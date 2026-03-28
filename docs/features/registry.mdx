@@ -38,7 +38,7 @@ Or install directly via URL:
 npx shadcn add https://shipkit.io/r/auth.json
 ```
 
-## Available Blocks (30 items)
+## Available Blocks (35 items)
 
 ### Core Feature Blocks
 
@@ -46,10 +46,12 @@ npx shadcn add https://shipkit.io/r/auth.json
 |-------|-------|-------------|
 | `auth` | 41 | NextAuth.js v5 — OAuth, credentials, magic link, guest access |
 | `payments` | 30 | Stripe, Lemon Squeezy, Polar — checkout, webhooks, subscriptions |
+| `dashboard` | 46 | User dashboard — projects, teams, API keys, deployments, charts |
 | `blog` | 24 | MDX blog with author profiles, categories, feed-style timeline |
 | `docs` | 12 | Documentation system — sidebar, search, MDX rendering |
 | `admin` | 30 | Role-based admin panel — users, payments, GitHub, integrations |
 | `settings` | 12 | User settings — profile, appearance, account management |
+| `rbac` | 3 | Role-based access control — permission service, hook, API |
 | `demo` | 93 | Showcase pages — dashboard, mail, music, playground, forms, cards |
 
 ### Content & Marketing
@@ -77,6 +79,9 @@ npx shadcn add https://shipkit.io/r/auth.json
 | `email` | 6 | Resend email — client, service, subscribe actions, newsletter form |
 | `feedback` | 4 | User feedback dialog/popover with database storage |
 | `analytics` | 9 | PostHog, Umami, DataFast, Google Analytics, GTM, Statsig |
+| `ai` | 15 | SmolLM browser AI (WebGPU) + cloud AI (OpenAI, Anthropic) |
+| `github-connect` | 10 | GitHub OAuth, repo creation, collaborators, download service |
+| `vercel-connect` | 11 | Vercel OAuth, deploy triggers, webhooks, status tracking |
 | `storage` | 6 | AWS S3 presigned uploads, file service, upload components |
 | `caching` | 4 | Redis caching and rate limiting via Upstash |
 
@@ -108,13 +113,8 @@ Standalone components, also installable individually:
 
 | Block | Description |
 |-------|-------------|
-| `dashboard` | User dashboard with projects, teams, API keys, deployments |
 | `onboarding` | Multi-step setup wizard |
-| `github-connect` | GitHub OAuth, repo creation, collaborator management |
-| `vercel-connect` | Vercel deploy integration |
 | `payload-cms` | Full Payload CMS collections and admin panel |
-| `rbac` | Role-based access control service |
-| `ai` | SmolLM browser AI + cloud AI (OpenAI, Anthropic) |
 
 ## Block Details
 
@@ -363,6 +363,46 @@ npx shadcn add @shipkit/storage
 ```
 
 AWS S3 file uploads with presigned URLs. Set `AWS_S3_BUCKET_NAME`, `AWS_S3_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`. Includes file upload components.
+
+### Dashboard
+
+```bash
+npx shadcn add @shipkit/dashboard
+```
+
+Full user dashboard with projects, teams, API keys, deployments, downloads, tools, revenue chart, and stats cards. Includes sidebar, service layer, and server actions. Requires `auth` block.
+
+### RBAC
+
+```bash
+npx shadcn add @shipkit/rbac
+```
+
+Role-based access control. Server-side `rbacService.hasPermission(userId, resource, action)` and client-side `usePermission()` hook. Includes `/api/permissions/check` endpoint.
+
+### AI
+
+```bash
+npx shadcn add @shipkit/ai
+```
+
+Browser-based SmolLM via WebGPU (no server, no API key) and cloud AI with OpenAI/Anthropic. Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` for cloud features. Includes demo components and WebGPU detection.
+
+### GitHub Connect
+
+```bash
+npx shadcn add @shipkit/github-connect
+```
+
+GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`. Provides repo creation, collaborator invitations, download service, and repo availability checks.
+
+### Vercel Connect
+
+```bash
+npx shadcn add @shipkit/vercel-connect
+```
+
+Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID`. OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components.
 
 ### Demo
 

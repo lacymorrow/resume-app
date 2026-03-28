@@ -2120,6 +2120,491 @@
         }
       ],
       "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` (Stripe), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
+    },
+
+    {
+      "name": "dashboard",
+      "type": "registry:block",
+      "title": "Dashboard",
+      "description": "User dashboard with projects, teams, API keys, deployments, downloads, tools, stats, and revenue chart.",
+      "categories": ["shipkit", "dashboard"],
+      "dependencies": ["recharts", "lucide-react", "date-fns"],
+      "registryDependencies": ["cn", "routes-config", "features-config", "button", "card", "badge", "input", "separator", "tabs", "table", "dialog", "dropdown-menu", "skeleton", "avatar", "scroll-area"],
+      "files": [
+        {
+          "path": "src/app/(app)/(dashboard)/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/layout.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/dashboard/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/dashboard/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/tools/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/tools/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/projects/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/projects/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/projects/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/projects/layout.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/teams/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/teams/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/teams/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/teams/layout.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/api-keys/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/api-keys/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/api-keys/_components/api-keys-table.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/api-keys/_components/api-keys-table.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/api-keys/_components/create-api-key-dialog.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/api-keys/_components/create-api-key-dialog.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/api-keys/_components/delete-api-key-dialog.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/api-keys/_components/delete-api-key-dialog.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/deployments/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/deployments/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/deployments/deployment-actions.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/deployments/deployment-actions.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/deployments/deployments-list.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/deployments/deployments-list.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/download/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/(dashboard)/download/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/download/download-button.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/download/download-button.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/download/[...slug]/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/(dashboard)/download/[...slug]/route.ts"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/dashboard-tabs.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/dashboard-tabs.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/download-section.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/download-section.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/download-submit-button.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/download-submit-button.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/mock-data.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/(dashboard)/_components/mock-data.ts"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/overview-tabs.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/overview-tabs.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/quick-actions.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/quick-actions.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/recent-activity.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/recent-activity.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/recent-sales.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/recent-sales.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/revenue-chart.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/revenue-chart.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/stats-cards.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/stats-cards.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_components/tools-section.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/(dashboard)/_components/tools-section.tsx"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/_hooks/use-dashboard-data.ts",
+          "type": "registry:hook",
+          "target": "~/app/(app)/(dashboard)/_hooks/use-dashboard-data.ts"
+        },
+        {
+          "path": "src/server/services/project-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/project-service.ts"
+        },
+        {
+          "path": "src/server/services/team-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/team-service.ts"
+        },
+        {
+          "path": "src/server/services/api-key-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/api-key-service.ts"
+        },
+        {
+          "path": "src/server/services/deployment-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/deployment-service.ts"
+        },
+        {
+          "path": "src/server/actions/projects.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/projects.ts"
+        },
+        {
+          "path": "src/server/actions/teams.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/teams.ts"
+        },
+        {
+          "path": "src/server/actions/api-key-actions.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/api-key-actions.ts"
+        },
+        {
+          "path": "src/server/actions/deployment-actions.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/deployment-actions.ts"
+        },
+        {
+          "path": "src/server/actions/deploy-private-repo.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/deploy-private-repo.ts"
+        },
+        {
+          "path": "src/components/modules/projects/project-dialog.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/projects/project-dialog.tsx"
+        },
+        {
+          "path": "src/components/modules/projects/projects-list.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/projects/projects-list.tsx"
+        },
+        {
+          "path": "src/components/modules/projects/project-menu.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/projects/project-menu.tsx"
+        },
+        {
+          "path": "src/components/modules/sidebar/app-sidebar.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/sidebar/app-sidebar.tsx"
+        },
+        {
+          "path": "src/hooks/use-team-id.ts",
+          "type": "registry:hook",
+          "target": "~/hooks/use-team-id.ts"
+        },
+        {
+          "path": "src/hooks/use-subscription.ts",
+          "type": "registry:hook",
+          "target": "~/hooks/use-subscription.ts"
+        },
+        {
+          "path": "src/types/team.ts",
+          "type": "registry:lib",
+          "target": "~/types/team.ts"
+        },
+        {
+          "path": "src/types/feature.ts",
+          "type": "registry:lib",
+          "target": "~/types/feature.ts"
+        }
+      ],
+      "docs": "User dashboard with projects, teams, API keys, deployments, downloads, and analytics charts. Requires `auth` block for session management and `DATABASE_URL` for data persistence. Install `payments` block for subscription-aware features."
+    },
+    {
+      "name": "rbac",
+      "type": "registry:block",
+      "title": "RBAC",
+      "description": "Role-based access control with permission service, client-side hook, and API permission check endpoint.",
+      "categories": ["shipkit", "rbac", "auth"],
+      "registryDependencies": ["cn", "routes-config"],
+      "files": [
+        {
+          "path": "src/server/services/rbac.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/rbac.ts"
+        },
+        {
+          "path": "src/hooks/use-permission.ts",
+          "type": "registry:hook",
+          "target": "~/hooks/use-permission.ts"
+        },
+        {
+          "path": "src/app/(app)/api/permissions/check/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/permissions/check/route.ts"
+        }
+      ],
+      "docs": "Role-based access control. Provides `rbacService.hasPermission(userId, resource, action)` on the server and `usePermission()` hook on the client. Requires `auth` block and `DATABASE_URL` for permission storage."
+    },
+    {
+      "name": "ai",
+      "type": "registry:block",
+      "title": "AI",
+      "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI — demo components, utilities, and worker scripts.",
+      "categories": ["shipkit", "ai"],
+      "dependencies": ["openai", "@anthropic-ai/sdk"],
+      "registryDependencies": ["cn", "button", "card", "input", "textarea", "scroll-area"],
+      "files": [
+        {
+          "path": "src/lib/ai/ai-analyzer.ts",
+          "type": "registry:lib",
+          "target": "~/lib/ai/ai-analyzer.ts"
+        },
+        {
+          "path": "src/lib/ai/ai-assistant.ts",
+          "type": "registry:lib",
+          "target": "~/lib/ai/ai-assistant.ts"
+        },
+        {
+          "path": "src/lib/ai/ai-loader.ts",
+          "type": "registry:lib",
+          "target": "~/lib/ai/ai-loader.ts"
+        },
+        {
+          "path": "src/lib/open-ai.ts",
+          "type": "registry:lib",
+          "target": "~/lib/open-ai.ts"
+        },
+        {
+          "path": "src/lib/utils/webgpu.ts",
+          "type": "registry:lib",
+          "target": "~/lib/utils/webgpu.ts"
+        },
+        {
+          "path": "src/components/blocks/ai-demo.tsx",
+          "type": "registry:component",
+          "target": "~/components/blocks/ai-demo.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai-demo-cloud.tsx",
+          "type": "registry:component",
+          "target": "~/components/blocks/ai-demo-cloud.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai-section.tsx",
+          "type": "registry:component",
+          "target": "~/components/blocks/ai-section.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/ai-smollm-webgpu.tsx",
+          "type": "registry:component",
+          "target": "~/components/blocks/ai/smollm-web/ai-smollm-webgpu.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/page.tsx",
+          "type": "registry:page",
+          "target": "~/components/blocks/ai/smollm-web/page.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/worker.js",
+          "type": "registry:lib",
+          "target": "~/components/blocks/ai/smollm-web/worker.js"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/Chat.jsx",
+          "type": "registry:component",
+          "target": "~/components/blocks/ai/smollm-web/_components/Chat.jsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/Chat.css",
+          "type": "registry:style",
+          "target": "~/components/blocks/ai/smollm-web/_components/Chat.css"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/Progress.jsx",
+          "type": "registry:component",
+          "target": "~/components/blocks/ai/smollm-web/_components/Progress.jsx"
+        },
+        {
+          "path": "src/components/primitives/ask-ai-buttons.tsx",
+          "type": "registry:component",
+          "target": "~/components/primitives/ask-ai-buttons.tsx"
+        }
+      ],
+      "docs": "AI integration with browser-based SmolLM (WebGPU, no server) and cloud AI (OpenAI, Anthropic). Set `OPENAI_API_KEY` for cloud AI. SmolLM runs entirely in-browser with no API key needed. Includes demo components and WebGPU detection utility."
+    },
+    {
+      "name": "github-connect",
+      "type": "registry:block",
+      "title": "GitHub Connect",
+      "description": "GitHub OAuth integration with repo creation, collaborator management, invitation checks, and download service.",
+      "categories": ["shipkit", "github", "integration"],
+      "dependencies": ["octokit"],
+      "registryDependencies": ["cn", "routes-config", "features-config", "button", "card", "input"],
+      "files": [
+        {
+          "path": "src/app/(app)/connect/github/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/connect/github/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/connect/github/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(app)/connect/github/layout.tsx"
+        },
+        {
+          "path": "src/server/services/github/github-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/github/github-service.ts"
+        },
+        {
+          "path": "src/server/services/github/github-download-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/github/github-download-service.ts"
+        },
+        {
+          "path": "src/server/services/github/github-token-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/github/github-token-service.ts"
+        },
+        {
+          "path": "src/server/actions/github.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/github.ts"
+        },
+        {
+          "path": "src/app/(app)/api/github/check-invitation/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/github/check-invitation/route.ts"
+        },
+        {
+          "path": "src/app/(app)/api/github/check-repo-availability/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/github/check-repo-availability/route.ts"
+        },
+        {
+          "path": "src/app/(app)/api/setup/create-repository/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/setup/create-repository/route.ts"
+        },
+        {
+          "path": "src/lib/utils/generate-project-name-suggestions.ts",
+          "type": "registry:lib",
+          "target": "~/lib/utils/generate-project-name-suggestions.ts"
+        }
+      ],
+      "docs": "GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET` for OAuth. Provides repo creation, collaborator invitations, download service, and API routes for checking repo availability."
+    },
+    {
+      "name": "vercel-connect",
+      "type": "registry:block",
+      "title": "Vercel Connect",
+      "description": "Vercel integration with OAuth, deploy triggers, webhook handling, deployment status, and deploy button components.",
+      "categories": ["shipkit", "vercel", "integration"],
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["cn", "routes-config", "features-config", "button", "card"],
+      "files": [
+        {
+          "path": "src/app/(app)/connect/vercel/deploy/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(app)/connect/vercel/deploy/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/connect/vercel/auth/[[...path]]/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/connect/vercel/auth/[[...path]]/route.ts"
+        },
+        {
+          "path": "src/app/(app)/connect/vercel/webhook/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/connect/vercel/webhook/route.ts"
+        },
+        {
+          "path": "src/server/services/vercel.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/vercel.ts"
+        },
+        {
+          "path": "src/server/services/vercel/vercel-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/vercel/vercel-service.ts"
+        },
+        {
+          "path": "src/lib/vercel-api.ts",
+          "type": "registry:lib",
+          "target": "~/lib/vercel-api.ts"
+        },
+        {
+          "path": "src/app/(app)/api/setup/deploy/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/setup/deploy/route.ts"
+        },
+        {
+          "path": "src/app/(app)/api/setup/deployment-status/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/setup/deployment-status/route.ts"
+        },
+        {
+          "path": "src/app/(app)/api/setup/vercel-auth-url/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(app)/api/setup/vercel-auth-url/route.ts"
+        },
+        {
+          "path": "src/components/modules/deploy/dashboard-vercel-deploy.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/deploy/dashboard-vercel-deploy.tsx"
+        },
+        {
+          "path": "src/components/buttons/vercel-deploy-button.tsx",
+          "type": "registry:component",
+          "target": "~/components/buttons/vercel-deploy-button.tsx"
+        }
+      ],
+      "docs": "Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID` for API access. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
     }
   ]
 }

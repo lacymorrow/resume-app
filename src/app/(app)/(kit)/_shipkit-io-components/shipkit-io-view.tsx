@@ -31,7 +31,7 @@ import { PricingSectionSingle } from "@/components/blocks/pricing-section-single
 import { AskAiButtons } from "@/components/primitives/ask-ai-buttons";
 import { JsonLd } from "@/components/primitives/json-ld";
 import { Link } from "@/components/primitives/link";
-import ExampleMasonry from "@/components/primitives/masonry";
+import { ExampleMasonry } from "@/components/primitives/masonry";
 import {
   Section,
   SectionBadge,
@@ -40,13 +40,13 @@ import {
   SectionHeader,
 } from "@/components/primitives/section";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
-import AnimatedGradientText from "@/components/ui/animated-gradient-text";
-import BlurFade from "@/components/ui/blur-fade";
+import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
+import { BlurFade } from "@/components/ui/blur-fade";
 import { buttonVariants } from "@/components/ui/button";
 import { FeaturesTimed } from "@/components/ui/cui/features-timed";
 import { SimpleFeaturesCards } from "@/components/ui/cui/simple-features-cards";
-import Meteors from "@/components/ui/meteors";
-import NumberTicker from "@/components/ui/number-ticker";
+import { Meteors } from "@/components/ui/meteors";
+import { NumberTicker } from "@/components/ui/number-ticker";
 import { ShinyButton } from "@/components/ui/shiny-button";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";

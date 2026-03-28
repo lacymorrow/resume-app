@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import AvatarCircles from "@/components/ui/avatar-circles";
+import { AvatarCircles } from "@/components/ui/avatar-circles";
 
 const avatarUrls = [
   "https://avatars.githubusercontent.com/u/5619728", // @tedtoy
