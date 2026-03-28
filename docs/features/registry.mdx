@@ -5,7 +5,9 @@ description: "Install Shipkit features as shadcn registry blocks in any Next.js 
 
 # Component Registry
 
-Shipkit features are available as installable [shadcn registry blocks](https://ui.shadcn.com/docs/registry). Add auth, blog, docs, CMS, or FAQ to any Next.js project with a single command.
+Shipkit features are available as installable [shadcn registry blocks](https://ui.shadcn.com/docs/registry). Add auth, payments, blog, docs, CMS, analytics, or any feature to a Next.js project with a single command.
+
+The goal: start from [bones](https://github.com/shipkit-io/bones) (the upstream boilerplate) and install blocks until you reach full Shipkit parity.
 
 ## Quick Start
 
@@ -24,46 +26,73 @@ In your project's `components.json`, add the Shipkit registry:
 ### 2. Install a block
 
 ```bash
-npx shadcn add @shipkit/faq
-npx shadcn add @shipkit/blog
-npx shadcn add @shipkit/docs
 npx shadcn add @shipkit/auth
-npx shadcn add @shipkit/builder-io
-npx shadcn add @shipkit/cms-pages
+npx shadcn add @shipkit/payments
+npx shadcn add @shipkit/blog
+npx shadcn add @shipkit/analytics
 ```
 
 Or install directly via URL:
 
 ```bash
-npx shadcn add https://shipkit.io/r/faq.json
+npx shadcn add https://shipkit.io/r/auth.json
 ```
 
-## Available Blocks
+## Available Blocks (30 items)
 
-### Feature Blocks
+### Core Feature Blocks
 
 | Block | Files | Description |
 |-------|-------|-------------|
-| `faq` | 3 | Accordion FAQ page with static content and optional Payload CMS integration |
-| `docs` | 12 | Full documentation system — sidebar, search, MDX rendering |
-| `blog` | 24 | Blog with author profiles, categories, feed-style timeline, sidebar |
-| `builder-io` | 11 | Builder.io visual page builder — components, config, standalone route |
-| `cms-pages` | 11 | Shared Payload + Builder.io catch-all route with automatic fallback |
-| `auth` | 41 | NextAuth.js v5 — OAuth, credentials, magic link, guest access, RBAC |
+| `auth` | 41 | NextAuth.js v5 — OAuth, credentials, magic link, guest access |
+| `payments` | 30 | Stripe, Lemon Squeezy, Polar — checkout, webhooks, subscriptions |
+| `blog` | 24 | MDX blog with author profiles, categories, feed-style timeline |
+| `docs` | 12 | Documentation system — sidebar, search, MDX rendering |
+| `admin` | 30 | Role-based admin panel — users, payments, GitHub, integrations |
+| `settings` | 12 | User settings — profile, appearance, account management |
+| `demo` | 93 | Showcase pages — dashboard, mail, music, playground, forms, cards |
+
+### Content & Marketing
+
+| Block | Files | Description |
+|-------|-------|-------------|
+| `faq` | 3 | Accordion FAQ page with optional Payload CMS integration |
+| `pricing` | 8 | Pricing page with plan cards, features, testimonials content |
+| `legal` | 5 | Privacy policy, terms of service, EULA, legal info (MDX) |
+| `changelog` | 6 | Auto-generated changelog from GitHub commits and tags |
+| `contact` | 4 | Contact form with Resend email and newsletter opt-in |
+| `waitlist` | 10 | Pre-launch signup with hero, social proof, FAQ sections |
+
+### CMS
+
+| Block | Files | Description |
+|-------|-------|-------------|
+| `builder-io` | 11 | Builder.io visual page builder — drag-and-drop components |
+| `cms-pages` | 11 | Shared Payload + Builder.io catch-all with automatic fallback |
+
+### Integrations
+
+| Block | Files | Description |
+|-------|-------|-------------|
+| `email` | 6 | Resend email — client, service, subscribe actions, newsletter form |
+| `feedback` | 4 | User feedback dialog/popover with database storage |
+| `analytics` | 9 | PostHog, Umami, DataFast, Google Analytics, GTM, Statsig |
+| `storage` | 6 | AWS S3 presigned uploads, file service, upload components |
+| `caching` | 4 | Redis caching and rate limiting via Upstash |
 
 ### Shared Infrastructure
 
-These are installed automatically as dependencies of the feature blocks above.
+Installed automatically as dependencies of the blocks above.
 
 | Item | Type | Description |
 |------|------|-------------|
-| `cn` | `registry:lib` | Tailwind class merging utility (`clsx` + `tailwind-merge`) |
+| `cn` | `registry:lib` | Tailwind class merging (`clsx` + `tailwind-merge`) |
 | `routes-config` | `registry:lib` | Centralized route definitions |
-| `features-config` | `registry:lib` | Build-time feature flag detection from env vars |
+| `features-config` | `registry:lib` | Build-time feature flags from env vars |
 
 ### UI Components
 
-Standalone UI components, also installable individually:
+Standalone components, also installable individually:
 
 | Component | Description |
 |-----------|-------------|
@@ -74,6 +103,18 @@ Standalone UI components, also installable individually:
 | `dock` | macOS-style dock with magnification |
 | `use-copy-to-clipboard` | Clipboard hook with timeout reset |
 | `use-mobile` | Mobile viewport detection hook |
+
+### Roadmap (not yet available)
+
+| Block | Description |
+|-------|-------------|
+| `dashboard` | User dashboard with projects, teams, API keys, deployments |
+| `onboarding` | Multi-step setup wizard |
+| `github-connect` | GitHub OAuth, repo creation, collaborator management |
+| `vercel-connect` | Vercel deploy integration |
+| `payload-cms` | Full Payload CMS collections and admin panel |
+| `rbac` | Role-based access control service |
+| `ai` | SmolLM browser AI + cloud AI (OpenAI, Anthropic) |
 
 ## Block Details
 
@@ -213,6 +254,123 @@ npx shadcn add @shipkit/auth
 3. Run Drizzle migrations: `npx drizzle-kit generate && npx drizzle-kit migrate`
 4. Configure at least one provider (e.g., `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`)
 5. Or enable guest access: `ENABLE_AUTH_GUEST=true`
+
+### Legal
+
+```bash
+npx shadcn add @shipkit/legal
+```
+
+Privacy policy, terms of service, EULA, and legal info as MDX pages with shared layout and header navigation. Customize content in each `.mdx` file after installation.
+
+### Changelog
+
+```bash
+npx shadcn add @shipkit/changelog
+```
+
+Auto-generates changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars. Timeline view with individual entry pages. Cached for 1 hour via ISR.
+
+### Contact
+
+```bash
+npx shadcn add @shipkit/contact
+```
+
+Contact page with animated background, email card, and React Hook Form. Sends emails via Resend (`RESEND_API_KEY`). Includes newsletter opt-in.
+
+### Waitlist
+
+```bash
+npx shadcn add @shipkit/waitlist
+```
+
+Pre-launch waitlist with hero, social proof, FAQ, and email signup. Stores entries in the database. Optional Resend email notifications.
+
+### Admin
+
+```bash
+npx shadcn add @shipkit/admin
+```
+
+Role-based admin dashboard. Set `ADMIN_EMAIL` (comma-separated) to grant access. Sections: users, payments, GitHub, integrations, feedback, waitlist, CMS. Requires `auth` block.
+
+### Settings
+
+```bash
+npx shadcn add @shipkit/settings
+```
+
+User settings with profile editing, appearance/theme picker, account deletion, and provider disconnect. Requires `auth` block.
+
+### Email
+
+```bash
+npx shadcn add @shipkit/email
+```
+
+Resend email integration. Set `RESEND_API_KEY` to enable. Includes subscribe form, audience management, and email utility functions.
+
+### Feedback
+
+```bash
+npx shadcn add @shipkit/feedback
+```
+
+User feedback dialog and popover components. Stores in database, optionally emails via Resend.
+
+### Analytics
+
+```bash
+npx shadcn add @shipkit/analytics
+```
+
+Six providers, all behind feature flags. Set any env var to enable: `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_DATAFAST_ID`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_GTM_ID`, `NEXT_PUBLIC_STATSIG_CLIENT_KEY`. Add `<AnalyticsProvider />` to your root layout.
+
+### Pricing
+
+```bash
+npx shadcn add @shipkit/pricing
+```
+
+Pricing page with plan cards, features showcase, and testimonials. Customize plans in `content/pricing/pricing-content.ts`.
+
+### Payments
+
+```bash
+npx shadcn add @shipkit/payments
+```
+
+Unified payment system. Each provider auto-enables via env vars:
+- **Stripe:** `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY`
+- **Lemon Squeezy:** `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID`
+- **Polar:** `POLAR_ACCESS_TOKEN`
+
+Includes webhook handlers, checkout flows, subscription management, and buy buttons.
+
+### Caching
+
+```bash
+npx shadcn add @shipkit/caching
+```
+
+Redis caching and rate limiting via Upstash. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`.
+
+### Storage
+
+```bash
+npx shadcn add @shipkit/storage
+```
+
+AWS S3 file uploads with presigned URLs. Set `AWS_S3_BUCKET_NAME`, `AWS_S3_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`. Includes file upload components.
+
+### Demo
+
+```bash
+npx shadcn add @shipkit/demo
+```
+
+93 files of showcase demos: dashboard, mail client, music player, AI playground, forms, cards, file browser, authentication, pricing, landing page, and tRPC. Great for exploring UI patterns.
 
 ## Route Groups
 
