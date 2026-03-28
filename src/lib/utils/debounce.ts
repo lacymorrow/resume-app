@@ -78,5 +78,5 @@ export function debounce<T extends unknown[], R>(
 		context = undefined;
 	};
 
-	return debounced as ((...args: T) => R | undefined) & { cancel: () => void };
+	return debounced as unknown as ((...args: T) => R | undefined) & { cancel: () => void };
 }
