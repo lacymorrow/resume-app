@@ -356,5 +356,15 @@
     "sharp",
     "unrs-resolver",
     "utf-8-validate"
+  ],
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/lacymorrow"
+    },
+    {
+      "type": "individual",
+      "url": "https://www.buymeacoffee.com/lm"
+    }
   ]
 }

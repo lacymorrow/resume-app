@@ -6,7 +6,7 @@ import { type SyncOptions, sync } from "./sync.js";
 const program = new Command()
   .name("shipkit")
   .description("Scaffold and manage ShipKit sites")
-  .version("0.1.0");
+  .version("0.2.0");
 
 program
   .command("create")
