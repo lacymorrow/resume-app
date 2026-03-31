@@ -52,6 +52,10 @@ bun dev
 
 ## Support
 
+[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa?style=for-the-badge&logo=github)](https://github.com/sponsors/lacymorrow)
+
+ShipKit is built and maintained full-time. Your sponsorship directly funds new features and faster releases.
+
 - 💬 [GitHub Discussions](https://github.com/shipkit-io/shipkit/discussions)
 - 🐦 [Follow Updates](https://twitter.com/lacybuilds)
 - 📧 [Contact](https://shipkit.io/contact)
