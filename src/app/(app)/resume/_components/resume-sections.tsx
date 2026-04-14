@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import type { ResumeSchema } from "../_lib/resume-types";
+import type { ResumeSchema, ResumeWork, ResumeProject } from "../_lib/resume-types";
 import type { MatchResult } from "../_lib/resume-filters";
 import { ResumeEntryCard, formatDateRange } from "./resume-entry-card";
 
@@ -15,30 +15,35 @@ export function Section({ title, children, visible = true }: SectionProps) {
   );
 }
 
-export function WorkSection({ work, matches, tags }: { work: (ResumeSchema["work"][number] & { hidden?: boolean })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; }) {
-  const filtered = work
-    .map((entry, i) => ({ entry, index: i }))
-    .filter(({ entry }) => entry.name !== "LacyMorrow.com" && !entry.hidden);
+export function WorkSection({ entries, matches, tags }: {
+  entries: (ResumeWork & { originalIndex: number })[];
+  matches: Map<number, MatchResult>;
+  tags: Map<number, string[]>;
+}) {
   return (
     <div className="space-y-0">
-      {filtered.map(({ entry, index }) => (
+      {entries.map((entry) => (
         <ResumeEntryCard key={`${entry.name}-${entry.startDate}`} title={entry.position} subtitle={entry.name}
           dateRange={formatDateRange(entry.startDate, entry.endDate)} location={entry.location}
-          summary={entry.summary} tags={tags.get(index) ?? []} url={entry.url}
-          highlights={entry.highlights?.filter(Boolean)} match={matches.get(index)} />
+          summary={entry.summary} tags={tags.get(entry.originalIndex) ?? []} url={entry.url}
+          highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)} />
       ))}
     </div>
   );
 }
 
-export function ProjectsSection({ projects, matches, tags }: { projects: ResumeSchema["projects"]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; }) {
+export function ProjectsSection({ entries, matches, tags }: {
+  entries: (ResumeProject & { originalIndex: number })[];
+  matches: Map<number, MatchResult>;
+  tags: Map<number, string[]>;
+}) {
   return (
     <div className="space-y-0">
-      {projects.map((project, i) => (
+      {entries.map((project) => (
         <ResumeEntryCard key={`${project.name}-${project.startDate}`} title={project.name}
           subtitle={project.summary.split(".")[0]} dateRange={formatDateRange(project.startDate, project.endDate)}
-          summary={project.summary} tags={tags.get(i) ?? []} url={project.url}
-          highlights={project.highlights?.filter(Boolean)} match={matches.get(i)} />
+          summary={project.summary} tags={tags.get(project.originalIndex) ?? []} url={project.url}
+          highlights={project.highlights?.filter(Boolean)} match={matches.get(project.originalIndex)} />
       ))}
     </div>
   );

@@ -1,35 +1,22 @@
-import type { ResumeSchema, SectionKey } from "./resume-types";
+import type { ResumeSchema, ResumeWork, ResumeProject, SectionKey } from "./resume-types";
+import type { ResumeFlavor } from "./resume-flavors";
 import { extractWorkTags, extractProjectTags } from "./resume-tags";
 
 export interface FilterState {
+  flavorId: string;
   sections: Record<SectionKey, boolean>;
   selectedTags: string[];
   tagMatchMode: "any" | "all";
-  dateRange: { from: Date | null; to: Date | null };
-  activeVariant: string;
-  /** Per-job manual overrides: company name → visible. Only used when user manually toggles. */
-  jobVisibility: Record<string, boolean>;
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
+  flavorId: "complete",
   sections: { work: true, projects: true, skills: true, education: true, interests: true, awards: true, references: true },
   selectedTags: [],
   tagMatchMode: "any",
-  dateRange: { from: null, to: null },
-  activeVariant: "all",
-  jobVisibility: {},
 };
 
 export interface MatchResult { matched: boolean; score: number; }
-
-function isInDateRange(startDate: string, endDate: string | undefined, range: FilterState["dateRange"]): boolean {
-  if (!range.from && !range.to) return true;
-  const start = new Date(startDate);
-  const end = endDate ? new Date(endDate) : new Date();
-  if (range.from && end < range.from) return false;
-  if (range.to && start > range.to) return false;
-  return true;
-}
 
 function matchesTags(entryTags: string[], selectedTags: string[], mode: "any" | "all"): MatchResult {
   if (selectedTags.length === 0) return { matched: true, score: 1 };
@@ -39,28 +26,87 @@ function matchesTags(entryTags: string[], selectedTags: string[], mode: "any" | 
   return { matched: matchCount === selectedTags.length, score: matchCount / selectedTags.length };
 }
 
-export function computeWorkMatches(data: ResumeSchema, filters: FilterState): Map<number, MatchResult> {
-  const results = new Map<number, MatchResult>();
-  const workTags = extractWorkTags(data.work);
+/** Apply flavor overrides to work entries and compute tag matches */
+export function resolveWork(
+  data: ResumeSchema, flavor: ResumeFlavor, filters: FilterState,
+): { entries: (ResumeWork & { originalIndex: number })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; } {
+  const entries: (ResumeWork & { originalIndex: number })[] = [];
+  const matches = new Map<number, MatchResult>();
+  const allWorkTags = extractWorkTags(data.work);
+
   for (let i = 0; i < data.work.length; i++) {
-    const entry = data.work[i];
-    const tags = workTags.get(i) ?? [];
-    const dateMatch = isInDateRange(entry.startDate, entry.endDate, filters.dateRange);
-    const tagMatch = matchesTags(tags, filters.selectedTags, filters.tagMatchMode);
-    results.set(i, !dateMatch ? { matched: false, score: 0 } : tagMatch);
+    const base = data.work[i];
+    if (base.name === "LacyMorrow.com") continue;
+
+    const override = flavor.work[base.name];
+    if (override?.visible === false) continue;
+
+    const entry: ResumeWork & { originalIndex: number } = {
+      ...base,
+      originalIndex: i,
+      position: override?.position ?? base.position,
+      summary: override?.summary ?? base.summary,
+      highlights: override?.highlights ?? base.highlights,
+    };
+
+    entries.push(entry);
+    const entryTags = allWorkTags.get(i) ?? [];
+    tags_map_set(allWorkTags, i, entryTags);
+    matches.set(i, matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode));
   }
-  return results;
+
+  // Re-extract tags from overridden summaries
+  const resolvedTags = new Map<number, string[]>();
+  const resolvedWork = entries.map(e => ({ ...e, name: e.name, summary: e.summary, highlights: e.highlights }));
+  const freshTags = extractWorkTags(resolvedWork);
+  for (let i = 0; i < entries.length; i++) {
+    resolvedTags.set(entries[i].originalIndex, freshTags.get(i) ?? []);
+  }
+
+  // Recompute matches with resolved tags
+  for (const entry of entries) {
+    const entryTags = resolvedTags.get(entry.originalIndex) ?? [];
+    matches.set(entry.originalIndex, matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode));
+  }
+
+  return { entries, matches, tags: resolvedTags };
 }
 
-export function computeProjectMatches(data: ResumeSchema, filters: FilterState): Map<number, MatchResult> {
-  const results = new Map<number, MatchResult>();
-  const projectTags = extractProjectTags(data.projects);
+function tags_map_set(_map: Map<number, string[]>, _i: number, _tags: string[]) {}
+
+/** Apply flavor overrides to project entries and compute tag matches */
+export function resolveProjects(
+  data: ResumeSchema, flavor: ResumeFlavor, filters: FilterState,
+): { entries: (ResumeProject & { originalIndex: number })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; } {
+  const entries: (ResumeProject & { originalIndex: number })[] = [];
+  const matches = new Map<number, MatchResult>();
+  const allProjectTags = extractProjectTags(data.projects);
+
   for (let i = 0; i < data.projects.length; i++) {
-    const entry = data.projects[i];
-    const tags = projectTags.get(i) ?? [];
-    const dateMatch = isInDateRange(entry.startDate, entry.endDate, filters.dateRange);
-    const tagMatch = matchesTags(tags, filters.selectedTags, filters.tagMatchMode);
-    results.set(i, !dateMatch ? { matched: false, score: 0 } : tagMatch);
+    const base = data.projects[i];
+    const override = flavor.projects[base.name];
+    if (override?.visible === false) continue;
+
+    const entry: ResumeProject & { originalIndex: number } = {
+      ...base,
+      originalIndex: i,
+      summary: override?.summary ?? base.summary,
+    };
+
+    entries.push(entry);
   }
-  return results;
+
+  // Re-extract tags from overridden summaries
+  const resolvedTags = new Map<number, string[]>();
+  const freshTags = extractProjectTags(entries);
+  for (let i = 0; i < entries.length; i++) {
+    resolvedTags.set(entries[i].originalIndex, freshTags.get(i) ?? []);
+  }
+
+  for (const entry of entries) {
+    const entryTags = resolvedTags.get(entry.originalIndex) ?? [];
+    matches.set(entry.originalIndex, matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode));
+  }
+
+  return { entries, matches, tags: resolvedTags };
 }
