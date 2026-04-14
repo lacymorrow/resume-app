@@ -461,7 +461,11 @@ export const ToolsSection = () => {
               showStarredOnly && "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
           >
-            <StarIcon className="h-4 w-4" />
+            {showStarredOnly ? (
+              <StarFilledIcon className="h-4 w-4 fill-current" />
+            ) : (
+              <StarIcon className="h-4 w-4" />
+            )}
             {showStarredOnly ? "Show All" : "Show Starred"}
           </Button>
         </div>

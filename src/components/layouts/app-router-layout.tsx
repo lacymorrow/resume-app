@@ -4,7 +4,6 @@ import type { ReactNode } from "react";
 import { PageTracker } from "react-page-tracker";
 import { KitProvider } from "@/components/providers/kit-provider";
 import { TeamProvider } from "@/components/providers/team-provider";
-import { ThemeProvider } from "@/components/ui/shipkit/theme";
 
 /**
  * Root layout component that wraps the entire application.
@@ -16,30 +15,27 @@ import { ThemeProvider } from "@/components/ui/shipkit/theme";
  * `KitProvider` passes `session={null}` to `SessionProvider`, which will
  * client-fetch `/api/auth/session` on mount. Team data is loaded in the
  * dashboard layout where it's actually consumed.
+ *
+ * Theme is provided by KitProvider's internal ThemeProvider (shared with Pages Router).
  */
 export function AppRouterLayout({
   children,
-  themeProvider: ThemeProviderWrapper = ThemeProvider,
 }: {
   children: ReactNode;
-  themeProvider?: typeof ThemeProvider;
 }) {
   return (
     <ViewTransitions>
       {/* PageTracker - Track page views */}
       <PageTracker />
 
-      {/* ThemeProvider should wrap providers that might need theme context */}
-      <ThemeProviderWrapper>
-        {/* KitProvider - Manage all core providers (session fetched client-side) */}
-        <KitProvider session={null}>
-          <NuqsAdapter>
-            <TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
-              {children}
-            </TeamProvider>
-          </NuqsAdapter>
-        </KitProvider>
-      </ThemeProviderWrapper>
+      {/* KitProvider - Manage all core providers including theme (session fetched client-side) */}
+      <KitProvider session={null}>
+        <NuqsAdapter>
+          <TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
+            {children}
+          </TeamProvider>
+        </NuqsAdapter>
+      </KitProvider>
     </ViewTransitions>
   );
 }

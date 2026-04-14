@@ -64,7 +64,7 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
   variants: {
     variant: {
       default: "relative",
-      floating: "sticky top-0 h-24",
+      floating: "fixed top-0 h-24 w-full",
       sticky:
         "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
       "logo-only": "relative",

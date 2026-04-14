@@ -10,7 +10,7 @@ export const DashboardHeader = async () => {
   const session = await auth();
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="fixed top-0 z-30 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center gap-3 px-4">
         {/* Keep a sidebar trigger on mobile so the off-canvas sidebar is still accessible. */}
         <SidebarTrigger className="-ml-1 md:hidden" />
