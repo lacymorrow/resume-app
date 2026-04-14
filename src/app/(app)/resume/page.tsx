@@ -5,8 +5,7 @@ import { ResumeViewer } from "./_components/resume-viewer";
 
 export const metadata: Metadata = constructMetadata({
   title: "Resume - Lacy Morrow",
-  description:
-    "Interactive resume with filtering by role, technology, and date range. Export custom versions as PDF.",
+  description: "Interactive resume with filtering by role, technology, and date range. Export custom versions as PDF.",
 });
 
 export default function ResumePage() {

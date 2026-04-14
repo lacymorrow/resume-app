@@ -67,31 +67,9 @@ export interface ResumeSkill {
   keywords: string[];
 }
 
-export interface ResumeInterest {
-  name: string;
-}
+export interface ResumeInterest { name: string; }
+export interface ResumeAward { title: string; awarder: string; date: string; }
+export interface ResumeReference { reference: string; name: string; }
+export interface ResumeLanguage { language: string; fluency: string; }
 
-export interface ResumeAward {
-  title: string;
-  awarder: string;
-  date: string;
-}
-
-export interface ResumeReference {
-  reference: string;
-  name: string;
-}
-
-export interface ResumeLanguage {
-  language: string;
-  fluency: string;
-}
-
-export type SectionKey =
-  | "work"
-  | "projects"
-  | "skills"
-  | "education"
-  | "interests"
-  | "awards"
-  | "references";
+export type SectionKey = "work" | "projects" | "skills" | "education" | "interests" | "awards" | "references";
