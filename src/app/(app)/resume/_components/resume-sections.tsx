@@ -15,8 +15,10 @@ export function Section({ title, children, visible = true }: SectionProps) {
   );
 }
 
-export function WorkSection({ work, matches, tags }: { work: ResumeSchema["work"]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; }) {
-  const filtered = work.map((entry, i) => ({ entry, index: i })).filter(({ entry }) => entry.name !== "LacyMorrow.com");
+export function WorkSection({ work, matches, tags }: { work: (ResumeSchema["work"][number] & { hidden?: boolean })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; }) {
+  const filtered = work
+    .map((entry, i) => ({ entry, index: i }))
+    .filter(({ entry }) => entry.name !== "LacyMorrow.com" && !entry.hidden);
   return (
     <div className="space-y-0">
       {filtered.map(({ entry, index }) => (

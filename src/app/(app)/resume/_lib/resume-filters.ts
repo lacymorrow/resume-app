@@ -6,7 +6,9 @@ export interface FilterState {
   selectedTags: string[];
   tagMatchMode: "any" | "all";
   dateRange: { from: Date | null; to: Date | null };
-  activePreset: string | null;
+  activeVariant: string;
+  /** Per-job manual overrides: company name → visible. Only used when user manually toggles. */
+  jobVisibility: Record<string, boolean>;
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
@@ -14,7 +16,8 @@ export const DEFAULT_FILTER_STATE: FilterState = {
   selectedTags: [],
   tagMatchMode: "any",
   dateRange: { from: null, to: null },
-  activePreset: "all",
+  activeVariant: "all",
+  jobVisibility: {},
 };
 
 export interface MatchResult { matched: boolean; score: number; }
