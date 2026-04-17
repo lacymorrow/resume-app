@@ -4,7 +4,8 @@
   "title": "GitHub Connect",
   "description": "GitHub OAuth integration with repo creation, collaborator management, invitation checks, and download service.",
   "dependencies": [
-    "octokit"
+    "octokit",
+    "@octokit/rest"
   ],
   "registryDependencies": [
     "@shipkit/cn",

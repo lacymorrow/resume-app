@@ -226,6 +226,36 @@
       ]
     },
     {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Data Table",
+      "description": "Feature-rich data table with search, pagination, column visibility, and row actions built on TanStack Table.",
+      "dependencies": [
+        "@tanstack/react-table"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "button",
+        "input",
+        "dialog",
+        "dropdown-menu",
+        "table",
+        "select"
+      ],
+      "files": [
+        {
+          "path": "src/components/ui/data-table/data-table.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/data-table/data-table.tsx"
+        },
+        {
+          "path": "src/components/ui/data-table/data-table-dialog.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/data-table/data-table-dialog.tsx"
+        }
+      ]
+    },
+    {
       "name": "routes-config",
       "type": "registry:lib",
       "title": "Routes Config",
@@ -770,11 +800,6 @@
           "target": "~/src/app/(app)/(authentication)/error/_components/auth-error-content.tsx"
         },
         {
-          "path": "src/app/(app)/(authentication)/sign-out/route.ts",
-          "type": "registry:lib",
-          "target": "~/src/app/(app)/(authentication)/sign-out/route.ts"
-        },
-        {
           "path": "src/app/(app)/(authentication)/_components/auth-form.tsx",
           "type": "registry:component",
           "target": "~/src/app/(app)/(authentication)/_components/auth-form.tsx"
@@ -913,6 +938,16 @@
           "path": "src/components/buttons/github-oauth-button.tsx",
           "type": "registry:component",
           "target": "~/src/components/buttons/github-oauth-button.tsx"
+        },
+        {
+          "path": "src/components/assets/icon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/assets/icon.tsx"
+        },
+        {
+          "path": "src/components/assets/kit-icon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/assets/kit-icon.tsx"
         }
       ],
       "docs": "Full auth system with NextAuth.js v5. Run `npx auth secret` to generate `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database \u2014 set `DATABASE_URL` and run Drizzle migrations."
@@ -1314,6 +1349,11 @@
           "path": "src/app/(app)/api/admin/users/[userId]/route.ts",
           "type": "registry:lib",
           "target": "~/src/app/(app)/api/admin/users/[userId]/route.ts"
+        },
+        {
+          "path": "src/server/services/integration-service.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/services/integration-service.ts"
         }
       ],
       "docs": "Role-based admin dashboard. Set `ADMIN_EMAIL` (comma-separated) to grant admin access by email. Requires auth block for session management and database for user/role queries."
@@ -2199,16 +2239,6 @@
       ],
       "files": [
         {
-          "path": "src/app/(app)/(kit)/pricing/page.tsx",
-          "type": "registry:page",
-          "target": "~/src/app/(app)/pricing/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/(kit)/features/page.tsx",
-          "type": "registry:page",
-          "target": "~/src/app/(app)/features/page.tsx"
-        },
-        {
           "path": "src/content/pricing/pricing-content.ts",
           "type": "registry:lib",
           "target": "~/src/content/pricing/pricing-content.ts"
@@ -2237,6 +2267,11 @@
           "path": "src/components/blocks/pricing-section-single.tsx",
           "type": "registry:component",
           "target": "~/src/components/blocks/pricing-section-single.tsx"
+        },
+        {
+          "path": "src/lib/utils/get-payload-content.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/utils/get-payload-content.ts"
         }
       ],
       "docs": "Pricing page with plan cards and feature comparison. Customize plans in `content/pricing/pricing-content.ts`, features in `content/features/features-content.ts`, and testimonials in `content/testimonials/testimonials-content.ts`."
@@ -2255,7 +2290,9 @@
         "@lemonsqueezy/lemonsqueezy.js",
         "@polar-sh/sdk",
         "zod",
-        "lucide-react"
+        "lucide-react",
+        "@polar-sh/nextjs",
+        "canvas-confetti"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -2415,6 +2452,11 @@
           "path": "src/components/modules/payments/polar-product-status.tsx",
           "type": "registry:component",
           "target": "~/src/components/modules/payments/polar-product-status.tsx"
+        },
+        {
+          "path": "src/components/ui/magicui/confetti/confetti-side-cannons.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/magicui/confetti/confetti-side-cannons.tsx"
         }
       ],
       "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` (Stripe), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
@@ -2448,7 +2490,8 @@
         "dropdown-menu",
         "skeleton",
         "avatar",
-        "scroll-area"
+        "scroll-area",
+        "@shipkit/data-table"
       ],
       "files": [
         {
@@ -2680,6 +2723,96 @@
           "path": "src/types/feature.ts",
           "type": "registry:lib",
           "target": "~/src/types/feature.ts"
+        },
+        {
+          "path": "src/lib/local-storage/project-storage.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/local-storage/project-storage.ts"
+        },
+        {
+          "path": "src/lib/local-storage/team-storage.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/local-storage/team-storage.ts"
+        },
+        {
+          "path": "src/components/providers/team-provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/providers/team-provider.tsx"
+        },
+        {
+          "path": "src/components/layouts/dashboard-layout.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/layouts/dashboard-layout.tsx"
+        },
+        {
+          "path": "src/server/services/error-service.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/services/error-service.ts"
+        },
+        {
+          "path": "src/server/services/temporary-links.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/services/temporary-links.ts"
+        },
+        {
+          "path": "src/app/(app)/(dashboard)/dashboard/_hooks/use-dashboard-data.ts",
+          "type": "registry:hook",
+          "target": "~/src/app/(app)/(dashboard)/dashboard/_hooks/use-dashboard-data.ts"
+        },
+        {
+          "path": "src/components/blocks/dashboard-header.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/dashboard-header.tsx"
+        },
+        {
+          "path": "src/components/layouts/sidebar-layout.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/layouts/sidebar-layout.tsx"
+        },
+        {
+          "path": "src/components/blocks/nav-user.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/nav-user.tsx"
+        },
+        {
+          "path": "src/components/blocks/dashboard-header-home-link.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/dashboard-header-home-link.tsx"
+        },
+        {
+          "path": "src/components/blocks/project-switcher.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/project-switcher.tsx"
+        },
+        {
+          "path": "src/components/blocks/team-switcher.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/team-switcher.tsx"
+        },
+        {
+          "path": "src/components/blocks/nav-main.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/nav-main.tsx"
+        },
+        {
+          "path": "src/components/modules/user/user-menu.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/user/user-menu.tsx"
+        },
+        {
+          "path": "src/components/modules/user/user-menu-dropdown.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/user/user-menu-dropdown.tsx"
+        },
+        {
+          "path": "src/components/modules/onboarding/onboarding-check.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/onboarding/onboarding-check.tsx"
+        },
+        {
+          "path": "src/components/blocks/nav-secondary.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/nav-secondary.tsx"
         }
       ],
       "docs": "User dashboard with projects, teams, API keys, deployments, downloads, and analytics charts. Requires `auth` block for session management and `DATABASE_URL` for data persistence. Install `payments` block for subscription-aware features."
@@ -2828,7 +2961,8 @@
         "integration"
       ],
       "dependencies": [
-        "octokit"
+        "octokit",
+        "@octokit/rest"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -2967,6 +3101,16 @@
           "path": "src/components/buttons/vercel-deploy-button.tsx",
           "type": "registry:component",
           "target": "~/src/components/buttons/vercel-deploy-button.tsx"
+        },
+        {
+          "path": "src/components/buttons/vercel-connect-button.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/buttons/vercel-connect-button.tsx"
+        },
+        {
+          "path": "src/lib/schemas/deployment.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/schemas/deployment.ts"
         }
       ],
       "docs": "Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID` for API access. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
