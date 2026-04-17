@@ -56,7 +56,7 @@ function extractTagsFromText(text: string): string[] {
 export function extractWorkTags(work: ResumeSchema["work"]): Map<number, string[]> {
   const map = new Map<number, string[]>();
   for (let i = 0; i < work.length; i++) {
-    const entry = work[i];
+    const entry = work[i]!;
     const tags = extractTagsFromText(entry.summary);
     if (entry.highlights) {
       for (const h of entry.highlights) tags.push(...extractTagsFromText(h));
@@ -69,7 +69,7 @@ export function extractWorkTags(work: ResumeSchema["work"]): Map<number, string[
 export function extractProjectTags(projects: ResumeSchema["projects"]): Map<number, string[]> {
   const map = new Map<number, string[]>();
   for (let i = 0; i < projects.length; i++) {
-    const entry = projects[i];
+    const entry = projects[i]!;
     const tags = extractTagsFromText(entry.summary);
     if (entry.highlights) {
       for (const h of entry.highlights) tags.push(...extractTagsFromText(h));

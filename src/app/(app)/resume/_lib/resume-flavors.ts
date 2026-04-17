@@ -205,7 +205,6 @@ export const FLAVORS: ResumeFlavor[] = [
       "Boone Community Network": { visible: false },
       "Phase2Productions": { visible: false },
     },
-    projects: {},
   },
 
   {

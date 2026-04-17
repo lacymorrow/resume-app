@@ -16,7 +16,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTER_STATE);
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  const flavor = useMemo(() => FLAVORS.find((f) => f.id === filters.flavorId) ?? FLAVORS[0], [filters.flavorId]);
+  const flavor = useMemo(() => FLAVORS.find((f) => f.id === filters.flavorId) ?? FLAVORS[0]!, [filters.flavorId]);
   const allTags = useMemo(() => getAllTags(data), [data]);
 
   const { entries: workEntries, matches: workMatches, tags: workTags } = useMemo(

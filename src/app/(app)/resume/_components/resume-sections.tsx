@@ -41,7 +41,7 @@ export function ProjectsSection({ entries, matches, tags }: {
     <div className="space-y-0">
       {entries.map((project) => (
         <ResumeEntryCard key={`${project.name}-${project.startDate}`} title={project.name}
-          subtitle={project.summary.split(".")[0]} dateRange={formatDateRange(project.startDate, project.endDate)}
+          subtitle={project.summary.split(".")[0] ?? ""} dateRange={formatDateRange(project.startDate, project.endDate)}
           summary={project.summary} tags={tags.get(project.originalIndex) ?? []} url={project.url}
           highlights={project.highlights?.filter(Boolean)} match={matches.get(project.originalIndex)} />
       ))}

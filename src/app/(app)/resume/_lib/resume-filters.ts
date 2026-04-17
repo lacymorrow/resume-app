@@ -35,7 +35,7 @@ export function resolveWork(
   const allWorkTags = extractWorkTags(data.work);
 
   for (let i = 0; i < data.work.length; i++) {
-    const base = data.work[i];
+    const base = data.work[i]!;
     if (base.name === "LacyMorrow.com") continue;
 
     const override = flavor.work[base.name];
@@ -50,9 +50,6 @@ export function resolveWork(
     };
 
     entries.push(entry);
-    const entryTags = allWorkTags.get(i) ?? [];
-    tags_map_set(allWorkTags, i, entryTags);
-    matches.set(i, matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode));
   }
 
   // Re-extract tags from overridden summaries
@@ -60,7 +57,7 @@ export function resolveWork(
   const resolvedWork = entries.map(e => ({ ...e, name: e.name, summary: e.summary, highlights: e.highlights }));
   const freshTags = extractWorkTags(resolvedWork);
   for (let i = 0; i < entries.length; i++) {
-    resolvedTags.set(entries[i].originalIndex, freshTags.get(i) ?? []);
+    resolvedTags.set(entries[i]!.originalIndex, freshTags.get(i) ?? []);
   }
 
   // Recompute matches with resolved tags
@@ -72,8 +69,6 @@ export function resolveWork(
   return { entries, matches, tags: resolvedTags };
 }
 
-function tags_map_set(_map: Map<number, string[]>, _i: number, _tags: string[]) {}
-
 /** Apply flavor overrides to project entries and compute tag matches */
 export function resolveProjects(
   data: ResumeSchema, flavor: ResumeFlavor, filters: FilterState,
@@ -83,7 +78,7 @@ export function resolveProjects(
   const allProjectTags = extractProjectTags(data.projects);
 
   for (let i = 0; i < data.projects.length; i++) {
-    const base = data.projects[i];
+    const base = data.projects[i]!;
     const override = flavor.projects[base.name];
     if (override?.visible === false) continue;
 
@@ -100,7 +95,7 @@ export function resolveProjects(
   const resolvedTags = new Map<number, string[]>();
   const freshTags = extractProjectTags(entries);
   for (let i = 0; i < entries.length; i++) {
-    resolvedTags.set(entries[i].originalIndex, freshTags.get(i) ?? []);
+    resolvedTags.set(entries[i]!.originalIndex, freshTags.get(i) ?? []);
   }
 
   for (const entry of entries) {
