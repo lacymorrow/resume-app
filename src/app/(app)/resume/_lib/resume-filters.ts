@@ -32,7 +32,6 @@ export function resolveWork(
 ): { entries: (ResumeWork & { originalIndex: number })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; } {
   const entries: (ResumeWork & { originalIndex: number })[] = [];
   const matches = new Map<number, MatchResult>();
-  const allWorkTags = extractWorkTags(data.work);
 
   for (let i = 0; i < data.work.length; i++) {
     const base = data.work[i]!;
@@ -75,7 +74,6 @@ export function resolveProjects(
 ): { entries: (ResumeProject & { originalIndex: number })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; } {
   const entries: (ResumeProject & { originalIndex: number })[] = [];
   const matches = new Map<number, MatchResult>();
-  const allProjectTags = extractProjectTags(data.projects);
 
   for (let i = 0; i < data.projects.length; i++) {
     const base = data.projects[i]!;

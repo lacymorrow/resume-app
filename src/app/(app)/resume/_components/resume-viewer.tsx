@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryState, parseAsString } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SlidersHorizontal } from "lucide-react";
@@ -13,8 +14,18 @@ import { FilterPanel } from "./filter-panel";
 import { Section, WorkSection, ProjectsSection, SkillsSection, EducationSection, ExtrasSection } from "./resume-sections";
 
 export function ResumeViewer({ data }: { data: ResumeSchema }) {
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTER_STATE);
+  const [flavorParam, setFlavorParam] = useQueryState("flavor", parseAsString.withDefault("complete"));
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const flavor = FLAVORS.find((f) => f.id === flavorParam);
+    if (flavor) return { ...DEFAULT_FILTER_STATE, flavorId: flavor.id, sections: flavor.sections };
+    return DEFAULT_FILTER_STATE;
+  });
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  // Sync URL param when flavor changes in filter state
+  useEffect(() => {
+    setFlavorParam(filters.flavorId === "complete" ? null : filters.flavorId);
+  }, [filters.flavorId, setFlavorParam]);
 
   const flavor = useMemo(() => FLAVORS.find((f) => f.id === filters.flavorId) ?? FLAVORS[0]!, [filters.flavorId]);
   const allTags = useMemo(() => getAllTags(data), [data]);
