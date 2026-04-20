@@ -61,7 +61,7 @@
     },
     {
       "path": "src/components/providers/consent-provider.tsx",
-      "content": "import { ConsentManagerDialog, ConsentManagerProvider, CookieBanner } from \"@c15t/nextjs\";\nimport type { ReactNode } from \"react\";\nimport { env } from \"@/env\";\n\nexport default function ConsentProvider({ children }: { children: ReactNode }) {\n  if (!env?.NEXT_PUBLIC_FEATURE_C15T_ENABLED) {\n    return children;\n  }\n\n  return (\n    <ConsentManagerProvider\n      options={\n        env?.NEXT_PUBLIC_C15T_URL\n          ? { mode: \"c15t\", backendURL: env?.NEXT_PUBLIC_C15T_URL }\n          : { mode: \"offline\" }\n      }\n    >\n      {children}\n      <CookieBanner />\n      <ConsentManagerDialog />\n    </ConsentManagerProvider>\n  );\n}\n",
+      "content": "import { ConsentBanner, ConsentDialog, ConsentManagerProvider } from \"@c15t/nextjs\";\nimport type { ReactNode } from \"react\";\nimport { env } from \"@/env\";\n\nexport default function ConsentProvider({ children }: { children: ReactNode }) {\n  if (!env?.NEXT_PUBLIC_FEATURE_C15T_ENABLED) {\n    return children;\n  }\n\n  return (\n    <ConsentManagerProvider\n      options={\n        env?.NEXT_PUBLIC_C15T_URL\n          ? { mode: \"c15t\", backendURL: env?.NEXT_PUBLIC_C15T_URL }\n          : { mode: \"offline\" }\n      }\n    >\n      {children}\n      <ConsentBanner />\n      <ConsentDialog />\n    </ConsentManagerProvider>\n  );\n}\n",
       "type": "registry:component",
       "target": "~/src/components/providers/consent-provider.tsx"
     }
