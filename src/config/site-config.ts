@@ -186,28 +186,28 @@ export const siteConfig: SiteConfig = {
     pageTransitions: true,
   },
 
-  name: "Shipkit",
-  title: "Shipkit",
-  tagline: "Launch your app at light speed.",
-  url: "https://shipkit.io",
+  name: "Lacy Morrow",
+  title: "Lacy Morrow",
+  tagline: "Engineer. Builder. Leader.",
+  url: "https://resume.lacy.sh",
   ogImage: "/app/og-image.png",
   description:
-    "Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
+    "Interactive resume for Lacy Morrow — full-stack engineer, AI tooling, and product builder.",
 
   branding: {
-    projectName: "Shipkit",
-    projectSlug: "shipkit",
+    projectName: "resume.lacy.sh",
+    projectSlug: "resume",
     productNames: {
       bones: "Bones",
       brains: "Brains",
-      main: "Shipkit",
+      main: "resume.lacy.sh",
     },
-    domain: "shipkit.io",
-    protocol: "web+shipkit",
-    githubOrg: "shipkit-io",
-    githubRepo: "shipkit",
-    vercelProjectName: "shipkit-app",
-    databaseName: "shipkit",
+    domain: "resume.lacy.sh",
+    protocol: "web+resume",
+    githubOrg: "lacymorrow",
+    githubRepo: "resume-app",
+    vercelProjectName: "resume-app",
+    databaseName: "resume",
   },
 
   links: {
@@ -215,27 +215,27 @@ export const siteConfig: SiteConfig = {
     twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
     x: "https://x.com/lacybuilds",
     x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
-    github: "https://github.com/lacymorrow/shipkit",
+    github: "https://github.com/lacymorrow",
   },
 
   // Configure social profiles here. Leave any you don't use as empty strings.
   social: {
-    github: "https://github.com/shipkit-io",
+    github: "https://github.com/lacymorrow",
     x: "https://x.com/lacybuilds",
-    linkedin: "",
+    linkedin: "https://linkedin.com/in/lacymorrow",
     instagram: "",
     facebook: "",
     youtube: "",
     tiktok: "",
-    discord: "https://discord.gg/XxKrKNvEje",
+    discord: "",
     dribbble: "",
     threads: "",
   },
 
   repo: {
     owner: "lacymorrow",
-    name: "shipkit",
-    url: "https://github.com/lacymorrow/shipkit",
+    name: "resume-app",
+    url: "https://github.com/lacymorrow/resume-app",
     format: {
       // Placeholder format functions - assigned below
       clone: () => "",
@@ -244,19 +244,19 @@ export const siteConfig: SiteConfig = {
   },
 
   email: {
-    support: "feedback@shipkit.io",
-    team: "team@shipkit.io",
-    noreply: "noreply@shipkit.io",
-    domain: "shipkit.io",
-    legal: "legal@shipkit.io",
-    privacy: "privacy@shipkit.io",
+    support: "lacy@lacy.sh",
+    team: "lacy@lacy.sh",
+    noreply: "noreply@lacy.sh",
+    domain: "lacy.sh",
+    legal: "lacy@lacy.sh",
+    privacy: "lacy@lacy.sh",
     // Placeholder format function - assigned below
     format: (_type) => "",
   },
 
   creator: {
     name: "lacymorrow",
-    email: "lacy@shipkit.io",
+    email: "lacy@lacy.sh",
     url: "https://lacymorrow.com",
     twitter: "@lacybuilds",
     twitter_handle: "lacybuilds",
