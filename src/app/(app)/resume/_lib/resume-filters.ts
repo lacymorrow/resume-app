@@ -7,6 +7,8 @@ export interface FilterState {
   sections: Record<SectionKey, boolean>;
   selectedTags: string[];
   tagMatchMode: "any" | "all";
+  hiddenCompanies: string[];
+  hiddenProjects: string[];
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
@@ -14,6 +16,8 @@ export const DEFAULT_FILTER_STATE: FilterState = {
   sections: { work: true, projects: true, skills: true, education: true, interests: true, awards: true, references: true },
   selectedTags: [],
   tagMatchMode: "any",
+  hiddenCompanies: [],
+  hiddenProjects: [],
 };
 
 export interface MatchResult { matched: boolean; score: number; }
@@ -24,6 +28,20 @@ function matchesTags(entryTags: string[], selectedTags: string[], mode: "any" | 
   const matchCount = selectedTags.filter((t) => entrySet.has(t.toLowerCase())).length;
   if (mode === "any") return { matched: matchCount > 0, score: matchCount / selectedTags.length };
   return { matched: matchCount === selectedTags.length, score: matchCount / selectedTags.length };
+}
+
+/** Returns company names that are visible in the current flavor (not flavor-hidden) */
+export function getFlavorVisibleCompanies(data: ResumeSchema, flavor: ResumeFlavor): string[] {
+  return data.work
+    .filter((w) => w.name !== "LacyMorrow.com" && flavor.work[w.name]?.visible !== false)
+    .map((w) => w.name);
+}
+
+/** Returns project names that are visible in the current flavor (not flavor-hidden) */
+export function getFlavorVisibleProjects(data: ResumeSchema, flavor: ResumeFlavor): string[] {
+  return data.projects
+    .filter((p) => flavor.projects[p.name]?.visible !== false)
+    .map((p) => p.name);
 }
 
 /** Apply flavor overrides to work entries and compute tag matches */
@@ -39,6 +57,7 @@ export function resolveWork(
 
     const override = flavor.work[base.name];
     if (override?.visible === false) continue;
+    if (filters.hiddenCompanies.includes(base.name)) continue;
 
     const entry: ResumeWork & { originalIndex: number } = {
       ...base,
@@ -79,6 +98,7 @@ export function resolveProjects(
     const base = data.projects[i]!;
     const override = flavor.projects[base.name];
     if (override?.visible === false) continue;
+    if (filters.hiddenProjects.includes(base.name)) continue;
 
     const entry: ResumeProject & { originalIndex: number } = {
       ...base,
