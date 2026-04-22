@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQueryState, parseAsString } from "nuqs";
+import { useQueryState, parseAsString, parseAsArrayOf } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SlidersHorizontal } from "lucide-react";
@@ -14,31 +14,45 @@ import { ResumeHeader } from "./resume-header";
 import { FilterPanel } from "./filter-panel";
 import { Section, WorkSection, ProjectsSection, SkillsSection, EducationSection, ExtrasSection } from "./resume-sections";
 
+const parseAsStringArray = parseAsArrayOf(parseAsString);
+
 export function ResumeViewer({ data }: { data: ResumeSchema }) {
+  // URL-persisted state — these make the view bookmarkable
   const [flavorParam, setFlavorParam] = useQueryState("flavor", parseAsString.withDefault("complete"));
+  const [hcParam, setHcParam] = useQueryState("hc", parseAsStringArray.withDefault([]));
+  const [hpParam, setHpParam] = useQueryState("hp", parseAsStringArray.withDefault([]));
+
   const [customFlavors, setCustomFlavors] = useState<CustomFlavor[]>(() => loadCustomFlavors());
   const allFlavors = useMemo<ResumeFlavor[]>(() => [...FLAVORS, ...customFlavors], [customFlavors]);
 
   const [filters, setFilters] = useState<FilterState>(() => {
     const flavor = allFlavors.find((f) => f.id === flavorParam);
-    if (flavor) {
-      const cf = flavor as CustomFlavor;
-      return {
-        ...DEFAULT_FILTER_STATE,
-        flavorId: flavor.id,
-        sections: flavor.sections,
-        hiddenCompanies: cf.hiddenCompanies ?? [],
-        hiddenProjects: cf.hiddenProjects ?? [],
-      };
-    }
-    return DEFAULT_FILTER_STATE;
+    const cf = flavor as CustomFlavor | undefined;
+    return {
+      ...DEFAULT_FILTER_STATE,
+      flavorId: flavor?.id ?? "complete",
+      sections: flavor?.sections ?? DEFAULT_FILTER_STATE.sections,
+      // URL params take precedence over custom flavor defaults
+      hiddenCompanies: hcParam.length > 0 ? hcParam : (cf?.hiddenCompanies ?? []),
+      hiddenProjects: hpParam.length > 0 ? hpParam : (cf?.hiddenProjects ?? []),
+    };
   });
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  // Sync URL param when flavor changes in filter state
+  // Sync flavor → URL
   useEffect(() => {
     setFlavorParam(filters.flavorId === "complete" ? null : filters.flavorId);
   }, [filters.flavorId, setFlavorParam]);
+
+  // Sync hiddenCompanies → URL
+  useEffect(() => {
+    setHcParam(filters.hiddenCompanies.length > 0 ? filters.hiddenCompanies : null);
+  }, [filters.hiddenCompanies, setHcParam]);
+
+  // Sync hiddenProjects → URL
+  useEffect(() => {
+    setHpParam(filters.hiddenProjects.length > 0 ? filters.hiddenProjects : null);
+  }, [filters.hiddenProjects, setHpParam]);
 
   const flavor = useMemo(
     () => allFlavors.find((f) => f.id === filters.flavorId) ?? FLAVORS[0]!,
@@ -56,7 +70,6 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
   const flavorCompanies = useMemo(() => getFlavorVisibleCompanies(data, flavor), [data, flavor]);
   const flavorProjects = useMemo(() => getFlavorVisibleProjects(data, flavor), [data, flavor]);
 
-  // Apply flavor overrides to basics
   const basics = useMemo(() => ({
     ...data.basics,
     label: flavor.tagline,
@@ -72,14 +85,12 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
     const cf = filterStateToCustomFlavor(filters, name, flavor);
     saveCustomFlavor(cf);
     setCustomFlavors(loadCustomFlavors());
-    // Switch to the newly-saved flavor
     setFilters((prev) => ({ ...prev, flavorId: cf.id }));
   }, [filters, flavor]);
 
   const handleDeleteCustomFlavor = useCallback((id: string) => {
     deleteCustomFlavor(id);
     setCustomFlavors(loadCustomFlavors());
-    // If we're on the deleted flavor, revert to complete
     if (filters.flavorId === id) {
       const base = FLAVORS[0]!;
       setFilters({ ...DEFAULT_FILTER_STATE, flavorId: base.id, sections: base.sections });
