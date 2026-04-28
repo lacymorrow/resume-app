@@ -1,3 +1,6 @@
+"use client";
+
+import { AnimatePresence, motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import type { ResumeSchema, ResumeWork, ResumeProject } from "../_lib/resume-types";
 import type { MatchResult } from "../_lib/resume-filters";
@@ -22,12 +25,21 @@ export function WorkSection({ entries, matches, tags }: {
 }) {
   return (
     <div className="space-y-0">
-      {entries.map((entry) => (
-        <ResumeEntryCard key={`${entry.name}-${entry.startDate}`} title={entry.position} subtitle={entry.name}
-          dateRange={formatDateRange(entry.startDate, entry.endDate)} location={entry.location}
-          summary={entry.summary} tags={tags.get(entry.originalIndex) ?? []} url={entry.url}
-          highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)} />
-      ))}
+      <AnimatePresence initial={false} mode="popLayout">
+        {entries.map((entry) => (
+          <motion.div key={`${entry.name}-${entry.startDate}`}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            layout>
+            <ResumeEntryCard title={entry.position} subtitle={entry.name}
+              dateRange={formatDateRange(entry.startDate, entry.endDate)} location={entry.location}
+              summary={entry.summary} tags={tags.get(entry.originalIndex) ?? []} url={entry.url}
+              highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }
@@ -39,12 +51,21 @@ export function ProjectsSection({ entries, matches, tags }: {
 }) {
   return (
     <div className="space-y-0">
-      {entries.map((project) => (
-        <ResumeEntryCard key={`${project.name}-${project.startDate}`} title={project.name}
-          subtitle={project.summary.split(".")[0] ?? ""} dateRange={formatDateRange(project.startDate, project.endDate)}
-          summary={project.summary} tags={tags.get(project.originalIndex) ?? []} url={project.url}
-          highlights={project.highlights?.filter(Boolean)} match={matches.get(project.originalIndex)} />
-      ))}
+      <AnimatePresence initial={false} mode="popLayout">
+        {entries.map((project) => (
+          <motion.div key={`${project.name}-${project.startDate}`}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -8 }}
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            layout>
+            <ResumeEntryCard title={project.name}
+              subtitle={project.summary.split(".")[0] ?? ""} dateRange={formatDateRange(project.startDate, project.endDate)}
+              summary={project.summary} tags={tags.get(project.originalIndex) ?? []} url={project.url}
+              highlights={project.highlights?.filter(Boolean)} match={matches.get(project.originalIndex)} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useQueryState, parseAsString, parseAsArrayOf } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -121,18 +122,32 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
         </aside>
         <main className="min-w-0 flex-1 print:max-w-none" id="resume-content">
           <ResumeHeader basics={basics} />
-          {filters.sections.work && (
-            <Section title="Work Experience">
-              <WorkSection entries={workEntries} matches={workMatches} tags={workTags} />
-            </Section>
-          )}
-          {filters.sections.projects && projectEntries.length > 0 && (
-            <Section title="Projects">
-              <ProjectsSection entries={projectEntries} matches={projectMatches} tags={projectTags} />
-            </Section>
-          )}
-          {filters.sections.skills && <Section title="Skills"><SkillsSection skills={data.skills} /></Section>}
-          {filters.sections.education && <Section title="Education"><EducationSection education={data.education} /></Section>}
+          <AnimatePresence initial={false}>
+            {filters.sections.work && (
+              <motion.div key="work" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: "easeOut" as const }} layout>
+                <Section title="Work Experience">
+                  <WorkSection entries={workEntries} matches={workMatches} tags={workTags} />
+                </Section>
+              </motion.div>
+            )}
+            {filters.sections.projects && projectEntries.length > 0 && (
+              <motion.div key="projects" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }} layout>
+                <Section title="Projects">
+                  <ProjectsSection entries={projectEntries} matches={projectMatches} tags={projectTags} />
+                </Section>
+              </motion.div>
+            )}
+            {filters.sections.skills && (
+              <motion.div key="skills" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }} layout>
+                <Section title="Skills"><SkillsSection skills={data.skills} /></Section>
+              </motion.div>
+            )}
+            {filters.sections.education && (
+              <motion.div key="education" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }} layout>
+                <Section title="Education"><EducationSection education={data.education} /></Section>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <ExtrasSection interests={data.interests} awards={data.awards} references={data.references}
             showInterests={filters.sections.interests} showAwards={filters.sections.awards} showReferences={filters.sections.references} />
         </main>
