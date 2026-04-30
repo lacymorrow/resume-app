@@ -8,7 +8,7 @@ export async function GET(
     params: paramsPromise,
   }: {
     params: Promise<{
-      slug: string;
+      slug: string[];
     }>;
   }
 ) {
