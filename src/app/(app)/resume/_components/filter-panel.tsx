@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,20 @@ interface FilterPanelProps {
   onSaveCustomFlavor: (name: string) => void;
   onDeleteCustomFlavor: (id: string) => void;
   onClose?: () => void;
+}
+
+function AnimCount({ val }: { val: number }) {
+  return (
+    <motion.span
+      key={val}
+      initial={{ opacity: 0, y: -5 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.18, ease: "easeOut" }}
+      className="inline-block tabular-nums"
+    >
+      {val}
+    </motion.span>
+  );
 }
 
 export function FilterPanel({
@@ -100,6 +115,8 @@ export function FilterPanel({
   // Split flavors for grouped display
   const builtInFlavors = allFlavors.filter((f) => !customFlavors.some((c) => c.id === f.id));
 
+  const statsKey = `${matchedWork}-${matchedProjects}-${hiddenCount}`;
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-between px-4 pt-4 pb-2">
@@ -146,10 +163,21 @@ export function FilterPanel({
         </div>
       )}
 
-      <div className="px-4 pb-2 text-xs text-muted-foreground">
-        {matchedWork}/{totalWork} jobs, {matchedProjects}/{totalProjects} projects
-        {hiddenCount > 0 && <span className="ml-1 text-amber-600">({hiddenCount} hidden)</span>}
-      </div>
+      <motion.div
+        key={statsKey}
+        initial={{ backgroundColor: "rgba(99,102,241,0.12)" }}
+        animate={{ backgroundColor: "rgba(99,102,241,0)" }}
+        transition={{ duration: 0.9 }}
+        className="px-4 pb-2 text-xs text-muted-foreground rounded"
+      >
+        <AnimCount val={matchedWork} />/{totalWork} jobs,{" "}
+        <AnimCount val={matchedProjects} />/{totalProjects} projects
+        {hiddenCount > 0 && (
+          <span className="ml-1 text-amber-600">
+            (<AnimCount val={hiddenCount} /> hidden)
+          </span>
+        )}
+      </motion.div>
 
       <Separator />
 

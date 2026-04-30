@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, animate, motion } from "framer-motion";
 import { useQueryState, parseAsString, parseAsArrayOf } from "nuqs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -98,6 +98,32 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
     }
   }, [filters.flavorId]);
 
+  const filterPanelRef = useRef<HTMLDivElement>(null);
+  const filterChangeCountRef = useRef(0);
+  const [filterFlash, setFilterFlash] = useState(0);
+
+  useEffect(() => {
+    filterChangeCountRef.current++;
+    if (filterChangeCountRef.current <= 1) return;
+    setFilterFlash((n) => n + 1);
+    if (filterPanelRef.current) {
+      void animate(
+        filterPanelRef.current,
+        { boxShadow: ["0 0 0 3px rgba(99,102,241,0.55)", "0 0 0 0px rgba(99,102,241,0)"] },
+        { duration: 0.75, ease: "easeOut" },
+      );
+    }
+  }, [filters]);
+
+  const activeFilterCount = useMemo(
+    () =>
+      Object.values(filters.sections).filter((v) => !v).length +
+      filters.selectedTags.length +
+      filters.hiddenCompanies.length +
+      filters.hiddenProjects.length,
+    [filters],
+  );
+
   const filterPanelProps = {
     filters, allTags, workMatches, projectMatches,
     totalWork: workEntries.length,
@@ -116,11 +142,31 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
     <div className="relative mx-auto max-w-7xl px-4 py-8">
       <div className="flex gap-8">
         <aside className="hidden lg:block w-72 shrink-0 print:hidden">
-          <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-hidden rounded-lg border bg-card">
+          <div ref={filterPanelRef} className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-hidden rounded-lg border bg-card">
             <FilterPanel {...filterPanelProps} />
           </div>
         </aside>
-        <main className="min-w-0 flex-1 print:max-w-none" id="resume-content">
+        <main className="relative min-w-0 flex-1 print:max-w-none" id="resume-content">
+          {filterFlash > 0 && (
+            <>
+              <motion.div
+                key={`ov-${filterFlash}`}
+                className="pointer-events-none absolute inset-0 print:hidden"
+                style={{ backgroundColor: "rgba(99,102,241,0.07)", zIndex: 1 }}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.9, ease: "easeOut" }}
+              />
+              <motion.div
+                key={`bar-${filterFlash}`}
+                className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-indigo-500 print:hidden origin-left"
+                style={{ zIndex: 2 }}
+                initial={{ scaleX: 0, opacity: 1 }}
+                animate={{ scaleX: [0, 1, 1], opacity: [1, 1, 0] }}
+                transition={{ duration: 0.9, times: [0, 0.55, 1] }}
+              />
+            </>
+          )}
           <ResumeHeader basics={basics} />
           <AnimatePresence initial={false}>
             {filters.sections.work && (
@@ -153,12 +199,32 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
         </main>
       </div>
       <div className="fixed bottom-6 right-6 lg:hidden print:hidden z-50">
-        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-          <SheetTrigger asChild><Button size="lg" className="h-14 w-14 rounded-full shadow-lg"><SlidersHorizontal className="h-5 w-5" /></Button></SheetTrigger>
-          <SheetContent side="bottom" className="h-[80vh] rounded-t-xl p-0">
-            <FilterPanel {...filterPanelProps} onClose={() => setSheetOpen(false)} />
-          </SheetContent>
-        </Sheet>
+        <div className="relative">
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetTrigger asChild>
+              <Button size="lg" className="h-14 w-14 rounded-full shadow-lg">
+                <SlidersHorizontal className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-[80vh] rounded-t-xl p-0">
+              <FilterPanel {...filterPanelProps} onClose={() => setSheetOpen(false)} />
+            </SheetContent>
+          </Sheet>
+          <AnimatePresence>
+            {activeFilterCount > 0 && (
+              <motion.div
+                key={activeFilterCount}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="pointer-events-none absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground"
+              >
+                {activeFilterCount}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
