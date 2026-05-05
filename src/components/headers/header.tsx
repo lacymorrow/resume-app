@@ -67,11 +67,13 @@ interface HeaderProps {
 
 // Deprecated local defaultNavLinks; use navigationDefaultNavLinks from config instead.
 
+const FLOATING_HEADER_HEIGHT = "h-24";
+
 const headerVariants = cva("translate-z-0 z-50 p-md", {
   variants: {
     variant: {
       default: "relative",
-      floating: "fixed top-0 h-24 w-full",
+      floating: `fixed top-0 ${FLOATING_HEADER_HEIGHT} w-full`,
       sticky:
         "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
       "logo-only": "relative",
@@ -341,7 +343,7 @@ export const Header: React.FC<HeaderProps> = ({
   if (variant === "floating" && pushContent) {
     return (
       <>
-        <div className="h-24 w-full" aria-hidden="true" />
+        <div className={cn(FLOATING_HEADER_HEIGHT, "w-full")} aria-hidden="true" />
         {headerEl}
       </>
     );
