@@ -55,16 +55,25 @@ interface HeaderProps {
    * Optional authenticated user to pass into the user menu.
    */
   user?: User | null;
+  /**
+   * When true and variant is "floating", renders an invisible in-flow spacer div
+   * before the fixed header so page content is not covered. Defaults to true.
+   * Pages that intentionally extend under the header (full-bleed heroes) should
+   * set this to false and apply `mt-header` or `pt-24` manually.
+   */
+  pushContent?: boolean;
   className?: string;
 }
 
 // Deprecated local defaultNavLinks; use navigationDefaultNavLinks from config instead.
 
+const FLOATING_HEADER_HEIGHT = "h-24";
+
 const headerVariants = cva("translate-z-0 z-50 p-md", {
   variants: {
     variant: {
       default: "relative",
-      floating: "fixed top-0 h-24 w-full",
+      floating: `fixed top-0 ${FLOATING_HEADER_HEIGHT} w-full`,
       sticky:
         "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
       "logo-only": "relative",
@@ -87,6 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
   animatedCTAOnScroll,
   opaqueOnScroll,
   user,
+  pushContent = true,
   className,
 }) => {
   const [{ y }] = useWindowScroll();
@@ -138,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
     );
   }
 
-  return (
+  const headerEl = (
     <header
       className={cn(
         headerVariants({ variant }),
@@ -329,4 +339,15 @@ export const Header: React.FC<HeaderProps> = ({
       </nav>
     </header>
   );
+
+  if (variant === "floating" && pushContent) {
+    return (
+      <>
+        <div className={cn(FLOATING_HEADER_HEIGHT, "w-full")} aria-hidden="true" />
+        {headerEl}
+      </>
+    );
+  }
+
+  return headerEl;
 };
