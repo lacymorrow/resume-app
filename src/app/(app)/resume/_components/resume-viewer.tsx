@@ -139,7 +139,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
   };
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-8">
+    <div className="relative mx-auto max-w-7xl px-4 py-8 mt-24">
       <div className="flex gap-8">
         <aside className="hidden lg:block w-72 shrink-0 print:hidden">
           <div ref={filterPanelRef} className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-hidden rounded-lg border bg-card">
