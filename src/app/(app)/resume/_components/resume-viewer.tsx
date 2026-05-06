@@ -130,8 +130,8 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
 
   const filterPanelProps = {
     filters, allTags, workMatches, projectMatches,
-    totalWork: workEntries.length,
-    totalProjects: projectEntries.length,
+    totalWork: flavorCompanies.length,
+    totalProjects: flavorProjects.length,
     flavorCompanies,
     flavorProjects,
     allFlavors,
