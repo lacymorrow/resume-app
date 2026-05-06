@@ -1,7 +1,8 @@
+import type React from "react";
 import type { Metadata } from "next";
 import { constructMetadata } from "@/config/metadata";
-import { resumeData } from "../resume/_lib/resume-data";
-import { ResumeViewer } from "../resume/_components/resume-viewer";
+import { resumeData } from "@/app/(app)/resume/_lib/resume-data";
+import { ResumeViewer } from "@/app/(app)/resume/_components/resume-viewer";
 
 export const metadata: Metadata = constructMetadata({
   title: "Resume - Lacy Morrow",
@@ -9,5 +10,9 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default function HomePage() {
-  return <ResumeViewer data={resumeData} />;
+  return (
+    <div style={{ "--header-height": "0px" } as React.CSSProperties}>
+      <ResumeViewer data={resumeData} />
+    </div>
+  );
 }

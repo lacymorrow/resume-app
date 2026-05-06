@@ -66,10 +66,15 @@ body {
 @media print {
 	@page { margin: 0.5in 0.6in; size: letter; }
 
-	/* Hide everything except resume content */
-	header:not(#resume-content header), footer:not(#resume-content footer), nav:not(#resume-content nav), aside:not(#resume-content aside),
+	/* Hide non-resume chrome globally, then re-enable inside resume content */
+	header, footer, nav, aside,
 	[data-print-hide],
 	.lg\:block { display: none !important; }
+
+	#resume-content header,
+	#resume-content footer,
+	#resume-content nav,
+	#resume-content aside { display: block !important; }
 
 	/* Remove dimmed entries from print */
 	[data-match="false"] { display: none !important; }
