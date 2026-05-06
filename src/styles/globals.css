@@ -4,6 +4,10 @@
 /* ! Shadcn UI Default Styles - Uncomment to use */
 /* @import "./shadcn-ui-default.css"; */
 
+:root {
+  --header-height: 6rem; /* matches floating header h-24 */
+}
+
 html {
   scroll-behavior: smooth;
 }

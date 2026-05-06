@@ -67,7 +67,7 @@ interface HeaderProps {
 
 // Deprecated local defaultNavLinks; use navigationDefaultNavLinks from config instead.
 
-const FLOATING_HEADER_HEIGHT = "h-24";
+const FLOATING_HEADER_HEIGHT = "h-[var(--header-height)]";
 
 const headerVariants = cva("translate-z-0 z-50 p-md", {
   variants: {
