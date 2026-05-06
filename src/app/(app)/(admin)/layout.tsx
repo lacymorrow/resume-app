@@ -7,6 +7,8 @@ import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
 import { isAdmin } from "@/server/services/admin-service";
 
+export const dynamic = "force-dynamic";
+
 const navLinks = [
   { href: routes.admin.users, label: "Users" },
   { href: routes.admin.github, label: "GitHub" },

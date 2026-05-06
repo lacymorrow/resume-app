@@ -144,14 +144,6 @@ export const routes = {
     profile: "/examples/forms/profile",
   },
 
-  // Pages Router demo routes
-  pages: {
-    index: "/pages",
-    static: "/pages/static",
-    dynamic: "/pages/dynamic",
-    apiExample: "/pages/api-example",
-    markdown: "/pages/markdown",
-  },
 
   ai: {
     index: "/ai",
