@@ -119,7 +119,7 @@ export function FilterPanel({
   const statsKey = `${matchedWork}-${matchedProjects}-${hiddenCount}`;
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-0 flex-1 flex-col">
       <div className="flex items-center justify-between px-4 pt-4 pb-2">
         <h2 className="text-sm font-semibold">Resume Builder</h2>
         <div className="flex items-center gap-1">
