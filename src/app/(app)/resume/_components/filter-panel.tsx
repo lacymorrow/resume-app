@@ -9,11 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Download, RotateCcw, X, ChevronDown, ChevronRight, BookmarkPlus, Trash2 } from "lucide-react";
+import { Download, RotateCcw, X, ChevronDown, ChevronRight, BookmarkPlus, Trash2, FileText, FileCode, Printer } from "lucide-react";
 import type { FilterState, MatchResult } from "../_lib/resume-filters";
 import type { SectionKey } from "../_lib/resume-types";
 import type { ResumeFlavor } from "../_lib/resume-flavors";
 import type { CustomFlavor } from "../_lib/resume-custom-flavors";
+import type { ExportFormat } from "../_lib/resume-export";
 
 const SECTION_LABELS: Record<SectionKey, string> = {
   work: "Work Experience", projects: "Projects", skills: "Skills",
@@ -28,7 +29,7 @@ interface FilterPanelProps {
   allFlavors: ResumeFlavor[];
   customFlavors: CustomFlavor[];
   onFiltersChange: (filters: FilterState) => void;
-  onExport: () => void;
+  onExport: (format: ExportFormat) => void;
   onSaveCustomFlavor: (name: string) => void;
   onDeleteCustomFlavor: (id: string) => void;
   onClose?: () => void;
@@ -387,10 +388,22 @@ export function FilterPanel({
 
       <Separator />
 
-      <div className="p-4">
-        <Button onClick={onExport} className="w-full gap-2" size="sm">
-          <Download className="h-3.5 w-3.5" />Export PDF
-        </Button>
+      <div className="p-4 space-y-2">
+        <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Export</Label>
+        <div className="grid grid-cols-2 gap-2">
+          <Button onClick={() => onExport("pdf")} variant="default" className="gap-1.5" size="sm">
+            <Download className="h-3.5 w-3.5" />PDF
+          </Button>
+          <Button onClick={() => onExport("docx")} variant="secondary" className="gap-1.5" size="sm">
+            <FileText className="h-3.5 w-3.5" />DOCX
+          </Button>
+          <Button onClick={() => onExport("html")} variant="secondary" className="gap-1.5" size="sm">
+            <FileCode className="h-3.5 w-3.5" />HTML
+          </Button>
+          <Button onClick={() => window.print()} variant="outline" className="gap-1.5" size="sm">
+            <Printer className="h-3.5 w-3.5" />Print
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import { type FilterState, DEFAULT_FILTER_STATE, resolveWork, resolveProjects, g
 import { getAllTags } from "../_lib/resume-tags";
 import { FLAVORS, type ResumeFlavor } from "../_lib/resume-flavors";
 import { type CustomFlavor, loadCustomFlavors, saveCustomFlavor, deleteCustomFlavor, filterStateToCustomFlavor } from "../_lib/resume-custom-flavors";
+import { type ExportFormat, exportResume, buildExportData } from "../_lib/resume-export";
 import { ResumeHeader } from "./resume-header";
 import { FilterPanel } from "./filter-panel";
 import { Section, WorkSection, ProjectsSection, SkillsSection, EducationSection, ExtrasSection } from "./resume-sections";
@@ -80,7 +81,10 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
     ),
   }), [data.basics, flavor]);
 
-  const handleExport = useCallback(() => { window.print(); }, []);
+  const handleExport = useCallback((format: ExportFormat) => {
+    const exportData = buildExportData(data, basics, flavor, filters);
+    void exportResume(format, exportData);
+  }, [data, basics, flavor, filters]);
 
   const handleSaveCustomFlavor = useCallback((name: string) => {
     const cf = filterStateToCustomFlavor(filters, name, flavor);
