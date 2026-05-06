@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { constructMetadata } from "@/config/metadata";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = constructMetadata({
   title: "Connect GitHub",
   description:

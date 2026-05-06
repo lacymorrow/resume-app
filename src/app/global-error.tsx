@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 export default function GlobalError({
   error,
   reset,
@@ -8,7 +10,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         style={{
           margin: 0,
@@ -17,19 +19,12 @@ export default function GlobalError({
           alignItems: "center",
           justifyContent: "center",
           fontFamily: "system-ui, sans-serif",
-          backgroundColor: "#fff",
-          color: "#111",
         }}
       >
         <div style={{ textAlign: "center" }}>
-          <h1 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
             Something went wrong.
-          </h1>
-          {process.env.NODE_ENV === "development" && (
-            <pre style={{ fontSize: "0.75rem", marginTop: "0.5rem" }}>
-              {error.message}
-            </pre>
-          )}
+          </h2>
           <button
             onClick={reset}
             style={{
