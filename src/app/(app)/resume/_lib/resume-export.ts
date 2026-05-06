@@ -96,7 +96,7 @@ a { color: inherit; text-decoration: none; }
 <h1>${esc(basics.name)}</h1>
 <div class="subtitle">${esc(basics.label)}</div>
 ${location ? `<div class="location">${esc(location)}</div>` : ""}
-<div class="contact">${esc(basics.phone)} | ${esc(basics.email)} | <a href="${esc(basics.url)}">${esc(basics.url.replace("http://", ""))}</a></div>
+<div class="contact">${esc(basics.phone)} | ${esc(basics.email)} | <a href="${esc(basics.url)}">${esc(basics.url.replace(/^https?:\/\//, ""))}</a></div>
 <div class="summary">${esc(intro)}</div>
 ${expertise ? `<div class="expertise"><strong>Expertise:</strong> ${esc(expertise)}</div>` : ""}
 </header>
@@ -165,7 +165,7 @@ ${expertise ? `<div class="expertise"><strong>Expertise:</strong> ${esc(expertis
 }
 
 function esc(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 }
 
 function downloadBlob(blob: Blob, filename: string) {
@@ -234,7 +234,7 @@ async function exportPdf(data: ExportData, filename: string) {
   y += 14;
 
   doc.setFontSize(9);
-  const contactLine = [basics.phone, basics.email, basics.url.replace("http://", ""), location].filter(Boolean).join("  |  ");
+  const contactLine = [basics.phone, basics.email, basics.url.replace(/^https?:\/\//, ""), location].filter(Boolean).join("  |  ");
   doc.text(contactLine, margin, y);
   y += 16;
 
@@ -246,18 +246,18 @@ async function exportPdf(data: ExportData, filename: string) {
   y += introLines.length * 12 + 4;
 
   if (expertise) {
+    const exLines = doc.splitTextToSize(expertise, contentWidth - doc.getTextWidth("Expertise: "));
+    checkPage(exLines.length * 11 + 14);
     doc.setFont("helvetica", "bold");
     doc.text("Expertise: ", margin, y);
     const exWidth = doc.getTextWidth("Expertise: ");
     doc.setFont("helvetica", "normal");
     doc.setTextColor(80);
-    const exLines = doc.splitTextToSize(expertise, contentWidth - exWidth);
     doc.text(exLines[0], margin + exWidth, y);
-    if (exLines.length > 1) {
-      for (let i = 1; i < exLines.length; i++) {
-        y += 11;
-        doc.text(exLines[i], margin, y);
-      }
+    for (let i = 1; i < exLines.length; i++) {
+      y += 11;
+      checkPage(12);
+      doc.text(exLines[i], margin, y);
     }
     y += 14;
   }
@@ -404,14 +404,22 @@ function exportDocx(data: ExportData, filename: string) {
     let rPr = `<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>`;
     if (opts?.bold) rPr += `<w:b/>`;
     if (opts?.color) rPr += `<w:color w:val="${opts.color}"/>`;
-    return `<w:p>${pPr ? `<w:pPr>${pPr}</w:pPr>` : ""}<w:r><w:rPr>${rPr}</w:rPr><w:t xml:space="preserve">${escXml(text)}</w:t></w:r></w:p>`;
+    const lines = text.split("\n");
+    if (lines.length <= 1) {
+      return `<w:p>${pPr ? `<w:pPr>${pPr}</w:pPr>` : ""}<w:r><w:rPr>${rPr}</w:rPr><w:t xml:space="preserve">${escXml(text)}</w:t></w:r></w:p>`;
+    }
+    const runs = lines.map((line, i) => {
+      const br = i < lines.length - 1 ? "<w:br/>" : "";
+      return `<w:r><w:rPr>${rPr}</w:rPr><w:t xml:space="preserve">${escXml(line)}</w:t>${br}</w:r>`;
+    }).join("");
+    return `<w:p>${pPr ? `<w:pPr>${pPr}</w:pPr>` : ""}${runs}</w:p>`;
   };
 
   // Header
   body += p(basics.name, { bold: true, size: 28 });
   body += p(basics.label, { size: 14, color: "666666" });
   if (location) body += p(location, { size: 10, color: "888888" });
-  body += p([basics.phone, basics.email, basics.url.replace("http://", "")].filter(Boolean).join("  |  "), { size: 10, color: "555555" });
+  body += p([basics.phone, basics.email, basics.url.replace(/^https?:\/\//, "")].filter(Boolean).join("  |  "), { size: 10, color: "555555" });
   body += p("");
   body += p(intro, { size: 11 });
   if (expertise) body += p(`Expertise: ${expertise}`, { size: 10, color: "666666" });
