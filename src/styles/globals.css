@@ -67,7 +67,7 @@ body {
 	@page { margin: 0.5in 0.6in; size: letter; }
 
 	/* Hide everything except resume content */
-	header, footer, nav, aside,
+	header:not(#resume-content header), footer:not(#resume-content footer), nav:not(#resume-content nav), aside:not(#resume-content aside),
 	[data-print-hide],
 	.lg\:block { display: none !important; }
 
