@@ -9,20 +9,19 @@ interface ResumeEntryCardProps {
 }
 
 function formatDateRange(startDate: string, endDate?: string): string {
-  const fmt = (d: string) => new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { month: "short", year: "numeric" });
   const start = fmt(startDate);
-  if (!endDate) return `${start} - Present`;
+  if (!endDate) return `${start} — Present`;
   const end = fmt(endDate);
   if (start === end) return start;
-  // Same year, different months
   const startYear = new Date(startDate).getFullYear();
   const endYear = new Date(endDate).getFullYear();
   if (startYear === endYear) {
-    const startMonth = new Date(startDate).toLocaleDateString("en-US", { month: "short" });
-    const endMonth = new Date(endDate).toLocaleDateString("en-US", { month: "short" });
-    return startMonth === endMonth ? `${start}` : `${startMonth} - ${endMonth} ${endYear}`;
+    const startMonth = new Date(startDate).toLocaleDateString(undefined, { month: "short" });
+    const endMonth = new Date(endDate).toLocaleDateString(undefined, { month: "short" });
+    return startMonth === endMonth ? `${start}` : `${startMonth} — ${endMonth} ${endYear}`;
   }
-  return `${start} - ${end}`;
+  return `${start} — ${end}`;
 }
 
 export { formatDateRange };
@@ -30,33 +29,57 @@ export { formatDateRange };
 export function ResumeEntryCard({ title, subtitle, dateRange, location, summary, tags, url, highlights, match }: ResumeEntryCardProps) {
   const isMatched = !match || match.matched;
   return (
-    <div data-match={isMatched} className="group relative border-l-2 border-border py-4 pl-6 transition-all duration-300 data-[match=false]:opacity-25 data-[match=false]:grayscale-[50%]">
-      <div className="absolute -left-[5px] top-6 h-2 w-2 rounded-full bg-primary transition-colors group-data-[match=false]:bg-muted" />
-      <div className="flex items-start justify-between gap-2">
+    <div data-match={isMatched} className="resume-entry group relative py-5 transition-all duration-500 data-[match=false]:opacity-20 data-[match=false]:grayscale">
+      {/* Date + Location as a prominent typographic element */}
+      <div className="mb-2 flex items-baseline gap-3">
+        <span className="font-serif text-xs font-medium uppercase tracking-[0.15em] text-primary/70">
+          {dateRange}
+        </span>
+        {location && (
+          <>
+            <span className="text-border">·</span>
+            <span className="text-xs text-muted-foreground/60">{location}</span>
+          </>
+        )}
+      </div>
+
+      {/* Title + Company */}
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-semibold leading-tight">
+          <h3 className="font-serif text-xl font-semibold leading-tight text-foreground">
             {url ? (
-              <a href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline">
-                {title}<ExternalLink className="h-3 w-3" />
+              <a href={url} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 decoration-primary/30 decoration-1 underline-offset-4 hover:underline">
+                {title}
+                <ExternalLink className="h-3 w-3 text-primary/40" />
               </a>
             ) : title}
           </h3>
-          <p className="text-sm font-medium text-muted-foreground">{subtitle}</p>
-        </div>
-        <div className="shrink-0 text-right">
-          <p className="text-sm font-medium text-muted-foreground">{dateRange}</p>
-          {location && <p className="text-xs text-muted-foreground/70">{location}</p>}
+          <p className="mt-0.5 text-sm font-medium text-muted-foreground">{subtitle}</p>
         </div>
       </div>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{summary}</p>
+
+      {/* Summary */}
+      <p className="mt-3 text-sm leading-relaxed text-foreground/70">{summary}</p>
+
+      {/* Highlights as refined bullet list */}
       {highlights && highlights.length > 0 && (
-        <ul className="mt-2 space-y-1">
-          {highlights.map((h) => <li key={h} className="text-sm text-muted-foreground">• {h}</li>)}
+        <ul className="mt-3 space-y-1.5 border-l border-primary/15 pl-4">
+          {highlights.map((h) => (
+            <li key={h} className="text-sm leading-relaxed text-foreground/65">{h}</li>
+          ))}
         </ul>
       )}
+
+      {/* Technology tags */}
       {tags.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {tags.map((tag) => <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>)}
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {tags.map((tag) => (
+            <Badge key={tag} variant="outline"
+              className="border-border/60 bg-transparent text-[11px] font-normal text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors">
+              {tag}
+            </Badge>
+          ))}
         </div>
       )}
     </div>

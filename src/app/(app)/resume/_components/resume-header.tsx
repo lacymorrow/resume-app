@@ -18,45 +18,67 @@ export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
   const location = [basics.location.city, basics.location.state].filter(Boolean).join(", ");
 
   return (
-    <header className="mb-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{basics.name}</h1>
-          <p className="mt-1 text-base text-muted-foreground sm:text-lg">{basics.label}</p>
-          {location && (
-            <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground/70">
-              <MapPin className="h-3 w-3" />{location}
-            </p>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground sm:flex-col sm:items-end sm:gap-1">
-          <a href={`tel:${basics.phone}`} className="flex items-center gap-1.5 hover:text-foreground">
-            <Phone className="h-3.5 w-3.5" />{basics.phone}
-          </a>
-          <a href={basics.url} className="flex items-center gap-1.5 hover:text-foreground">
-            <Globe className="h-3.5 w-3.5" />{basics.url.replace("http://", "")}
-          </a>
-          <a href={`mailto:${basics.email}`} className="flex items-center gap-1.5 hover:text-foreground">
-            <Mail className="h-3.5 w-3.5" />{basics.email}
-          </a>
-        </div>
-      </div>
-      <div className="mt-4 flex gap-3">
-        {basics.profiles.map((profile) => {
-          const Icon = NETWORK_ICONS[profile.network.toLowerCase()] ?? Globe;
-          return (
-            <a key={profile.network} href={profile.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
-              <Icon className="h-4 w-4" />
-            </a>
-          );
-        })}
-      </div>
-      <p className="mt-4 text-sm leading-relaxed">{intro}</p>
-      {expertise && (
-        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-          <span className="font-semibold uppercase tracking-wider">Expertise:</span>{" "}
-          {expertise}
+    <header className="mb-12">
+      {/* Name + Title block */}
+      <div className="mb-6">
+        <h1 className="font-serif text-5xl font-light tracking-tight sm:text-6xl text-foreground">
+          {basics.name}
+        </h1>
+        <p className="mt-2 font-serif text-lg italic text-primary sm:text-xl">
+          {basics.label}
         </p>
+      </div>
+
+      {/* Contact bar — elegant horizontal layout */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-border/60 py-3 text-sm text-muted-foreground">
+        {location && (
+          <span className="flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-primary/60" />
+            {location}
+          </span>
+        )}
+        <a href={`tel:${basics.phone}`} className="flex items-center gap-1.5 transition-colors hover:text-primary">
+          <Phone className="h-3.5 w-3.5 text-primary/60" />
+          {basics.phone}
+        </a>
+        <a href={basics.url} className="flex items-center gap-1.5 transition-colors hover:text-primary">
+          <Globe className="h-3.5 w-3.5 text-primary/60" />
+          {basics.url.replace(/^https?:\/\//, "")}
+        </a>
+        <a href={`mailto:${basics.email}`} className="flex items-center gap-1.5 transition-colors hover:text-primary">
+          <Mail className="h-3.5 w-3.5 text-primary/60" />
+          {basics.email}
+        </a>
+
+        {/* Social links inline */}
+        <div className="flex items-center gap-3 ml-auto">
+          {basics.profiles.map((profile) => {
+            const Icon = NETWORK_ICONS[profile.network.toLowerCase()] ?? Globe;
+            return (
+              <a key={profile.network} href={profile.url} target="_blank" rel="noopener noreferrer"
+                className="text-muted-foreground/60 transition-colors hover:text-primary">
+                <Icon className="h-4 w-4" />
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Summary with drop cap */}
+      <p className="resume-dropcap mt-6 text-[15px] leading-relaxed text-foreground/85 max-w-prose">
+        {intro}
+      </p>
+
+      {/* Expertise as refined inline list */}
+      {expertise && (
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-1.5 text-xs tracking-wide text-muted-foreground">
+          <span className="font-serif text-sm font-semibold italic text-primary/70 mr-1">Expertise</span>
+          {expertise.split(";").map((item, index) => (
+            <span key={index} className="after:content-['·'] after:ml-1.5 after:text-border last:after:content-none">
+              {item.trim()}
+            </span>
+          ))}
+        </div>
       )}
     </header>
   );

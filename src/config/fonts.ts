@@ -1,7 +1,7 @@
-import { Poppins as FontSans, Noto_Serif as FontSerif } from "next/font/google";
+import { Outfit as FontSans, Cormorant_Garamond as FontSerif } from "next/font/google";
 
 export const fontSerif = FontSerif({
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700"],
   style: ["normal", "italic"],
   subsets: ["latin"],
   variable: "--font-serif",
@@ -9,8 +9,7 @@ export const fontSerif = FontSerif({
 });
 
 export const fontSans = FontSans({
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",

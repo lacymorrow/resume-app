@@ -42,7 +42,7 @@ function AnimCount({ val }: { val: number }) {
       initial={{ opacity: 0, y: -5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.18, ease: "easeOut" }}
-      className="inline-block tabular-nums"
+      className="inline-block tabular-nums font-serif font-semibold text-foreground"
     >
       {val}
     </motion.span>
@@ -112,29 +112,22 @@ export function FilterPanel({
   const isCustomActive = customFlavors.some((f) => f.id === filters.flavorId);
   const hiddenCount = filters.hiddenCompanies.length + filters.hiddenProjects.length;
   const hasCustomizations = hiddenCount > 0 || filters.selectedTags.length > 0;
-
-  // Split flavors for grouped display
   const builtInFlavors = allFlavors.filter((f) => !customFlavors.some((c) => c.id === f.id));
-
-  const statsKey = `${matchedWork}-${matchedProjects}-${hiddenCount}`;
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col">
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
-        <h2 className="text-sm font-semibold">Resume Builder</h2>
+      {/* Panel header */}
+      <div className="flex items-center justify-between px-4 pt-4 pb-3">
+        <h2 className="font-serif text-base font-semibold text-foreground">Resume Builder</h2>
         <div className="flex items-center gap-1">
           {hasCustomizations && !isCustomActive && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7"
-              title="Save as custom flavor"
-              onClick={() => setSavingFlavor((v) => !v)}
-            >
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary"
+              title="Save as custom flavor" onClick={() => setSavingFlavor((v) => !v)}>
               <BookmarkPlus className="h-3.5 w-3.5" />
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="h-7 w-7" title="Reset to Complete" onClick={() => setFlavor("complete")}>
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary"
+            title="Reset to Complete" onClick={() => setFlavor("complete")}>
             <RotateCcw className="h-3.5 w-3.5" />
           </Button>
           {onClose && (
@@ -147,14 +140,10 @@ export function FilterPanel({
 
       {savingFlavor && (
         <div className="mx-4 mb-2 flex gap-1.5">
-          <Input
-            className="h-7 text-xs flex-1"
-            placeholder="Flavor name…"
-            value={customName}
-            onChange={(e) => setCustomName(e.target.value)}
+          <Input className="h-7 text-xs flex-1" placeholder="Flavor name…"
+            value={customName} onChange={(e) => setCustomName(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleSaveFlavor(); if (e.key === "Escape") setSavingFlavor(false); }}
-            autoFocus
-          />
+            autoFocus />
           <Button size="sm" className="h-7 text-xs px-2" onClick={handleSaveFlavor} disabled={!customName.trim()}>
             Save
           </Button>
@@ -164,39 +153,35 @@ export function FilterPanel({
         </div>
       )}
 
-      <motion.div
-        key={statsKey}
-        initial={{ backgroundColor: "rgba(99,102,241,0.12)" }}
-        animate={{ backgroundColor: "rgba(99,102,241,0)" }}
-        transition={{ duration: 0.9 }}
-        className="px-4 pb-2 text-xs text-muted-foreground rounded"
-      >
-        <AnimCount val={matchedWork} />/{totalWork} jobs,{" "}
-        <AnimCount val={matchedProjects} />/{totalProjects} projects
+      {/* Stats with warm accent */}
+      <div className="px-4 pb-3 text-xs text-muted-foreground">
+        <AnimCount val={matchedWork} />
+        <span className="text-muted-foreground/50">/{totalWork}</span>
+        <span className="mx-1">jobs,</span>
+        <AnimCount val={matchedProjects} />
+        <span className="text-muted-foreground/50">/{totalProjects}</span>
+        <span className="ml-1">projects</span>
         {hiddenCount > 0 && (
-          <span className="ml-1 text-amber-600">
+          <span className="ml-1.5 text-primary/70">
             (<AnimCount val={hiddenCount} /> hidden)
           </span>
         )}
-      </motion.div>
+      </div>
 
-      <Separator />
+      <Separator className="bg-border/50" />
 
-      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-5">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
         {/* Flavor selector */}
         <div>
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <Label className="font-serif text-xs font-semibold italic text-primary/70">
               Role / Flavor
             </Label>
             {isCustomActive && (
-              <Button
-                variant="ghost"
-                size="sm"
+              <Button variant="ghost" size="sm"
                 className="h-5 w-5 p-0 text-destructive hover:text-destructive"
                 title="Delete this custom flavor"
-                onClick={() => onDeleteCustomFlavor(filters.flavorId)}
-              >
+                onClick={() => onDeleteCustomFlavor(filters.flavorId)}>
                 <Trash2 className="h-3 w-3" />
               </Button>
             )}
@@ -226,7 +211,7 @@ export function FilterPanel({
             </SelectContent>
           </Select>
           {activeFlavor && activeFlavor.id !== "complete" && (
-            <p className="mt-1.5 text-xs text-muted-foreground italic">
+            <p className="mt-1.5 text-xs text-muted-foreground/70 italic">
               {isCustomActive ? "Custom: " : "Showing as: "}{activeFlavor.tagline}
             </p>
           )}
@@ -234,7 +219,7 @@ export function FilterPanel({
 
         {/* Sections */}
         <div>
-          <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Sections</Label>
+          <Label className="font-serif text-xs font-semibold italic text-primary/70">Sections</Label>
           <div className="mt-2 space-y-2">
             {(Object.keys(SECTION_LABELS) as SectionKey[]).map((key) => (
               <div key={key} className="flex items-center justify-between">
@@ -245,20 +230,17 @@ export function FilterPanel({
           </div>
         </div>
 
-        <Separator />
+        <Separator className="bg-border/50" />
 
         {/* Per-company visibility */}
         {flavorCompanies.length > 0 && (
           <div>
-            <button
-              type="button"
-              className="flex w-full items-center justify-between"
-              onClick={() => setShowCompanies((v) => !v)}
-            >
-              <Label className="pointer-events-none text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <button type="button" className="flex w-full items-center justify-between"
+              onClick={() => setShowCompanies((v) => !v)}>
+              <Label className="pointer-events-none font-serif text-xs font-semibold italic text-primary/70">
                 Companies
                 {filters.hiddenCompanies.length > 0 && (
-                  <span className="ml-1.5 text-amber-600">({filters.hiddenCompanies.length} hidden)</span>
+                  <span className="ml-1.5 not-italic text-primary/50">({filters.hiddenCompanies.length} hidden)</span>
                 )}
               </Label>
               {showCompanies ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
@@ -269,29 +251,19 @@ export function FilterPanel({
                   const visible = !filters.hiddenCompanies.includes(name);
                   return (
                     <div key={name} className="flex items-center justify-between">
-                      <Label
-                        htmlFor={`company-${name}`}
-                        className={`text-xs truncate max-w-[160px] ${!visible ? "line-through text-muted-foreground" : ""}`}
-                        title={name}
-                      >
+                      <Label htmlFor={`company-${name}`}
+                        className={`text-xs truncate max-w-[160px] ${!visible ? "line-through text-muted-foreground/50" : ""}`}
+                        title={name}>
                         {name}
                       </Label>
-                      <Switch
-                        id={`company-${name}`}
-                        checked={visible}
-                        onCheckedChange={() => toggleCompany(name)}
-                        className="scale-75"
-                      />
+                      <Switch id={`company-${name}`} checked={visible}
+                        onCheckedChange={() => toggleCompany(name)} className="scale-75" />
                     </div>
                   );
                 })}
                 {filters.hiddenCompanies.length > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-5 w-full text-xs px-1 justify-start"
-                    onClick={() => onFiltersChange({ ...filters, hiddenCompanies: [] })}
-                  >
+                  <Button variant="ghost" size="sm" className="h-5 w-full text-xs px-1 justify-start text-primary/60 hover:text-primary"
+                    onClick={() => onFiltersChange({ ...filters, hiddenCompanies: [] })}>
                     Show all companies
                   </Button>
                 )}
@@ -303,15 +275,12 @@ export function FilterPanel({
         {/* Per-project visibility */}
         {flavorProjects.length > 0 && (
           <div>
-            <button
-              type="button"
-              className="flex w-full items-center justify-between"
-              onClick={() => setShowProjects((v) => !v)}
-            >
-              <Label className="pointer-events-none text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <button type="button" className="flex w-full items-center justify-between"
+              onClick={() => setShowProjects((v) => !v)}>
+              <Label className="pointer-events-none font-serif text-xs font-semibold italic text-primary/70">
                 Projects
                 {filters.hiddenProjects.length > 0 && (
-                  <span className="ml-1.5 text-amber-600">({filters.hiddenProjects.length} hidden)</span>
+                  <span className="ml-1.5 not-italic text-primary/50">({filters.hiddenProjects.length} hidden)</span>
                 )}
               </Label>
               {showProjects ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" /> : <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />}
@@ -322,29 +291,19 @@ export function FilterPanel({
                   const visible = !filters.hiddenProjects.includes(name);
                   return (
                     <div key={name} className="flex items-center justify-between">
-                      <Label
-                        htmlFor={`project-${name}`}
-                        className={`text-xs truncate max-w-[160px] ${!visible ? "line-through text-muted-foreground" : ""}`}
-                        title={name}
-                      >
+                      <Label htmlFor={`project-${name}`}
+                        className={`text-xs truncate max-w-[160px] ${!visible ? "line-through text-muted-foreground/50" : ""}`}
+                        title={name}>
                         {name}
                       </Label>
-                      <Switch
-                        id={`project-${name}`}
-                        checked={visible}
-                        onCheckedChange={() => toggleProject(name)}
-                        className="scale-75"
-                      />
+                      <Switch id={`project-${name}`} checked={visible}
+                        onCheckedChange={() => toggleProject(name)} className="scale-75" />
                     </div>
                   );
                 })}
                 {filters.hiddenProjects.length > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-5 w-full text-xs px-1 justify-start"
-                    onClick={() => onFiltersChange({ ...filters, hiddenProjects: [] })}
-                  >
+                  <Button variant="ghost" size="sm" className="h-5 w-full text-xs px-1 justify-start text-primary/60 hover:text-primary"
+                    onClick={() => onFiltersChange({ ...filters, hiddenProjects: [] })}>
                     Show all projects
                   </Button>
                 )}
@@ -353,11 +312,11 @@ export function FilterPanel({
           </div>
         )}
 
-        <Separator />
+        <Separator className="bg-border/50" />
 
-        {/* Tag filter (still useful for further narrowing) */}
+        {/* Tag filter */}
         <div>
-          <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <Label className="font-serif text-xs font-semibold italic text-primary/70">
             Tag Matching
           </Label>
           <Select value={filters.tagMatchMode} onValueChange={(v) => onFiltersChange({ ...filters, tagMatchMode: v as "any" | "all" })}>
@@ -371,25 +330,34 @@ export function FilterPanel({
 
         <div>
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Technologies</Label>
+            <Label className="font-serif text-xs font-semibold italic text-primary/70">Technologies</Label>
             {filters.selectedTags.length > 0 && (
-              <Button variant="ghost" size="sm" className="h-5 text-xs px-1"
+              <Button variant="ghost" size="sm" className="h-5 text-xs px-1 text-primary/60 hover:text-primary"
                 onClick={() => onFiltersChange({ ...filters, selectedTags: [] })}>Clear</Button>
             )}
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {allTags.map((tag) => (
-              <Badge key={tag} variant={filters.selectedTags.includes(tag) ? "default" : "outline"}
-                className="cursor-pointer text-xs transition-colors" onClick={() => toggleTag(tag)}>{tag}</Badge>
+              <Badge key={tag}
+                variant={filters.selectedTags.includes(tag) ? "default" : "outline"}
+                className={`cursor-pointer text-[11px] transition-all ${
+                  filters.selectedTags.includes(tag)
+                    ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
+                    : "border-border/60 bg-transparent text-muted-foreground hover:border-primary/40 hover:text-primary"
+                }`}
+                onClick={() => toggleTag(tag)}>
+                {tag}
+              </Badge>
             ))}
           </div>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="bg-border/50" />
 
+      {/* Export section */}
       <div className="p-4 space-y-2">
-        <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Export</Label>
+        <Label className="font-serif text-xs font-semibold italic text-primary/70">Export</Label>
         <div className="grid grid-cols-2 gap-2">
           <Button onClick={() => onExport("pdf")} variant="default" className="gap-1.5" size="sm">
             <Download className="h-3.5 w-3.5" />PDF
