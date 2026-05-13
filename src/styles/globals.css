@@ -115,6 +115,15 @@ body {
 
 	.resume-grain::before { display: none !important; }
 
+	.resume-grain {
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+
+	.resume-grain > .flex {
+		gap: 0 !important;
+	}
+
 	#resume-content {
 		max-width: 100% !important;
 		padding: 0 !important;
@@ -128,11 +137,62 @@ body {
 		line-height: 1.4 !important;
 	}
 
-	section { break-inside: avoid-page; }
+	/* Tighten section spacing for print */
+	#resume-content section {
+		margin-bottom: 8pt !important;
+		break-inside: avoid-page;
+	}
+
+	#resume-content section > div:first-child {
+		margin-bottom: 4pt !important;
+	}
+
+	/* Compact resume header */
+	#resume-content > header {
+		margin-bottom: 8pt !important;
+	}
+
+	#resume-content > header > div:first-child {
+		margin-bottom: 4pt !important;
+	}
+
+	#resume-content > header p.resume-dropcap {
+		margin-top: 4pt !important;
+	}
+
+	#resume-content > header > div:last-child {
+		margin-top: 3pt !important;
+	}
+
+	/* Compact entry cards */
+	.resume-entry {
+		padding-top: 4pt !important;
+		padding-bottom: 4pt !important;
+	}
+
+	.resume-entry > div:first-child { margin-bottom: 1pt !important; }
+	.resume-entry p { margin-top: 2pt !important; }
+	.resume-entry ul { margin-top: 2pt !important; }
+	.resume-entry .flex.flex-wrap { margin-top: 2pt !important; gap: 2pt !important; }
+
 	.group { break-inside: avoid; }
 
 	h1 { font-size: 22pt !important; }
 	h2 { font-size: 10pt !important; }
 
 	a { text-decoration: none !important; color: inherit !important; }
+
+	/* Compact skills and education */
+	#resume-content .grid { gap: 4pt !important; }
+	#resume-content .space-y-5 > * + * { margin-top: 3pt !important; }
+	#resume-content .space-y-2 > * + * { margin-top: 1pt !important; }
+
+	/* Reduce drop-cap size for print */
+	.resume-dropcap::first-letter {
+		font-size: 2.4em !important;
+		line-height: 0.9 !important;
+	}
+
+	/* Tighter line-height for print body text */
+	.leading-relaxed { line-height: 1.35 !important; }
 }
