@@ -13,6 +13,16 @@ export default function HomePage() {
   return (
     <div style={{ "--header-height": "0px" } as React.CSSProperties}>
       <ResumeViewer data={resumeData} />
+      <footer className="pb-6 pt-2 text-center print:hidden">
+        <a
+          href="https://lacymorrow.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-muted-foreground/40 transition-colors hover:text-muted-foreground/70"
+        >
+          lacymorrow.com
+        </a>
+      </footer>
     </div>
   );
 }
