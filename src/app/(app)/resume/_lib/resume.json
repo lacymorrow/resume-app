@@ -86,7 +86,7 @@
     {
       "name": "Juno AI",
       "startDate": "2025-01-01",
-      "summary": "Voice-Operate Your Computer. Rust + Tauri Desktop app built on OpenAI Whisper and Anthropic Computer-use.",
+      "summary": "Voice-Operate Your Computer. Rust + Tauri Desktop app built on OpenAI Whisper and Anthropic Computer-use. Also functions as an MCP server (npx juno-cua) for Claude Code, Cursor, and other AI agents.",
       "url": "https://github.com/lacymorrow/juno-ai"
     },
     {
@@ -102,9 +102,16 @@
       "url": "https://github.com/lacymorrow/hitchhikers-guide"
     },
     {
-      "name": "OpenClaw Alpaca",
+      "name": "OpenClaw Trading Skills",
       "startDate": "2024-01-01",
-      "summary": "OpenClaw Skills for Trading Stocks, Predictions, and Crypto. Created an automating stock trading agent that runs a brokerage account and posts updates and trades to Twitter. Alpaca, Polymarket, Kalshi"
+      "summary": "AI agent skills for the OpenClaw platform. Built autonomous trading agents in Rust, Go, and Shell for stock/crypto (Alpaca), prediction markets (Polymarket, Kalshi). Runs a brokerage account and posts trades to Twitter.",
+      "url": "https://github.com/lacymorrow/openclaw-alpaca-trading-skill"
+    },
+    {
+      "name": "MCP Servers & Tools",
+      "startDate": "2025-01-01",
+      "summary": "Model Context Protocol integrations enabling AI agents to control desktop apps, execute shell commands, and query APIs. Juno CUA MCP server for desktop automation; MCP tool integration in Lash AI coding agent.",
+      "url": "https://github.com/lacymorrow"
     },
     {
       "name": "Shipkit",
@@ -451,7 +458,7 @@
     {
       "name": "AI Engineer",
       "level": "Evolving",
-      "keywords": ["LLMs", "Neural-networks", "Tensorflow", "Vector Databases", "Prompt Engineer"]
+      "keywords": ["LLMs", "MCP (Model Context Protocol)", "Neural-networks", "Tensorflow", "Vector Databases", "Prompt Engineer", "Agentic Systems"]
     },
     {
       "name": "Other Languages",

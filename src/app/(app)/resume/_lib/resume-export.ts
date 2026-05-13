@@ -34,7 +34,7 @@ function getVisibleProjects(data: ExportData): (ResumeProject & { originalIndex:
 }
 
 function formatDate(d: string): string {
-  return new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  return new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
 }
 
 function formatDateRange(startDate: string, endDate?: string): string {
@@ -73,14 +73,14 @@ h3 { font-size: 11pt; margin: 0; }
 .subtitle { color: #666; font-size: 12pt; margin-top: 2px; }
 .location { color: #888; font-size: 10pt; }
 .contact { font-size: 10pt; color: #555; margin-top: 4px; }
-.summary { margin-top: 12px; font-size: 10pt; }
+.summary { margin-top: 12px; font-size: 10pt; white-space: pre-wrap; }
 .expertise { font-size: 9pt; color: #666; margin-top: 6px; }
 .entry { margin-bottom: 12px; }
 .entry-header { display: flex; justify-content: space-between; align-items: baseline; }
 .entry-title { font-weight: 600; }
 .entry-company { font-size: 10pt; color: #555; }
 .entry-date { font-size: 10pt; color: #666; white-space: nowrap; }
-.entry-summary { font-size: 10pt; color: #444; margin-top: 3px; }
+.entry-summary { font-size: 10pt; color: #444; margin-top: 3px; white-space: pre-wrap; }
 .entry-highlights { margin: 4px 0 0 0; padding-left: 16px; font-size: 10pt; color: #444; }
 .entry-highlights li { margin-bottom: 2px; }
 .skills-group { margin-bottom: 8px; }
@@ -180,7 +180,7 @@ function downloadBlob(blob: Blob, filename: string) {
 }
 
 export async function exportResume(format: ExportFormat, data: ExportData) {
-  const filename = `${data.basics.name.replace(/\s+/g, "_")}_Resume`;
+  const filename = `${data.basics.name.replace(/[^a-z0-9]/gi, "_")}_Resume`;
 
   switch (format) {
     case "html": {
@@ -246,18 +246,23 @@ async function exportPdf(data: ExportData, filename: string) {
   y += introLines.length * 12 + 4;
 
   if (expertise) {
-    const exLines = doc.splitTextToSize(expertise, contentWidth - doc.getTextWidth("Expertise: "));
+    const exWidth = doc.getTextWidth("Expertise: ");
+    // First line is indented past the label; subsequent lines use full content width
+    const firstLineParts = doc.splitTextToSize(expertise, contentWidth - exWidth);
+    const firstLine = firstLineParts[0] ?? "";
+    const remaining = expertise.slice(firstLine.length).trimStart();
+    const contLines = remaining ? doc.splitTextToSize(remaining, contentWidth) : [];
+    const exLines = [firstLine, ...contLines];
     checkPage(exLines.length * 11 + 14);
     doc.setFont("helvetica", "bold");
     doc.text("Expertise: ", margin, y);
-    const exWidth = doc.getTextWidth("Expertise: ");
     doc.setFont("helvetica", "normal");
     doc.setTextColor(80);
-    doc.text(exLines[0], margin + exWidth, y);
+    doc.text(exLines[0] ?? "", margin + exWidth, y);
     for (let i = 1; i < exLines.length; i++) {
       y += 11;
       checkPage(12);
-      doc.text(exLines[i], margin, y);
+      doc.text(exLines[i] ?? "", margin, y);
     }
     y += 14;
   }

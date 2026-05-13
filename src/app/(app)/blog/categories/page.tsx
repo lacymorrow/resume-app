@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { getBlogCategories, getBlogPosts } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
