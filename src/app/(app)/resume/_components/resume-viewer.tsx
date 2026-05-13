@@ -19,7 +19,6 @@ import { Section, WorkSection, ProjectsSection, SkillsSection, EducationSection,
 const parseAsStringArray = parseAsArrayOf(parseAsString);
 
 export function ResumeViewer({ data }: { data: ResumeSchema }) {
-  // URL-persisted state — these make the view bookmarkable
   const [flavorParam, setFlavorParam] = useQueryState("flavor", parseAsString.withDefault("complete"));
   const [hcParam, setHcParam] = useQueryState("hc", parseAsStringArray.withDefault([]));
   const [hpParam, setHpParam] = useQueryState("hp", parseAsStringArray.withDefault([]));
@@ -34,24 +33,20 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
       ...DEFAULT_FILTER_STATE,
       flavorId: flavor?.id ?? "complete",
       sections: flavor?.sections ?? DEFAULT_FILTER_STATE.sections,
-      // URL params take precedence over custom flavor defaults
       hiddenCompanies: hcParam.length > 0 ? hcParam : (cf?.hiddenCompanies ?? []),
       hiddenProjects: hpParam.length > 0 ? hpParam : (cf?.hiddenProjects ?? []),
     };
   });
   const [sheetOpen, setSheetOpen] = useState(false);
 
-  // Sync flavor → URL
   useEffect(() => {
     setFlavorParam(filters.flavorId === "complete" ? null : filters.flavorId);
   }, [filters.flavorId, setFlavorParam]);
 
-  // Sync hiddenCompanies → URL
   useEffect(() => {
     setHcParam(filters.hiddenCompanies.length > 0 ? filters.hiddenCompanies : null);
   }, [filters.hiddenCompanies, setHcParam]);
 
-  // Sync hiddenProjects → URL
   useEffect(() => {
     setHpParam(filters.hiddenProjects.length > 0 ? filters.hiddenProjects : null);
   }, [filters.hiddenProjects, setHpParam]);
@@ -113,7 +108,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
     if (filterPanelRef.current) {
       void animate(
         filterPanelRef.current,
-        { boxShadow: ["0 0 0 3px rgba(99,102,241,0.55)", "0 0 0 0px rgba(99,102,241,0)"] },
+        { boxShadow: ["0 0 0 2px hsl(12 50% 48% / 0.35)", "0 0 0 0px hsl(12 50% 48% / 0)"] },
         { duration: 0.75, ease: "easeOut" },
       );
     }
@@ -143,70 +138,78 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
   };
 
   return (
-    <div className="relative mx-auto max-w-7xl px-4 py-8 mt-[var(--header-height)] print:mt-0">
-      <div className="flex gap-8">
+    <div className="resume-grain relative mx-auto max-w-6xl px-4 py-10 mt-[var(--header-height)] print:mt-0">
+      <div className="flex gap-10">
+        {/* Sidebar */}
         <aside className="hidden lg:block w-72 shrink-0 print:hidden">
-          <div ref={filterPanelRef} className="sticky top-[var(--header-height)] flex max-h-[calc(100vh-var(--header-height)-2rem)] flex-col overflow-hidden rounded-lg border bg-card print:top-0 print:max-h-none">
+          <div ref={filterPanelRef} className="sticky top-[calc(var(--header-height)+0.5rem)] flex max-h-[calc(100vh-var(--header-height)-2rem)] flex-col overflow-hidden rounded border border-border/60 bg-card/80 backdrop-blur-sm print:top-0 print:max-h-none">
             <FilterPanel {...filterPanelProps} />
           </div>
         </aside>
+
+        {/* Main content */}
         <main className="relative min-w-0 flex-1 print:max-w-none" id="resume-content">
           {filterFlash > 0 && (
             <>
               <motion.div
                 key={`ov-${filterFlash}`}
                 className="pointer-events-none absolute inset-0 print:hidden"
-                style={{ backgroundColor: "rgba(99,102,241,0.07)", zIndex: 1 }}
+                style={{ backgroundColor: "hsl(12 50% 48% / 0.04)", zIndex: 1 }}
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
               />
               <motion.div
                 key={`bar-${filterFlash}`}
-                className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-indigo-500 print:hidden origin-left"
-                style={{ zIndex: 2 }}
+                className="pointer-events-none absolute inset-x-0 top-0 h-[1px] print:hidden origin-left"
+                style={{ zIndex: 2, background: "linear-gradient(to right, transparent, hsl(12 50% 48% / 0.6), transparent)" }}
                 initial={{ scaleX: 0, opacity: 1 }}
                 animate={{ scaleX: [0, 1, 1], opacity: [1, 1, 0] }}
-                transition={{ duration: 0.9, times: [0, 0.55, 1] }}
+                transition={{ duration: 1, times: [0, 0.55, 1] }}
               />
             </>
           )}
+
           <ResumeHeader basics={basics} />
+
           <AnimatePresence initial={false}>
             {filters.sections.work && (
-              <motion.div key="work" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: "easeOut" as const }} layout>
+              <motion.div key="work" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
                 <Section title="Work Experience">
                   <WorkSection entries={workEntries} matches={workMatches} tags={workTags} />
                 </Section>
               </motion.div>
             )}
             {filters.sections.projects && projectEntries.length > 0 && (
-              <motion.div key="projects" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }} layout>
+              <motion.div key="projects" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
                 <Section title="Projects">
                   <ProjectsSection entries={projectEntries} matches={projectMatches} tags={projectTags} />
                 </Section>
               </motion.div>
             )}
             {filters.sections.skills && (
-              <motion.div key="skills" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }} layout>
+              <motion.div key="skills" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
                 <Section title="Skills"><SkillsSection skills={data.skills} /></Section>
               </motion.div>
             )}
             {filters.sections.education && (
-              <motion.div key="education" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }} layout>
+              <motion.div key="education" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
                 <Section title="Education"><EducationSection education={data.education} /></Section>
               </motion.div>
             )}
           </AnimatePresence>
+
           <ExtrasSection interests={data.interests} awards={data.awards} references={data.references}
             showInterests={filters.sections.interests} showAwards={filters.sections.awards} showReferences={filters.sections.references} />
         </main>
       </div>
+
+      {/* Mobile filter FAB */}
       <div className="fixed bottom-6 right-6 lg:hidden print:hidden z-50">
         <div className="relative">
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>
-              <Button size="lg" className="h-14 w-14 rounded-full shadow-lg">
+              <Button size="lg" className="h-14 w-14 rounded-full shadow-lg bg-primary text-primary-foreground hover:bg-primary/90">
                 <SlidersHorizontal className="h-5 w-5" />
               </Button>
             </SheetTrigger>
