@@ -116,6 +116,11 @@ body {
 	.resume-grain::before { display: none !important; }
 
 	.resume-grain {
+		--print-gap-xl: 8pt;
+		--print-gap-lg: 4pt;
+		--print-gap-md: 3pt;
+		--print-gap-sm: 2pt;
+		--print-gap-xs: 1pt;
 		padding: 0 !important;
 		margin: 0 !important;
 	}
@@ -139,41 +144,41 @@ body {
 
 	/* Tighten section spacing for print */
 	#resume-content section {
-		margin-bottom: 8pt !important;
+		margin-bottom: var(--print-gap-xl) !important;
 		break-inside: avoid-page;
 	}
 
 	#resume-content section > div:first-child {
-		margin-bottom: 4pt !important;
+		margin-bottom: var(--print-gap-lg) !important;
 	}
 
 	/* Compact resume header */
 	#resume-content > header {
-		margin-bottom: 8pt !important;
+		margin-bottom: var(--print-gap-xl) !important;
 	}
 
 	#resume-content > header > div:first-child {
-		margin-bottom: 4pt !important;
+		margin-bottom: var(--print-gap-lg) !important;
 	}
 
 	#resume-content > header p.resume-dropcap {
-		margin-top: 4pt !important;
+		margin-top: var(--print-gap-lg) !important;
 	}
 
 	#resume-content > header > div:last-child {
-		margin-top: 3pt !important;
+		margin-top: var(--print-gap-md) !important;
 	}
 
 	/* Compact entry cards */
 	.resume-entry {
-		padding-top: 4pt !important;
-		padding-bottom: 4pt !important;
+		padding-top: var(--print-gap-lg) !important;
+		padding-bottom: var(--print-gap-lg) !important;
 	}
 
-	.resume-entry > div:first-child { margin-bottom: 1pt !important; }
-	.resume-entry p { margin-top: 2pt !important; }
-	.resume-entry ul { margin-top: 2pt !important; }
-	.resume-entry .flex.flex-wrap { margin-top: 2pt !important; gap: 2pt !important; }
+	.resume-entry > div:first-child { margin-bottom: var(--print-gap-xs) !important; }
+	.resume-entry p { margin-top: var(--print-gap-sm) !important; }
+	.resume-entry ul { margin-top: var(--print-gap-sm) !important; }
+	.resume-entry .flex.flex-wrap { margin-top: var(--print-gap-sm) !important; gap: var(--print-gap-sm) !important; }
 
 	.group { break-inside: avoid; }
 
@@ -183,9 +188,9 @@ body {
 	a { text-decoration: none !important; color: inherit !important; }
 
 	/* Compact skills and education */
-	#resume-content .grid { gap: 4pt !important; }
-	#resume-content .space-y-5 > * + * { margin-top: 3pt !important; }
-	#resume-content .space-y-2 > * + * { margin-top: 1pt !important; }
+	#resume-content .grid { gap: var(--print-gap-lg) !important; }
+	#resume-content .space-y-5 > * + * { margin-top: var(--print-gap-md) !important; }
+	#resume-content .space-y-2 > * + * { margin-top: var(--print-gap-xs) !important; }
 
 	/* Reduce drop-cap size for print */
 	.resume-dropcap::first-letter {
