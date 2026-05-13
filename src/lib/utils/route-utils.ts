@@ -23,13 +23,15 @@ export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {
   return path;
 };
 
-type NestedPaths<T, P extends string = ""> = T extends object
-  ? {
-      [K in keyof T]: T[K] extends object
-        ? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
-        : `${P}${P extends "" ? "" : "."}${K & string}`;
-    }[keyof T]
-  : never;
+type NestedPaths<T, P extends string = "", D extends unknown[] = []> = D["length"] extends 4
+  ? `${P}${P extends "" ? "" : "."}${keyof T & string}`
+  : T extends object
+    ? {
+        [K in keyof T]: T[K] extends object
+          ? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`, [...D, unknown]>
+          : `${P}${P extends "" ? "" : "."}${K & string}`;
+      }[keyof T]
+    : never;
 
 type RoutePath = NestedPaths<typeof routes>;
 
