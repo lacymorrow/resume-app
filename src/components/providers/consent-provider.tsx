@@ -1,4 +1,4 @@
-import { ConsentBanner, ConsentDialog, ConsentManagerProvider } from "@c15t/nextjs";
+import { ConsentManagerProvider } from "@c15t/nextjs";
 import type { ReactNode } from "react";
 import { env } from "@/env";
 
@@ -16,8 +16,6 @@ export default function ConsentProvider({ children }: { children: ReactNode }) {
       }
     >
       {children}
-      <ConsentBanner />
-      <ConsentDialog />
     </ConsentManagerProvider>
   );
 }

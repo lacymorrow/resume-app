@@ -60,7 +60,7 @@ const data = [
         ? [{ title: "Payload CMS", url: routes.demo.payloadCms }]
         : []),
       ...(env.NEXT_PUBLIC_FEATURE_MDX_ENABLED
-        ? [{ title: "Markdown Content", url: routes.demo.index }]
+        ? [{ title: "Markdown Content", url: "/blog" }]
         : []),
       { title: "TRPC Example", url: routes.demo.trpc },
 

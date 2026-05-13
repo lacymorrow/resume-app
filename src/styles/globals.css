@@ -115,6 +115,20 @@ body {
 
 	.resume-grain::before { display: none !important; }
 
+	.resume-grain {
+		--print-gap-xl: 8pt;
+		--print-gap-lg: 4pt;
+		--print-gap-md: 3pt;
+		--print-gap-sm: 2pt;
+		--print-gap-xs: 1pt;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+
+	.resume-grain > .flex {
+		gap: 0 !important;
+	}
+
 	#resume-content {
 		max-width: 100% !important;
 		padding: 0 !important;
@@ -128,11 +142,62 @@ body {
 		line-height: 1.4 !important;
 	}
 
-	section { break-inside: avoid-page; }
+	/* Tighten section spacing for print */
+	#resume-content section {
+		margin-bottom: var(--print-gap-xl) !important;
+		break-inside: avoid-page;
+	}
+
+	#resume-content section > div:first-child {
+		margin-bottom: var(--print-gap-lg) !important;
+	}
+
+	/* Compact resume header */
+	#resume-content > header {
+		margin-bottom: var(--print-gap-xl) !important;
+	}
+
+	#resume-content > header > div:first-child {
+		margin-bottom: var(--print-gap-lg) !important;
+	}
+
+	#resume-content > header p.resume-dropcap {
+		margin-top: var(--print-gap-lg) !important;
+	}
+
+	#resume-content > header > div:last-child {
+		margin-top: var(--print-gap-md) !important;
+	}
+
+	/* Compact entry cards */
+	.resume-entry {
+		padding-top: var(--print-gap-lg) !important;
+		padding-bottom: var(--print-gap-lg) !important;
+	}
+
+	.resume-entry > div:first-child { margin-bottom: var(--print-gap-xs) !important; }
+	.resume-entry p { margin-top: var(--print-gap-sm) !important; }
+	.resume-entry ul { margin-top: var(--print-gap-sm) !important; }
+	.resume-entry .flex.flex-wrap { margin-top: var(--print-gap-sm) !important; gap: var(--print-gap-sm) !important; }
+
 	.group { break-inside: avoid; }
 
 	h1 { font-size: 22pt !important; }
 	h2 { font-size: 10pt !important; }
 
 	a { text-decoration: none !important; color: inherit !important; }
+
+	/* Compact skills and education */
+	#resume-content .grid { gap: var(--print-gap-lg) !important; }
+	#resume-content .space-y-5 > * + * { margin-top: var(--print-gap-md) !important; }
+	#resume-content .space-y-2 > * + * { margin-top: var(--print-gap-xs) !important; }
+
+	/* Reduce drop-cap size for print */
+	.resume-dropcap::first-letter {
+		font-size: 2.4em !important;
+		line-height: 0.9 !important;
+	}
+
+	/* Tighter line-height for print body text */
+	.leading-relaxed { line-height: 1.35 !important; }
 }
