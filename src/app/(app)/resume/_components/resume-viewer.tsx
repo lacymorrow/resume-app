@@ -19,6 +19,7 @@ import { Section, WorkSection, ProjectsSection, SkillsSection, EducationSection,
 const parseAsStringArray = parseAsArrayOf(parseAsString);
 
 export function ResumeViewer({ data }: { data: ResumeSchema }) {
+  // URL-persisted state — these make the view bookmarkable and shareable
   const [flavorParam, setFlavorParam] = useQueryState("flavor", parseAsString.withDefault("complete"));
   const [hcParam, setHcParam] = useQueryState("hc", parseAsStringArray.withDefault([]));
   const [hpParam, setHpParam] = useQueryState("hp", parseAsStringArray.withDefault([]));
@@ -108,7 +109,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
     if (filterPanelRef.current) {
       void animate(
         filterPanelRef.current,
-        { boxShadow: ["0 0 0 2px hsl(12 50% 48% / 0.35)", "0 0 0 0px hsl(12 50% 48% / 0)"] },
+        { boxShadow: ["0 0 0 2px hsl(var(--primary) / 0.35)", "0 0 0 0px hsl(var(--primary) / 0)"] },
         { duration: 0.75, ease: "easeOut" },
       );
     }
@@ -142,7 +143,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
       <div className="flex gap-10">
         {/* Sidebar */}
         <aside className="hidden lg:block w-72 shrink-0 print:hidden">
-          <div ref={filterPanelRef} className="sticky top-[calc(var(--header-height)+0.5rem)] flex max-h-[calc(100vh-var(--header-height)-2rem)] flex-col overflow-hidden rounded border border-border/60 bg-card/80 backdrop-blur-sm print:top-0 print:max-h-none">
+          <div ref={filterPanelRef} className="sticky top-[calc(var(--header-height)+var(--sidebar-top-offset))] flex max-h-[calc(100vh-var(--header-height)-2rem)] flex-col overflow-hidden rounded border border-border/60 bg-card/80 backdrop-blur-sm print:top-0 print:max-h-none">
             <FilterPanel {...filterPanelProps} />
           </div>
         </aside>
@@ -154,7 +155,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
               <motion.div
                 key={`ov-${filterFlash}`}
                 className="pointer-events-none absolute inset-0 print:hidden"
-                style={{ backgroundColor: "hsl(12 50% 48% / 0.04)", zIndex: 1 }}
+                style={{ backgroundColor: "hsl(var(--primary) / 0.04)", zIndex: 1 }}
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
@@ -162,7 +163,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
               <motion.div
                 key={`bar-${filterFlash}`}
                 className="pointer-events-none absolute inset-x-0 top-0 h-[1px] print:hidden origin-left"
-                style={{ zIndex: 2, background: "linear-gradient(to right, transparent, hsl(12 50% 48% / 0.6), transparent)" }}
+                style={{ zIndex: 2, background: "linear-gradient(to right, transparent, hsl(var(--primary) / 0.6), transparent)" }}
                 initial={{ scaleX: 0, opacity: 1 }}
                 animate={{ scaleX: [0, 1, 1], opacity: [1, 1, 0] }}
                 transition={{ duration: 1, times: [0, 0.55, 1] }}

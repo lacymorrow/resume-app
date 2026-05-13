@@ -6,6 +6,7 @@
 
 :root {
   --header-height: 6rem;
+  --sidebar-top-offset: 0.5rem;
 }
 
 html {

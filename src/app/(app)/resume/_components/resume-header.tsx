@@ -43,7 +43,7 @@ export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
         </a>
         <a href={basics.url} className="flex items-center gap-1.5 transition-colors hover:text-primary">
           <Globe className="h-3.5 w-3.5 text-primary/60" />
-          {basics.url.replace("http://", "")}
+          {basics.url.replace(/^https?:\/\//, "")}
         </a>
         <a href={`mailto:${basics.email}`} className="flex items-center gap-1.5 transition-colors hover:text-primary">
           <Mail className="h-3.5 w-3.5 text-primary/60" />
@@ -73,8 +73,8 @@ export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
       {expertise && (
         <div className="mt-4 flex flex-wrap items-baseline gap-x-1.5 text-xs tracking-wide text-muted-foreground">
           <span className="font-serif text-sm font-semibold italic text-primary/70 mr-1">Expertise</span>
-          {expertise.split(";").map((item) => (
-            <span key={item.trim()} className="after:content-['·'] after:ml-1.5 after:text-border last:after:content-none">
+          {expertise.split(";").map((item, index) => (
+            <span key={index} className="after:content-['·'] after:ml-1.5 after:text-border last:after:content-none">
               {item.trim()}
             </span>
           ))}

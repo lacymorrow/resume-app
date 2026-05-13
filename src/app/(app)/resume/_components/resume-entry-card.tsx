@@ -9,7 +9,7 @@ interface ResumeEntryCardProps {
 }
 
 function formatDateRange(startDate: string, endDate?: string): string {
-  const fmt = (d: string) => new Date(d).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { month: "short", year: "numeric" });
   const start = fmt(startDate);
   if (!endDate) return `${start} — Present`;
   const end = fmt(endDate);
@@ -17,8 +17,8 @@ function formatDateRange(startDate: string, endDate?: string): string {
   const startYear = new Date(startDate).getFullYear();
   const endYear = new Date(endDate).getFullYear();
   if (startYear === endYear) {
-    const startMonth = new Date(startDate).toLocaleDateString("en-US", { month: "short" });
-    const endMonth = new Date(endDate).toLocaleDateString("en-US", { month: "short" });
+    const startMonth = new Date(startDate).toLocaleDateString(undefined, { month: "short" });
+    const endMonth = new Date(endDate).toLocaleDateString(undefined, { month: "short" });
     return startMonth === endMonth ? `${start}` : `${startMonth} — ${endMonth} ${endYear}`;
   }
   return `${start} — ${end}`;
