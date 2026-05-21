@@ -17,42 +17,21 @@ export interface PricingPlan {
 }
 
 export const singlePlan: PricingPlan = {
-  title: "Shipkit",
-  description: "$249 one-time. Lifetime updates. No recurring fees.",
+  title: "Resume",
+  description: "Interactive resume with filtering and export.",
   isBestValue: true,
-  price: { oneTime: 249 },
-  href: routes.external.buy,
+  price: { oneTime: 0 },
+  href: "/",
   features: [
-    "Next.js 15 App Router + TypeScript",
-    "Auth that works out of the box (Better Auth + OAuth)",
-    "Postgres + Drizzle, already migrated",
-    "LemonSqueezy payments, pre-wired",
-    "Payload CMS with admin panel",
-    "Resend email with templates",
-    "100+ shadcn/ui components",
-    "Cursor rules + AI context files included",
-    "AI workflows + v0.dev integration",
-    "Deploy to Vercel in one click",
+    "Interactive resume viewer",
+    "Filter by role, technology, and date",
+    "Export as PDF, DOCX, or HTML",
+    "Multiple resume flavors",
+    "URL-based state management",
+    "Print-optimized layout",
   ],
 };
 
-export const oneTimePlans: PricingPlan[] = [
-  {
-    title: "Shipkit Bones",
-    description: "Perfect for indie developers and small projects",
-    price: { oneTime: 0 },
-    href: routes.external.buy,
-    features: [
-      "Next.js 15 App Router Setup",
-      "Authentication (Better Auth)",
-      "TypeScript Configuration",
-      "Basic UI Components",
-      "Basic Testing Setup",
-      "Community Support",
-    ],
-    noCardRequired: true,
-  },
-  singlePlan,
-];
+export const oneTimePlans: PricingPlan[] = [singlePlan];
 
 

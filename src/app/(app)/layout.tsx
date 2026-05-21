@@ -55,25 +55,22 @@ export default async function Layout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
+              "@type": "ProfilePage",
               name: siteConfig.title,
               description: siteConfig.description,
               url: siteConfig.url,
-              applicationCategory: "DeveloperApplication",
-              operatingSystem: "Any",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
-              },
-              author: {
+              mainEntity: {
                 "@type": "Person",
-                name: siteConfig.creator.name,
+                name: siteConfig.creator.fullName,
                 url: siteConfig.creator.url,
+                jobTitle: siteConfig.creator.role,
+                image: siteConfig.creator.avatar,
+                sameAs: [
+                  siteConfig.links.github,
+                  siteConfig.links.x,
+                  siteConfig.social.linkedin,
+                ],
               },
-              codeRepository: siteConfig.repo.url,
-              programmingLanguage: ["TypeScript", "JavaScript"],
-              runtimePlatform: "Node.js",
             }),
           }}
         />
