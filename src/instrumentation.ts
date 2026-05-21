@@ -24,7 +24,7 @@ export function register() {
 
   displayLaunchMessage();
   registerOTel({
-    serviceName: "shipkit",
+    serviceName: "resume-app",
     // Add any additional configuration options here
   });
 }

@@ -269,26 +269,19 @@ export const siteConfig: SiteConfig = {
   },
 
   store: {
-    id: "shipkit",
-    products: {
-      // LemonSqueezy Checkout URLs use Variant IDs (not Product IDs)
-      // Format: variant UUID from LemonSqueezy dashboard
-      shipkit: "411883",
-      // Examples:
-      bones: "411883",
-      brains: "411883",
-    },
+    id: "resume",
+    products: {},
   },
 
   metadata: {
     keywords: [
-      "Next.js",
-      "React",
-      "Tailwind CSS",
-      "Server Components",
-      "Shipkit",
-      "Shadcn",
-      "UI Components",
+      "Lacy Morrow",
+      "resume",
+      "software engineer",
+      "full-stack developer",
+      "interactive resume",
+      "portfolio",
+      "AI tooling",
     ],
     themeColor: {
       light: "white",
@@ -297,8 +290,8 @@ export const siteConfig: SiteConfig = {
     locale: "en-US",
     generator: "Next.js", // Use Next.js as generator
     referrer: "origin-when-cross-origin",
-    category: "technology", // Use technology as category
-    classification: "Business Software",
+    category: "resume",
+    classification: "Personal Portfolio",
     openGraph: {
       imageWidth: 1200,
       imageHeight: 630,

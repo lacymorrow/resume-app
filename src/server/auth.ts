@@ -52,7 +52,7 @@ const {
   ? NextAuth({
       ...authOptions,
       trustHost: true,
-      secret: env.AUTH_SECRET ?? "supersecretshipkit",
+      secret: env.AUTH_SECRET ?? "supersecret-resume-app",
       // Override session strategy based on adapter usage
       session: {
         ...authOptions.session,
