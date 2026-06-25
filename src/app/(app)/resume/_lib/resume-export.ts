@@ -246,6 +246,7 @@ async function exportPdf(data: ExportData, filename: string) {
   y += introLines.length * 12 + 4;
 
   if (expertise) {
+    doc.setFont("helvetica", "bold");
     const exWidth = doc.getTextWidth("Expertise: ");
     // First line is indented past the label; subsequent lines use full content width
     const firstLineParts = doc.splitTextToSize(expertise, contentWidth - exWidth);
@@ -254,7 +255,6 @@ async function exportPdf(data: ExportData, filename: string) {
     const contLines = remaining ? doc.splitTextToSize(remaining, contentWidth) : [];
     const exLines = [firstLine, ...contLines];
     checkPage(exLines.length * 11 + 14);
-    doc.setFont("helvetica", "bold");
     doc.text("Expertise: ", margin, y);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(80);
