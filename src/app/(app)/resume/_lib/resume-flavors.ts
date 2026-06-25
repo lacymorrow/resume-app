@@ -56,6 +56,7 @@ export const FLAVORS: ResumeFlavor[] = [
     expertise: "Frontend specialist; React/Next.js expert; TypeScript; UI/UX development; Design systems; Accessibility; Performance optimization",
     sections: { ...ALL_SECTIONS, interests: false, awards: false, references: false },
     work: {
+      "American City Business Journals": { visible: false },
       "Duke Energy": {
         position: "Senior Frontend Developer",
         summary: "Built React dashboards for weather forecasting. Migrated authentication UI to Azure AD. Python, React, Docker, AWS, Azure.",
@@ -118,6 +119,10 @@ export const FLAVORS: ResumeFlavor[] = [
     expertise: "Full-stack developer; React/Next.js + Node/Python/PHP; API design; Database architecture; DevOps; Software architect; Tech lead",
     sections: { ...ALL_SECTIONS, interests: false },
     work: {
+      "American City Business Journals": {
+        position: "Senior Full-Stack Developer",
+        summary: "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected AI orchestration layer for autonomous engineering task completion. Laravel, PHP, AI/LLM Orchestration, Claude.",
+      },
       "Duke Energy": {
         position: "Senior Full-Stack Developer",
         summary: "Refactored a weather-forecasting dashboard end-to-end: React frontend, Python backend, deployed to AWS. Migrated authentication to Azure AD. Python, React, Docker, AWS, Azure.",
@@ -152,6 +157,7 @@ export const FLAVORS: ResumeFlavor[] = [
     expertise: "DevOps; AWS/Azure/GCP; Docker; CI/CD pipelines; Infrastructure automation; Linux systems; Monitoring; Database administration",
     sections: { ...ALL_SECTIONS, interests: false, references: false, awards: false },
     work: {
+      "American City Business Journals": { visible: false },
       "Duke Energy": {
         position: "DevOps Engineer",
         summary: "Refactored weather-forecasting dashboard deployment to AWS. Migrated authentication infrastructure to Azure AD from user/password. Configured containerized deployments and cron-based automation. Python, Docker, AWS, Azure, Regex, Cron.",
@@ -215,6 +221,10 @@ export const FLAVORS: ResumeFlavor[] = [
     expertise: "Agentic engineer; AI/LLM integration; Automation & RPA; Rust/Tauri desktop apps; Full-stack developer; Open-source maintainer",
     sections: ALL_SECTIONS,
     work: {
+      "American City Business Journals": {
+        position: "Agentic Engineer",
+        summary: "Contract - Architected an AI orchestration layer managing 12 autonomous agents that independently completed engineering tasks across a 48-market business publication platform. Developed Claude agent personas and reusable skill sets for the development team. Built and migrated backend Laravel platform. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents.",
+      },
       "Duke Energy": {
         position: "Agentic Engineer",
         summary: "Created internal GPT setup for company-wide AI adoption. Built agentic workflows for internal tooling. Also refactored weather-forecasting dashboard to deploy to AWS. Python, React, Docker, AWS, Azure.",
@@ -273,6 +283,10 @@ export const FLAVORS: ResumeFlavor[] = [
     expertise: "Tech/Development lead; Product/Project manager; Software architect; Hiring manager; SCRUM master; Stakeholder management; Agency owner",
     sections: ALL_SECTIONS,
     work: {
+      "American City Business Journals": {
+        position: "Technical Lead + Agentic Engineer",
+        summary: "Contract - Led development and migration of a backend Laravel platform serving 48 U.S. markets. Architected and managed an AI orchestration layer with 12 autonomous engineering agents. Developed Claude agent personas and skill sets adopted across the development team. Laravel, PHP, AI/LLM Orchestration, Claude.",
+      },
       "Duke Energy": {
         position: "Senior Developer & Technical Lead",
         summary: "Led AI initiative creating internal GPT setup for company-wide adoption. Directed refactoring of weather-forecasting dashboard for AWS migration. Managed authentication migration to Azure AD. Python, React, Docker, AWS, Azure.",
