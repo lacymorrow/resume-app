@@ -121,7 +121,7 @@ export const FLAVORS: ResumeFlavor[] = [
     work: {
       "American City Business Journals": {
         position: "Senior Full-Stack Developer",
-        summary: "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected AI orchestration layer for autonomous engineering task completion. Laravel, PHP, AI/LLM Orchestration, Claude.",
+        summary: "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer for autonomous engineering task completion. Laravel, PHP, AI/LLM Orchestration, Claude.",
       },
       "Duke Energy": {
         position: "Senior Full-Stack Developer",
@@ -223,7 +223,7 @@ export const FLAVORS: ResumeFlavor[] = [
     work: {
       "American City Business Journals": {
         position: "Agentic Engineer",
-        summary: "Contract - Architected an AI orchestration layer managing 12 autonomous agents that independently completed engineering tasks across a 48-market business publication platform. Developed Claude agent personas and reusable skill sets for the development team. Built and migrated backend Laravel platform. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents.",
+        summary: "Contract - Architected an AI orchestration layer managing 12 autonomous agents that independently completed engineering tasks across a 48-market business publication platform. Developed Claude agent personas and reusable skill sets for the development team. Built and migrated a backend Laravel platform. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents.",
       },
       "Duke Energy": {
         position: "Agentic Engineer",
