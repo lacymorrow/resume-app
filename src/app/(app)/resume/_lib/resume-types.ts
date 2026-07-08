@@ -39,6 +39,7 @@ export interface ResumeWork {
   summary: string;
   url?: string;
   location?: string;
+  sector?: string;
   highlights?: string[];
 }
 
