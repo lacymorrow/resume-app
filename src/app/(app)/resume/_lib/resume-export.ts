@@ -114,7 +114,7 @@ a:hover { text-decoration: underline; }
     location ? esc(location) : "",
     esc(basics.phone),
     esc(basics.email),
-    `<a href="${esc(basics.url)}">${esc(basics.url.replace(/^https?:\/\//, ""))}</a>`,
+    basics.url ? `<a href="${esc(basics.url)}">${esc(basics.url.replace(/^https?:\/\//, ""))}</a>` : "",
   ].filter(Boolean).join(`<span class="sep">|</span>`)}</div>
 <div class="summary">${esc(intro)}</div>
 ${expertise ? `<div class="expertise"><strong>Expertise:</strong> ${esc(expertise)}</div>` : ""}
