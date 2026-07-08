@@ -39,7 +39,8 @@ export function WorkSection({ entries, matches, tags }: {
             <ResumeEntryCard title={entry.position} subtitle={entry.name}
               dateRange={formatDateRange(entry.startDate, entry.endDate)} location={entry.location}
               summary={entry.summary} tags={tags.get(entry.originalIndex) ?? []} url={entry.url}
-              highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)} />
+              highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)}
+              sector={entry.sector} />
           </motion.div>
         ))}
       </AnimatePresence>

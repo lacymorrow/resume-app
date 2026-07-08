@@ -40,6 +40,7 @@ export interface ResumeWork {
   url?: string;
   location?: string;
   highlights?: string[];
+  sector?: string;
 }
 
 export interface ResumeProject {

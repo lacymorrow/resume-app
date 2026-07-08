@@ -5,7 +5,7 @@ import type { MatchResult } from "../_lib/resume-filters";
 interface ResumeEntryCardProps {
   title: string; subtitle: string; dateRange: string; location?: string;
   summary: string; tags: string[]; url?: string; highlights?: string[];
-  match?: MatchResult;
+  match?: MatchResult; sector?: string;
 }
 
 function formatDateRange(startDate: string, endDate?: string): string {
@@ -26,7 +26,7 @@ function formatDateRange(startDate: string, endDate?: string): string {
 
 export { formatDateRange };
 
-export function ResumeEntryCard({ title, subtitle, dateRange, location, summary, tags, url, highlights, match }: ResumeEntryCardProps) {
+export function ResumeEntryCard({ title, subtitle, dateRange, location, summary, tags, url, highlights, match, sector }: ResumeEntryCardProps) {
   const isMatched = !match || match.matched;
   return (
     <div data-match={isMatched} className="resume-entry group relative py-5 transition-all duration-500 data-[match=false]:opacity-20 data-[match=false]:grayscale">
@@ -55,7 +55,10 @@ export function ResumeEntryCard({ title, subtitle, dateRange, location, summary,
               </a>
             ) : title}
           </h3>
-          <p className="mt-0.5 text-sm font-medium text-muted-foreground">{subtitle}</p>
+          <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+            {subtitle}
+            {sector && <span className="ml-2 text-xs font-normal italic text-primary/50">{sector}</span>}
+          </p>
         </div>
       </div>
 
