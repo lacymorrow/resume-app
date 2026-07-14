@@ -57,22 +57,26 @@ const KNOWN_TAGS = new Set([
 ]);
 
 /**
- * Word-boundary tag match: prevents short tags from matching inside words
+ * Word-boundary tag regexes, pre-compiled once since KNOWN_TAGS is static.
+ * Boundaries prevent short tags from matching inside words
  * (e.g. "Go" in "Django", "RAG" in "brokerage").
  */
-function containsTag(text: string, tag: string): boolean {
-  const escaped = tag.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`).test(text.toLowerCase());
-}
+const TAG_REGEXES = new Map<string, RegExp>(
+  Array.from(KNOWN_TAGS, (tag) => {
+    const escaped = tag.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    return [tag, new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`)];
+  }),
+);
 
 function extractTagsFromText(text: string): string[] {
   const tags = new Set<string>();
   const parts = text.split(/[,;|]/);
   for (const part of parts) {
     const trimmed = part.trim();
-    for (const known of KNOWN_TAGS) {
-      if (containsTag(trimmed, known)) {
-        tags.add(known);
+    const lower = trimmed.toLowerCase();
+    for (const [tag, regex] of TAG_REGEXES) {
+      if (regex.test(lower)) {
+        tags.add(tag);
       }
     }
     const normalized = normalize(trimmed);
@@ -111,8 +115,6 @@ export function getAllTags(data: ResumeSchema): string[] {
   const all = new Set<string>();
   for (const skill of data.skills) {
     for (const kw of skill.keywords) {
-      const n = normalize(kw);
-      if (KNOWN_TAGS.has(n)) all.add(n);
       for (const t of extractTagsFromText(kw)) all.add(t);
     }
   }
