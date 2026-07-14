@@ -182,8 +182,17 @@ body {
 
 	.group { break-inside: avoid; }
 
-	h1 { font-size: 22pt !important; }
-	h2 { font-size: 10pt !important; }
+	h1 { font-size: 22pt !important; color: #1e3a5f !important; }
+	h2 { font-size: 10pt !important; color: #1e3a5f !important; }
+
+	/* Print accent: rose underline on section headers */
+	#resume-content section > div:first-child .h-px {
+		background: #c9365e !important;
+		height: 1.5px !important;
+	}
+
+	/* Rose accent on drop-cap and date labels */
+	.resume-dropcap::first-letter { color: #c9365e !important; }
 
 	a { text-decoration: none !important; color: inherit !important; }
 
