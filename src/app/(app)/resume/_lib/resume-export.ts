@@ -91,6 +91,7 @@ h3 { font-size: 11pt; margin: 0; }
 .entry-header { display: flex; justify-content: space-between; align-items: baseline; }
 .entry-title { font-weight: 600; color: ${PALETTE.dark}; }
 .entry-company { font-size: 10pt; color: ${PALETTE.muted}; }
+.entry-sector { font-size: 8.5pt; color: ${PALETTE.subtle}; font-style: italic; margin-left: 6px; }
 .entry-date { font-size: 9pt; color: ${PALETTE.rose}; white-space: nowrap; font-weight: 500; }
 .entry-summary { font-size: 10pt; color: ${PALETTE.body}; margin-top: 3px; white-space: pre-wrap; }
 .entry-highlights { margin: 6px 0 0 0; padding-left: 16px; font-size: 9.5pt; color: ${PALETTE.body}; }
@@ -125,7 +126,7 @@ ${expertise ? `<div class="expertise"><strong>Expertise:</strong> ${esc(expertis
     html += `<h2>Work Experience</h2>\n`;
     for (const entry of work) {
       html += `<div class="entry">
-<div class="entry-header"><div><span class="entry-title">${esc(entry.position)}</span> <span class="entry-company">— ${esc(entry.name)}</span></div><span class="entry-date">${esc(formatDateRange(entry.startDate, entry.endDate))}</span></div>
+<div class="entry-header"><div><span class="entry-title">${esc(entry.position)}</span> <span class="entry-company">— ${esc(entry.name)}</span>${entry.sector ? `<span class="entry-sector">${esc(entry.sector)}</span>` : ""}</div><span class="entry-date">${esc(formatDateRange(entry.startDate, entry.endDate))}</span></div>
 <div class="entry-summary">${esc(entry.summary)}</div>`;
       if (entry.highlights?.length) {
         html += `<ul class="entry-highlights">${entry.highlights.filter(Boolean).map((h) => `<li>${esc(h)}</li>`).join("")}</ul>`;
@@ -168,7 +169,7 @@ ${expertise ? `<div class="expertise"><strong>Expertise:</strong> ${esc(expertis
   if (filters.sections.awards && data.awards.length > 0) {
     html += `<h2>Awards</h2>\n`;
     for (const a of data.awards) {
-      html += `<p><strong>${esc(a.title)}</strong> — ${esc(a.awarder)}, ${new Date(a.date).getFullYear()}</p>\n`;
+      html += `<p><strong>${esc(a.title)}</strong> — ${esc(a.awarder)}, ${new Date(a.date).getUTCFullYear()}</p>\n`;
     }
   }
 
@@ -268,7 +269,7 @@ async function exportPdf(data: ExportData, filename: string) {
   // Contact line
   doc.setFontSize(9);
   doc.setTextColor(...muted);
-  const contactLine = [basics.phone, basics.email, basics.url.replace(/^https?:\/\//, ""), location].filter(Boolean).join("  |  ");
+  const contactLine = [basics.phone, basics.email, basics.url?.replace(/^https?:\/\//, ""), location].filter(Boolean).join("  |  ");
   doc.text(contactLine, margin, y);
   y += 6;
 
@@ -339,7 +340,8 @@ async function exportPdf(data: ExportData, filename: string) {
       y += 12;
       doc.setFontSize(9.5);
       doc.setTextColor(...muted);
-      doc.text(entry.name, margin, y);
+      const companyText = entry.sector ? `${entry.name}  ·  ${entry.sector}` : entry.name;
+      doc.text(companyText, margin, y);
       y += 12;
 
       doc.setFontSize(9);
@@ -478,7 +480,7 @@ function exportDocx(data: ExportData, filename: string) {
   body += p(basics.name, { bold: true, size: 28, color: navyHex });
   body += p(basics.label, { size: 14, color: roseHex });
   if (location) body += p(location, { size: 10, color: mutedHex });
-  body += p([basics.phone, basics.email, basics.url.replace(/^https?:\/\//, "")].filter(Boolean).join("  |  "), { size: 10, color: mutedHex });
+  body += p([basics.phone, basics.email, basics.url?.replace(/^https?:\/\//, "")].filter(Boolean).join("  |  "), { size: 10, color: mutedHex });
   body += p("");
   body += p(intro, { size: 11, color: darkHex });
   if (expertise) body += p(`Expertise: ${expertise}`, { size: 10, color: mutedHex });
@@ -488,11 +490,12 @@ function exportDocx(data: ExportData, filename: string) {
   if (filters.sections.work && work.length > 0) {
     body += p("WORK EXPERIENCE", { bold: true, size: 11, color: navyHex });
     for (const entry of work) {
-      body += p(`${entry.position} — ${entry.name}    ${formatDateRange(entry.startDate, entry.endDate)}`, { bold: true, size: 11, color: darkHex });
+      const entryLabel = entry.sector ? `${entry.position} — ${entry.name}  ·  ${entry.sector}` : `${entry.position} — ${entry.name}`;
+      body += p(`${entryLabel}    ${formatDateRange(entry.startDate, entry.endDate)}`, { bold: true, size: 11, color: darkHex });
       body += p(entry.summary, { size: 10, color: bodyHex });
       if (entry.highlights?.length) {
         for (const h of entry.highlights.filter(Boolean)) {
-          body += p(`• ${h}`, { size: 10 });
+          body += p(`• ${h}`, { size: 10, color: bodyHex });
         }
       }
       body += p("");
@@ -507,7 +510,7 @@ function exportDocx(data: ExportData, filename: string) {
       body += p(project.summary, { size: 10, color: bodyHex });
       if (project.highlights?.length) {
         for (const h of project.highlights.filter(Boolean)) {
-          body += p(`• ${h}`, { size: 10 });
+          body += p(`• ${h}`, { size: 10, color: bodyHex });
         }
       }
       body += p("");
@@ -544,7 +547,7 @@ function exportDocx(data: ExportData, filename: string) {
   if (filters.sections.awards && data.awards.length > 0) {
     body += p("AWARDS", { bold: true, size: 11, color: navyHex });
     for (const a of data.awards) {
-      body += p(`${a.title} — ${a.awarder}, ${new Date(a.date).getFullYear()}`, { size: 10, color: bodyHex });
+      body += p(`${a.title} — ${a.awarder}, ${new Date(a.date).getUTCFullYear()}`, { size: 10, color: bodyHex });
     }
     body += p("");
   }

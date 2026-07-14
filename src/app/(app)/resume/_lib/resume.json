@@ -208,7 +208,8 @@
       "endDate": "2026-06-01",
       "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer managing 12 autonomous agents that independently picked up and completed engineering tasks. Developed Claude agent personas and reusable skill sets across multiple services and platforms for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents",
       "url": "https://www.bizjournals.com/",
-      "location": "Charlotte, NC"
+      "location": "Charlotte, NC",
+      "sector": "Media"
     },
     {
       "name": "Duke Energy",
@@ -216,7 +217,8 @@
       "startDate": "2025-06-01",
       "endDate": "2026-04-01",
       "summary": "Created internal GPT setup for company use. Contract - Refactored a weather-forecasting dashboard to deploy to AWS and migrated authentication to Azure A/D (Active Directory) from user/password. Python, React, Docker, AWS, Azure, Regex, Cron",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Energy"
     },
     {
       "name": "Credit Karma",
@@ -224,7 +226,8 @@
       "startDate": "2025-01-01",
       "endDate": "2025-01-01",
       "summary": "Contract - Created the entire User Testing dashboard for Credit Karma for the User Management team. Converted pages router to App router. Built features for creating test/production users across the web and mobile experience. Included search and metrics coordinated across multiple system APIs. TypeScript, NextJS, React, Tachyons, React Native",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Fintech"
     },
     {
       "name": "Novant Health / Red Ventures",
@@ -232,7 +235,8 @@
       "startDate": "2024-06-01",
       "endDate": "2024-12-01",
       "summary": "Contract - Build and maintained Physician Finder, Matcher, and landing pages sites for Novant to locate doctors. Legacy code was sunsetted and new, modern websites were built using TypeScript, NextJS, and Vue, tooled with Datadog/Netlify.",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Healthcare"
     },
     {
       "name": "OptumRX Health / Red Ventures",
@@ -240,7 +244,8 @@
       "startDate": "2024-01-01",
       "endDate": "2024-12-31",
       "summary": "Contract - Created E-commerce site for RVO Health. Built the market, inventory, authentication, and ordering systems, complete with automation pipelines. TypeScript, NextJS, React, Contentful, Plytix, Stripe, Algolia",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Healthcare"
     },
     {
       "name": "Swell Energy",
@@ -248,7 +253,8 @@
       "startDate": "2023-08-01",
       "endDate": "2024-02-01",
       "summary": "Contract - Developed charts, dashboards, control panels to manage solar and power utilities in southern California and Hawaii. Authentication, API, UI, CRUD. TypeScript, NextJS, React, Python, Django, Docker, PostgreSQL",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Clean Energy"
     },
     {
       "name": "Lumenai (Startup)",
@@ -256,7 +262,8 @@
       "startDate": "2023-03-01",
       "endDate": "2023-07-01",
       "summary": "Contract Full-Stack Web Developer - Helped create foundational internal apps and build process for a browser extension using RPA automation, React, SASS, Docker. Created dynamic robust UI screens React, Typescript, Jest, automated deployments, and self-built CI/CD. The company saw a 15% rise in productivity and experienced 35% growth in 6 months.",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "AI / Automation"
     },
     {
       "name": "TekSystems",
@@ -264,7 +271,8 @@
       "startDate": "2023-01-01",
       "endDate": "2023-06-01",
       "summary": "Government contract with the VA. Built health medicine tools + calculators to lessen the amount of information patients had to fill out and help physicians get accurate stats about health issues.",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Government / Healthcare"
     },
     {
       "name": "Viasat",
@@ -272,7 +280,8 @@
       "startDate": "2022-06-01",
       "endDate": "2023-01-01",
       "summary": "Contract - Managed in-flight entertainment portals for dozens of airlines. On-call. In charge of workflow management and client-stakeholder relations. Demoed product updates to stakeholders. Transformed polished designs into reusable components. React, TypeScript, NextJS, Jenkins, AWS, MySQL",
-      "location": "Remote"
+      "location": "Remote",
+      "sector": "Aerospace"
     },
     {
       "name": "Twilio Inc.",
@@ -282,7 +291,8 @@
       "highlights": [],
       "summary": "In charge of twilio.com and all sub-sites. Managed and lead multiple projects, created a React design system, built the SIGNAL HackPack v4 badge. Launched WhatsApp, Studio, Flex, products. Localization/Regionalization. Implemented testing, migrated blog and legal to a CMS. Worked emergency on-call. TypeScript, React, Docker, Python, Django, Wagtail, PHP, WordPress, i18n.",
       "url": "https://twilio.com/",
-      "location": "San Francisco, CA"
+      "location": "San Francisco, CA",
+      "sector": "Telecom"
     },
     {
       "name": "LacyMorrow.com",
@@ -302,7 +312,8 @@
       "highlights": [],
       "summary": "Took on every role and responsibility of designing, creating, implementing, deploying, and maintaining a plethora of websites for numerous clients including: Microsoft, Uber, AARP, and Beasley Media. Docker; Electron; PHP; WordPress; SASS; Webpack; AWS; Google Analytics",
       "url": "https://10up.com/",
-      "location": "San Francisco, CA"
+      "location": "San Francisco, CA",
+      "sector": "Digital Agency"
     },
     {
       "name": "Flymore (Startup)",
@@ -310,7 +321,8 @@
       "startDate": "2016-06-01",
       "endDate": "2017-12-01",
       "summary": "Hosted a camp for kids to build FPV drones with a focus on teaching kids about basic software & electronics. Hosted first drone race in Charlotte, NC: qualifier for Drone Nationals. Developed software to livestream 4 analog FPV feeds; Co-founded and created Flymore LLC Web Identity and Academy website. OpenStack; Apache; Linux; ReactJS, GraphQL, Youtube API, WordPress, PHP",
-      "location": "Charlotte, NC"
+      "location": "Charlotte, NC",
+      "sector": "Education / Drones"
     },
     {
       "name": "Long Game",
@@ -320,7 +332,8 @@
       "highlights": [],
       "summary": "Contract - Helped create a startup's initial mobile app: React web-app and second-iteration React Native app for IOS and Android; Saw first launch to 100+ beta users. AWS; NodeJS; Docker; SequelizeJS; React Native",
       "url": "https://www.truist.com/long-game",
-      "location": "San Francisco, CA"
+      "location": "San Francisco, CA",
+      "sector": "Fintech"
     },
     {
       "name": "Yahoo",
@@ -330,7 +343,8 @@
       "highlights": [],
       "summary": "Contract - Built several React components on a Yahoo stack for the Search and Branded Marketing teams using Tumblr as a data serve API. OpenStack; Apache; Linux; NodeJS; ReactJS, Electron, NW.js, Selenium.",
       "url": "https://www.yahoo.com/",
-      "location": "Palo Alto, CA"
+      "location": "Palo Alto, CA",
+      "sector": "Tech"
     },
     {
       "name": "Invitae",
@@ -340,7 +354,8 @@
       "highlights": [],
       "summary": "Senior Full-Stack Web Developer - Created and maintained HIPAA-compliant back office software, data science tools, and analytics software as well as the public-facing invitae.com; UX/UI Developer - Developed navigation, modals, and interactions; Made custom WordPress theme; DevOps - Managed database health, configured continuous integration instances, web-hooks, bi-weekly deployments. Created an automated Selenium testing workflow; Tech Interviewer;\n\nPython, PHP, MySQL, Django, Flask, Angular, Backbone, React, WordPress, ElasticSearch, NightwatchJS, Git & Mercurial, Docker, Jenkins, Splunk, Apache, AWS EC2, Linux",
       "url": "https://www.invitae.com/",
-      "location": "San Francisco, CA"
+      "location": "San Francisco, CA",
+      "sector": "Genomics"
     },
     {
       "name": "Appalachian State University",
@@ -350,7 +365,8 @@
       "highlights": [],
       "summary": "Full-Stack Web Developer - Built internal websites and scheduling software. Helped develop back office software. Created custom CMS framework with PHP, Postgres used by all campus web pages; DevOps - Managed database and handled deployments;\n\nPHP, Python, Postgres, MySQL, PHPWebsite, PHPUnit, Git, Apache, Linux",
       "url": "https://www.appstate.edu/",
-      "location": "Boone, NC"
+      "location": "Boone, NC",
+      "sector": "Education"
     },
     {
       "name": "Red Ventures",
@@ -360,7 +376,8 @@
       "highlights": [],
       "summary": "Front-End Web Developer - Created 10+ branded advertising websites and unique user interactions; Created promotional sites and emails. Sliced Photoshop files to create HTML email; \n\nPHP, MySQL, Linux",
       "url": "https://www.redventures.com/",
-      "location": "Rock Hill, SC"
+      "location": "Rock Hill, SC",
+      "sector": "Digital Marketing"
     }
   ],
   "volunteer": [],
