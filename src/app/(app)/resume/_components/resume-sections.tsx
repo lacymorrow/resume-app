@@ -39,7 +39,8 @@ export function WorkSection({ entries, matches, tags }: {
             <ResumeEntryCard title={entry.position} subtitle={entry.name}
               dateRange={formatDateRange(entry.startDate, entry.endDate)} location={entry.location}
               summary={entry.summary} tags={tags.get(entry.originalIndex) ?? []} url={entry.url}
-              highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)} />
+              highlights={entry.highlights?.filter(Boolean)} match={matches.get(entry.originalIndex)}
+              sector={entry.sector} />
           </motion.div>
         ))}
       </AnimatePresence>
@@ -137,7 +138,7 @@ export function ExtrasSection({ interests, awards, references, showInterests, sh
           {awards.map((a) => (
             <div key={a.title} className="text-sm">
               <span className="font-serif font-semibold text-foreground">{a.title}</span>
-              <span className="text-muted-foreground"> — {a.awarder}, {new Date(a.date).getFullYear()}</span>
+              <span className="text-muted-foreground"> — {a.awarder}, {new Date(a.date).getUTCFullYear()}</span>
             </div>
           ))}
         </Section>
