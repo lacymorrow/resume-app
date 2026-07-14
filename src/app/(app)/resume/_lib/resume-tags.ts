@@ -18,6 +18,22 @@ const TAG_ALIASES: Record<string, string> = {
   "nw.js": "NW.js", wagtail: "Wagtail", "ci/cd": "CI/CD",
   regex: "Regex", cron: "Cron", azure: "Azure", linux: "Linux",
   apache: "Apache", redis: "Redis", "react query": "React Query",
+  "lang chain": "LangChain", langchain: "LangChain",
+  "lang graph": "LangGraph", langgraph: "LangGraph",
+  "llama index": "LlamaIndex", llamaindex: "LlamaIndex",
+  rag: "RAG", "retrieval augmented generation": "RAG",
+  "retrieval-augmented generation": "RAG",
+  llm: "LLM", llms: "LLM", "ai/llm orchestration": "LLM",
+  mcp: "MCP", "model context protocol": "MCP",
+  claude: "Claude", anthropic: "Claude", openai: "OpenAI",
+  "vector database": "Vector Databases", "vector databases": "Vector Databases",
+  pgvector: "Vector Databases", pinecone: "Vector Databases",
+  embeddings: "Vector Databases",
+  nosql: "NoSQL", microservices: "Microservices",
+  "distributed systems": "Distributed Systems",
+  "autonomous agents": "AI Agents", "ai agents": "AI Agents",
+  "agent orchestration": "AI Agents", agentic: "AI Agents",
+  rpa: "RPA", automation: "Automation",
 };
 
 function normalize(tag: string): string {
@@ -35,7 +51,19 @@ const KNOWN_TAGS = new Set([
   "SASS", "Tailwind", "Webpack", "CI/CD", "Linux", "Apache",
   "Sequelize", "NW.js", "React Query", "Tachyons", "Datadog",
   "Netlify", "Vercel", "Heroku", "Cron", "Regex",
+  "LangChain", "LangGraph", "LlamaIndex", "RAG", "LLM", "MCP",
+  "Claude", "OpenAI", "Vector Databases", "NoSQL", "Microservices",
+  "Distributed Systems", "AI Agents", "RPA", "Automation",
 ]);
+
+/**
+ * Word-boundary tag match: prevents short tags from matching inside words
+ * (e.g. "Go" in "Django", "RAG" in "brokerage").
+ */
+function containsTag(text: string, tag: string): boolean {
+  const escaped = tag.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`).test(text.toLowerCase());
+}
 
 function extractTagsFromText(text: string): string[] {
   const tags = new Set<string>();
@@ -43,7 +71,7 @@ function extractTagsFromText(text: string): string[] {
   for (const part of parts) {
     const trimmed = part.trim();
     for (const known of KNOWN_TAGS) {
-      if (trimmed.toLowerCase().includes(known.toLowerCase())) {
+      if (containsTag(trimmed, known)) {
         tags.add(known);
       }
     }
@@ -85,6 +113,7 @@ export function getAllTags(data: ResumeSchema): string[] {
     for (const kw of skill.keywords) {
       const n = normalize(kw);
       if (KNOWN_TAGS.has(n)) all.add(n);
+      for (const t of extractTagsFromText(kw)) all.add(t);
     }
   }
   for (const tags of extractWorkTags(data.work).values()) for (const t of tags) all.add(t);

@@ -13,7 +13,7 @@
     "email": "me@lacymorrow.com",
     "phone": "704-451-6680",
     "url": "http://lacymorrow.com",
-    "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nEXPERTISE: Agentic engineer + Full-stack developer + Hardware Engineer; Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
+    "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nEXPERTISE: Agentic engineer + Full-stack developer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
     "location": {
       "countryCode": "US",
       "city": "Charlotte",
@@ -80,7 +80,7 @@
     {
       "name": "Lacy Shell",
       "startDate": "2024-01-01",
-      "summary": "AI Coding Agent for Your Terminal. Integrate Codex, Claude Code, or your favorite AI coding CLI into your existing shell.",
+      "summary": "AI Coding Agent for Your Terminal. Integrate Codex, Claude Code, or your favorite AI coding CLI into your existing shell. Natural language routes through an LLM agent with tool calling and safe command execution.",
       "url": "https://github.com/lacymorrow/lacy-shell"
     },
     {
@@ -98,13 +98,13 @@
     {
       "name": "Hitchhiker's Guide to the Galaxy",
       "startDate": "2025-01-01",
-      "summary": "Completely dynamic website that generates entries as they are requested. Mimicking the guide from the famous Douglas Adams novel.",
+      "summary": "Completely dynamic website that generates entries as they are requested — LLM-powered generative content with retrieval of prior entries for consistency. Mimicking the guide from the famous Douglas Adams novel.",
       "url": "https://github.com/lacymorrow/hitchhikers-guide"
     },
     {
       "name": "OpenClaw Trading Skills",
       "startDate": "2024-01-01",
-      "summary": "AI agent skills for the OpenClaw platform. Built autonomous trading agents in Rust, Go, and Shell for stock/crypto (Alpaca), prediction markets (Polymarket, Kalshi). Runs a brokerage account and posts trades to Twitter.",
+      "summary": "AI agent skills for the OpenClaw platform. Built autonomous trading agents in Rust, Go, and Shell for stock/crypto (Alpaca), prediction markets (Polymarket, Kalshi) — agent-based workflows with scheduled evaluation loops and risk guardrails. Runs a brokerage account and posts trades to Twitter.",
       "url": "https://github.com/lacymorrow/openclaw-alpaca-trading-skill"
     },
     {
@@ -206,7 +206,7 @@
       "position": "Backend Developer + Agentic Engineer",
       "startDate": "2025-12-01",
       "endDate": "2026-06-01",
-      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer managing 12 autonomous agents that independently picked up and completed engineering tasks. Developed Claude agent personas and reusable skill sets across multiple services and platforms for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents",
+      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer managing 12 autonomous agents that independently picked up and completed engineering tasks — agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG (Retrieval-Augmented Generation) pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets across multiple services and platforms for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents, LangGraph, RAG, MCP",
       "url": "https://www.bizjournals.com/",
       "location": "Charlotte, NC"
     },
@@ -215,7 +215,7 @@
       "position": "Agentic Engineer + Senior Developer",
       "startDate": "2025-06-01",
       "endDate": "2026-04-01",
-      "summary": "Created internal GPT setup for company use. Contract - Refactored a weather-forecasting dashboard to deploy to AWS and migrated authentication to Azure A/D (Active Directory) from user/password. Python, React, Docker, AWS, Azure, Regex, Cron",
+      "summary": "Contract - Led internal AI adoption: built an internal GPT/LLM platform for company-wide use with RAG (Retrieval-Augmented Generation) over internal documentation, prompt libraries, and Azure OpenAI integration. Refactored a weather-forecasting dashboard to deploy to AWS and migrated authentication to Azure A/D (Active Directory) from user/password. Python, React, LangChain, LlamaIndex, RAG, LLMs, Docker, AWS, Azure, Regex, Cron",
       "location": "Remote"
     },
     {
@@ -255,7 +255,7 @@
       "position": "Senior Web Engineer - Browser Extension",
       "startDate": "2023-03-01",
       "endDate": "2023-07-01",
-      "summary": "Contract Full-Stack Web Developer - Helped create foundational internal apps and build process for a browser extension using RPA automation, React, SASS, Docker. Created dynamic robust UI screens React, Typescript, Jest, automated deployments, and self-built CI/CD. The company saw a 15% rise in productivity and experienced 35% growth in 6 months.",
+      "summary": "Contract Full-Stack Web Developer - Helped create foundational internal apps and build process for a browser extension using RPA and LLM-assisted automation, React, SASS, Docker. Created dynamic robust UI screens React, Typescript, Jest, automated deployments, and self-built CI/CD. The company saw a 15% rise in productivity and experienced 35% growth in 6 months.",
       "location": "Remote"
     },
     {
@@ -421,10 +421,11 @@
         "Rust",
         "Swift",
         "Go",
-        "SQL / MySQL / PostgreSQL / MongoDB",
-        "Redis",
+        "SQL / MySQL / PostgreSQL",
+        "NoSQL / MongoDB / Redis",
         "Serverless",
-        "Microservices"
+        "Microservices",
+        "Distributed Systems"
       ]
     },
     {
@@ -465,9 +466,20 @@
       ]
     },
     {
-      "name": "AI Engineer",
-      "level": "Evolving",
-      "keywords": ["LLMs", "MCP (Model Context Protocol)", "Neural-networks", "Tensorflow", "Vector Databases", "Prompt Engineer", "Agentic Systems"]
+      "name": "AI & Agentic Systems",
+      "level": "Expert",
+      "keywords": [
+        "LLMs (Claude, GPT, Gemini)",
+        "LangChain / LangGraph",
+        "LlamaIndex",
+        "RAG (Retrieval-Augmented Generation)",
+        "Agent Orchestration / Multi-Agent Systems",
+        "MCP (Model Context Protocol)",
+        "Vector Databases / Embeddings (pgvector, Pinecone)",
+        "Prompt Engineering / Evals",
+        "Generative AI Integrations / Automation",
+        "Neural-networks / Tensorflow"
+      ]
     },
     {
       "name": "Other Languages",
