@@ -138,7 +138,7 @@ export function ExtrasSection({ interests, awards, references, showInterests, sh
           {awards.map((a) => (
             <div key={a.title} className="text-sm">
               <span className="font-serif font-semibold text-foreground">{a.title}</span>
-              <span className="text-muted-foreground"> — {a.awarder}, {new Date(a.date).getFullYear()}</span>
+              <span className="text-muted-foreground"> — {a.awarder}, {new Date(a.date).getUTCFullYear()}</span>
             </div>
           ))}
         </Section>

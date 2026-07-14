@@ -9,16 +9,16 @@ interface ResumeEntryCardProps {
 }
 
 function formatDateRange(startDate: string, endDate?: string): string {
-  const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { month: "short", year: "numeric" });
+  const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { month: "short", year: "numeric", timeZone: "UTC" });
   const start = fmt(startDate);
   if (!endDate) return `${start} — Present`;
   const end = fmt(endDate);
   if (start === end) return start;
-  const startYear = new Date(startDate).getFullYear();
-  const endYear = new Date(endDate).getFullYear();
+  const startYear = new Date(startDate).getUTCFullYear();
+  const endYear = new Date(endDate).getUTCFullYear();
   if (startYear === endYear) {
-    const startMonth = new Date(startDate).toLocaleDateString(undefined, { month: "short" });
-    const endMonth = new Date(endDate).toLocaleDateString(undefined, { month: "short" });
+    const startMonth = new Date(startDate).toLocaleDateString(undefined, { month: "short", timeZone: "UTC" });
+    const endMonth = new Date(endDate).toLocaleDateString(undefined, { month: "short", timeZone: "UTC" });
     return startMonth === endMonth ? `${start}` : `${startMonth} — ${endMonth} ${endYear}`;
   }
   return `${start} — ${end}`;
