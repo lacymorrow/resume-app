@@ -221,7 +221,7 @@ export const FLAVORS: ResumeFlavor[] = [
     label: "AI / Agentic Engineer",
     description: "AI agents, LLMs, RAG, LangChain/LangGraph, automation",
     tagline: "Agentic engineer + AI systems builder + hardware hacker",
-    expertise: "Agentic engineer; LLM & GenAI integration; LangChain / LangGraph / LlamaIndex; RAG pipelines; Agent orchestration & MCP; Vector databases; Automation & RPA; Full-stack developer (Python, TypeScript, React); Open-source maintainer",
+    expertise: "Agentic engineer; LLM & GenAI integration; LangChain / LangGraph / LlamaIndex; RAG pipelines; Agent orchestration & MCP; Vector databases; Automation & RPA; Full-stack developer (Node.js, TypeScript, React); Open-source maintainer",
     sections: ALL_SECTIONS,
     work: {
       "American City Business Journals": {
