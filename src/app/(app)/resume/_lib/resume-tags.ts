@@ -42,11 +42,6 @@ const TAG_ALIASES: Record<string, string> = {
   "landing page": "Landing Pages", "landing pages": "Landing Pages",
 };
 
-function normalize(tag: string): string {
-  const lower = tag.trim().toLowerCase();
-  return TAG_ALIASES[lower] ?? tag.trim();
-}
-
 const KNOWN_TAGS = new Set([
   "TypeScript", "JavaScript", "React", "React Native", "Next.js",
   "Vue", "Svelte", "Angular", "Astro", "Node.js", "Python", "PHP",
@@ -64,30 +59,30 @@ const KNOWN_TAGS = new Set([
 ]);
 
 /**
- * Word-boundary tag regexes, pre-compiled once since KNOWN_TAGS is static.
- * Boundaries prevent short tags from matching inside words
- * (e.g. "Go" in "Django", "RAG" in "brokerage").
+ * Word-boundary tag regexes, pre-compiled once since KNOWN_TAGS and
+ * TAG_ALIASES are static. Every search term (canonical tag or alias) maps
+ * to its canonical tag, so aliases like "ecommerce" or "i18n" are matched
+ * inside prose and despite trailing punctuation. Boundaries prevent short
+ * tags from matching inside words (e.g. "Go" in "Django", "RAG" in
+ * "brokerage").
  */
-const TAG_REGEXES = new Map<string, RegExp>(
-  Array.from(KNOWN_TAGS, (tag) => {
-    const escaped = tag.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    return [tag, new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`)];
-  }),
-);
+const TAG_REGEXES = new Map<string, { canonical: string; regex: RegExp }>();
+for (const [term, canonical] of [
+  ...Array.from(KNOWN_TAGS, (tag) => [tag.toLowerCase(), tag] as const),
+  ...Object.entries(TAG_ALIASES),
+]) {
+  const escaped = term.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  TAG_REGEXES.set(term.toLowerCase(), {
+    canonical,
+    regex: new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`),
+  });
+}
 
 function extractTagsFromText(text: string): string[] {
+  const lower = text.toLowerCase();
   const tags = new Set<string>();
-  const parts = text.split(/[,;|]/);
-  for (const part of parts) {
-    const trimmed = part.trim();
-    const lower = trimmed.toLowerCase();
-    for (const [tag, regex] of TAG_REGEXES) {
-      if (regex.test(lower)) {
-        tags.add(tag);
-      }
-    }
-    const normalized = normalize(trimmed);
-    if (KNOWN_TAGS.has(normalized)) tags.add(normalized);
+  for (const { canonical, regex } of TAG_REGEXES.values()) {
+    if (regex.test(lower)) tags.add(canonical);
   }
   return Array.from(tags);
 }
