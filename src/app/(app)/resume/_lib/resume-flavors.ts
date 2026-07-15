@@ -42,7 +42,7 @@ export const FLAVORS: ResumeFlavor[] = [
     label: "Complete Resume",
     description: "Everything, unfiltered",
     tagline: "Agentic & web engineer + open-source developer + hardware hacker",
-    expertise: "Agentic engineer + Full-stack developer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master",
+    expertise: "Agentic engineer + Full-stack developer + GTM/Growth engineer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); GTM engineering (product launches, e-commerce funnels, SEO/analytics, marketing automation); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master",
     sections: ALL_SECTIONS,
     work: {},
     projects: {},
@@ -276,6 +276,87 @@ export const FLAVORS: ResumeFlavor[] = [
       "XPlay.js": { visible: false },
       "XSPF Jukebox": { visible: false },
       "Cinematic": { visible: false },
+    },
+  },
+
+  {
+    id: "gtm",
+    label: "GTM Engineer",
+    description: "Go-to-market: launches, growth, funnels, marketing automation",
+    tagline: "GTM engineer + full-stack product launcher",
+    expertise: "GTM/Growth engineering; Product launches & marketing sites; Landing pages & e-commerce funnels (Stripe, Algolia, Contentful); SEO / Analytics / Google Tag Manager; Localization & i18n; AI-powered GTM automation (agents, RPA); Full-stack developer (TypeScript, React, Next.js)",
+    sections: { ...ALL_SECTIONS, interests: false },
+    work: {
+      "American City Business Journals": {
+        position: "Automation & Platform Engineer",
+        summary: "Contract - Built and migrated the Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer of 12 autonomous agents that independently completed engineering tasks — the agent-based automation (task routing, guardrails, human-in-the-loop review) now central to modern GTM workflows. Laravel, PHP, Claude, AI Agents, Automation.",
+      },
+      "Duke Energy": {
+        position: "AI Platform Engineer - Internal Adoption",
+        summary: "Drove company-wide adoption of an internal GPT/LLM platform: built the product, onboarding, and prompt libraries that turned an internal tool into an org-wide rollout. RAG over internal documentation, Azure OpenAI integration. Python, React, LangChain, RAG, Azure.",
+      },
+      "Credit Karma": {
+        summary: "Built the User Testing dashboard powering user research at Credit Karma — programmatic creation of test/production users across web and mobile, with search and metrics coordinated across multiple system APIs. TypeScript, NextJS, React.",
+      },
+      "Novant Health / Red Ventures": {
+        summary: "Contract - Built and maintained Physician Finder, Matcher, and landing pages for Novant Health patient acquisition. Sunsetted legacy code and rebuilt modern sites with TypeScript, NextJS, and Vue, instrumented with Datadog and deployed on Netlify.",
+      },
+      "OptumRX Health / Red Ventures": {
+        position: "E-commerce Engineer",
+        summary: "Contract - Created the E-commerce storefront for RVO Health: market pages, inventory, authentication, and ordering funnels with Stripe payments, Algolia search, and Contentful content ops, complete with automation pipelines. TypeScript, NextJS, React, Plytix.",
+      },
+      "Swell Energy": { visible: false },
+      "Viasat": { visible: false },
+      "Twilio Inc.": {
+        position: "Senior Web Engineer - Brand & Web Team",
+        summary: "Owned twilio.com and all sub-sites — the company's primary marketing and acquisition surface. Launched product pages for the WhatsApp, Studio, and Flex releases. Created a React design system adopted org-wide. Led the localization/regionalization effort for international markets. Migrated blog and legal sites to a CMS for content velocity. TypeScript, React, i18n, WordPress, Wagtail.",
+      },
+      "Yahoo": {
+        summary: "Contract - Built React components for the Search and Branded Marketing teams on a Yahoo stack, using Tumblr as a data-serve API. NodeJS, ReactJS, Electron.",
+      },
+      "Invitae": {
+        summary: "Built the public-facing invitae.com and a custom WordPress theme; led UX/UI development for a HIPAA-compliant healthcare platform. React, WordPress, SASS.",
+      },
+      "10up": {},
+      "LacyMorrow.com": { visible: false },
+      "Lumenai (Startup)": {
+        summary: "Built RPA and LLM-assisted automation via a browser extension, plus foundational internal apps with automated deployments. The company saw a 15% rise in productivity and 35% growth in 6 months. React, TypeScript, Docker, Jest.",
+      },
+      "TekSystems": { visible: false },
+      "Flymore (Startup)": {
+        summary: "Co-founded a drone-education startup: created the Flymore LLC web identity and Academy website, hosted Charlotte's first drone race (a Drone Nationals qualifier), and ran camps teaching kids software & electronics. ReactJS, GraphQL, WordPress.",
+      },
+      "Long Game": {
+        summary: "Contract - Helped take a startup from zero to first launch: built the initial React web app and second-iteration React Native app for iOS and Android, launched to 100+ beta users. AWS, NodeJS, React Native.",
+      },
+      "Appalachian State University": { visible: false },
+      "Red Ventures": { visible: false },
+    },
+    projects: {
+      "Shipkit": {
+        summary: "Next.js Accelerator for building, launching, and monetizing MVPs — the full GTM stack (auth, payments, CMS, analytics, email) preconfigured so products ship in days, not months.",
+      },
+      "Vibe Rehab": {},
+      "CrossOver": {
+        summary: "Electron cross-platform crosshair overlay for PC gaming. Launched and distributed through the Windows App Store and Snapcraft store.",
+      },
+      "NPM Libraries": {},
+      "Twilio Hackpack v4": {
+        summary: "Twilio's open-source hardware badge built for the SIGNAL 2018 conference — developer-marketing hardware with a joystick, lights, 7 buttons, and a touchscreen on a Raspberry Pi Zero.",
+      },
+      "Lacy Shell": { visible: false },
+      "Juno AI": { visible: false },
+      "Hitchhiker's Guide to the Galaxy": { visible: false },
+      "OpenClaw Trading Skills": { visible: false },
+      "MCP Servers & Tools": { visible: false },
+      "Uibrary": { visible: false },
+      "React Component Libraries": { visible: false },
+      "Cinematic": { visible: false },
+      "Casper": { visible: false },
+      "Boone Community Network": { visible: false },
+      "Phase2Productions": { visible: false },
+      "XPlay.js": { visible: false },
+      "XSPF Jukebox": { visible: false },
     },
   },
 
