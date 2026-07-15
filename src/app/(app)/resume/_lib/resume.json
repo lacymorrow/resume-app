@@ -13,7 +13,7 @@
     "email": "me@lacymorrow.com",
     "phone": "704-451-6680",
     "url": "http://lacymorrow.com",
-    "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nEXPERTISE: Agentic engineer + Full-stack developer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
+    "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nEXPERTISE: Agentic engineer + Full-stack developer + GTM/Growth engineer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); GTM engineering (product launches, e-commerce funnels, SEO/analytics, marketing automation); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
     "location": {
       "countryCode": "US",
       "city": "Charlotte",
@@ -451,9 +451,9 @@
       "keywords": ["Docker", "AWS", "G Cloud", "Vercel", "Netlify", "Heroku", "Caching", "CI/CD", "Testing"]
     },
     {
-      "name": "Web Branding",
+      "name": "Growth & GTM",
       "level": "Senior",
-      "keywords": ["SEO", "GTM", "Analytics", "WordPress"]
+      "keywords": ["SEO", "Google Tag Manager", "Google Analytics", "Landing Pages / Funnels", "E-commerce (Stripe, CommerceTools)", "Localization / i18n", "Marketing & Outbound Automation (RPA, AI Agents)", "Product Launches", "WordPress / CMS"]
     },
     {
       "name": "Platform",

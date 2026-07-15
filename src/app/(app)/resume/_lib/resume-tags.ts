@@ -34,6 +34,12 @@ const TAG_ALIASES: Record<string, string> = {
   "autonomous agents": "AI Agents", "ai agents": "AI Agents",
   "agent orchestration": "AI Agents", agentic: "AI Agents",
   rpa: "RPA", automation: "Automation",
+  seo: "SEO", analytics: "Analytics", "google analytics": "Analytics",
+  "google tag manager": "Analytics",
+  "e-commerce": "E-commerce", ecommerce: "E-commerce",
+  i18n: "Localization", l10n: "Localization",
+  localization: "Localization", regionalization: "Localization",
+  "landing page": "Landing Pages", "landing pages": "Landing Pages",
 };
 
 function normalize(tag: string): string {
@@ -54,6 +60,7 @@ const KNOWN_TAGS = new Set([
   "LangChain", "LangGraph", "LlamaIndex", "RAG", "LLM", "MCP",
   "Claude", "OpenAI", "Vector Databases", "NoSQL", "Microservices",
   "Distributed Systems", "AI Agents", "RPA", "Automation",
+  "SEO", "Analytics", "E-commerce", "Localization", "Landing Pages",
 ]);
 
 /**
