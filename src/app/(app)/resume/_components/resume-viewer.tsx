@@ -12,14 +12,14 @@ import { getAllTags } from "../_lib/resume-tags";
 import { FLAVORS, type ResumeFlavor } from "../_lib/resume-flavors";
 import { type CustomFlavor, loadCustomFlavors, saveCustomFlavor, deleteCustomFlavor, filterStateToCustomFlavor } from "../_lib/resume-custom-flavors";
 import { type ExportFormat, exportResume, buildExportData } from "../_lib/resume-export";
-import { ResumeHeader } from "./resume-header";
+import { SIGNATURE_FONT_STACK, SIGNATURE, parseSummary } from "../_lib/resume-export-shared";
+import { ResumeHeader, ExpertiseBlock } from "./resume-header";
 import { FilterPanel } from "./filter-panel";
-import { Section, WorkSection, ProjectsSection, SkillsSection, EducationSection, ExtrasSection } from "./resume-sections";
+import { Section, WorkSection, ProjectsSection, PersonalSection, ReferencesSection, ResumeFooter } from "./resume-sections";
 
 const parseAsStringArray = parseAsArrayOf(parseAsString);
 
 export function ResumeViewer({ data }: { data: ResumeSchema }) {
-  // URL-persisted state — these make the view bookmarkable and shareable
   const [flavorParam, setFlavorParam] = useQueryState("flavor", parseAsString.withDefault("complete"));
   const [hcParam, setHcParam] = useQueryState("hc", parseAsStringArray.withDefault([]));
   const [hpParam, setHpParam] = useQueryState("hp", parseAsStringArray.withDefault([]));
@@ -76,6 +76,8 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
       `EXPERTISE: ${flavor.expertise}`,
     ),
   }), [data.basics, flavor]);
+
+  const summary = useMemo(() => parseSummary(basics.summary), [basics.summary]);
 
   const handleExport = useCallback((format: ExportFormat) => {
     const exportData = buildExportData(data, basics, flavor, filters);
@@ -139,7 +141,10 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
   };
 
   return (
-    <div className="resume-grain relative mx-auto max-w-6xl px-4 py-10 mt-[var(--header-height)] print:mt-0">
+    <div
+      className="resume-grain relative mx-auto max-w-6xl px-4 py-10 mt-[var(--header-height)] print:mt-0 print:px-0 print:py-0 print:max-w-none"
+      style={{ fontFamily: SIGNATURE_FONT_STACK, color: SIGNATURE.body }}
+    >
       <div className="flex gap-10">
         {/* Sidebar */}
         <aside className="hidden lg:block w-72 shrink-0 print:hidden">
@@ -155,7 +160,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
               <motion.div
                 key={`ov-${filterFlash}`}
                 className="pointer-events-none absolute inset-0 print:hidden"
-                style={{ backgroundColor: "hsl(var(--primary) / 0.04)", zIndex: 1 }}
+                style={{ backgroundColor: `${SIGNATURE.pink}08`, zIndex: 1 }}
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut" }}
@@ -163,7 +168,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
               <motion.div
                 key={`bar-${filterFlash}`}
                 className="pointer-events-none absolute inset-x-0 top-0 h-[1px] print:hidden origin-left"
-                style={{ zIndex: 2, background: "linear-gradient(to right, transparent, hsl(var(--primary) / 0.6), transparent)" }}
+                style={{ zIndex: 2, background: `linear-gradient(to right, transparent, ${SIGNATURE.pink}99, transparent)` }}
                 initial={{ scaleX: 0, opacity: 1 }}
                 animate={{ scaleX: [0, 1, 1], opacity: [1, 1, 0] }}
                 transition={{ duration: 1, times: [0, 0.55, 1] }}
@@ -174,34 +179,59 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
           <ResumeHeader basics={basics} />
 
           <AnimatePresence initial={false}>
+            {/* Expertise */}
+            <motion.div key="expertise" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
+              <Section rail="Expertise">
+                <ExpertiseBlock basics={basics} />
+              </Section>
+            </motion.div>
+
+            {/* Work */}
             {filters.sections.work && (
               <motion.div key="work" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
-                <Section title="Work Experience">
+                <Section rail="Developer Experience">
                   <WorkSection entries={workEntries} matches={workMatches} tags={workTags} />
                 </Section>
               </motion.div>
             )}
+
+            {/* Personal — groups skills, interests, qualities, education, awards */}
+            <motion.div key="personal" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
+              <Section rail="Personal">
+                <PersonalSection
+                  skills={data.skills}
+                  interests={data.interests}
+                  education={data.education}
+                  awards={data.awards}
+                  qualities={summary.qualities}
+                  showSkills={filters.sections.skills}
+                  showInterests={filters.sections.interests}
+                  showEducation={filters.sections.education}
+                  showAwards={filters.sections.awards}
+                />
+              </Section>
+            </motion.div>
+
+            {/* Projects / Open-Source */}
             {filters.sections.projects && projectEntries.length > 0 && (
               <motion.div key="projects" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
-                <Section title="Projects">
+                <Section rail="Open-Source">
                   <ProjectsSection entries={projectEntries} matches={projectMatches} tags={projectTags} />
                 </Section>
               </motion.div>
             )}
-            {filters.sections.skills && (
-              <motion.div key="skills" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
-                <Section title="Skills"><SkillsSection skills={data.skills} /></Section>
-              </motion.div>
-            )}
-            {filters.sections.education && (
-              <motion.div key="education" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
-                <Section title="Education"><EducationSection education={data.education} /></Section>
+
+            {/* References */}
+            {filters.sections.references && data.references.length > 0 && (
+              <motion.div key="references" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} layout>
+                <Section rail="References">
+                  <ReferencesSection references={data.references} />
+                </Section>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <ExtrasSection interests={data.interests} awards={data.awards} references={data.references}
-            showInterests={filters.sections.interests} showAwards={filters.sections.awards} showReferences={filters.sections.references} />
+          <ResumeFooter />
         </main>
       </div>
 

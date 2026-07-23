@@ -97,32 +97,38 @@ body {
 	animation: connectionHighlightDark 3s ease-in-out !important;
 }
 
-/* Resume print styles */
+/* Signature resume print styles — matches the PDF/DOCX export design */
 @media print {
-	@page { margin: 0.5in 0.6in; size: letter; }
+	@page { size: letter; margin: 0.5in 0; }
 
+	/* Hide everything except resume content */
 	header, footer, nav, aside,
 	[data-print-hide],
 	.lg\:block { display: none !important; }
 
+	#resume-content,
 	#resume-content header,
 	#resume-content footer,
 	#resume-content nav,
 	#resume-content aside { display: block !important; }
 
-
 	[data-match="false"] { display: none !important; }
-
 	.resume-grain::before { display: none !important; }
 
+	body {
+		background: white !important;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+		font-size: 9.5pt !important;
+		line-height: 1.45 !important;
+		color: #404042 !important;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+	}
+
 	.resume-grain {
-		--print-gap-xl: 8pt;
-		--print-gap-lg: 4pt;
-		--print-gap-md: 3pt;
-		--print-gap-sm: 2pt;
-		--print-gap-xs: 1pt;
-		padding: 0 !important;
-		margin: 0 !important;
+		padding: 0 0.55in !important;
+		margin: 0 auto !important;
+		max-width: 8.5in !important;
 	}
 
 	.resume-grain > .flex {
@@ -135,77 +141,70 @@ body {
 		margin: 0 !important;
 	}
 
-	body {
-		background: white !important;
-		color: black !important;
-		font-size: 11pt !important;
-		line-height: 1.4 !important;
-	}
-
-	/* Tighten section spacing for print */
-	#resume-content section {
-		margin-bottom: var(--print-gap-xl) !important;
-		break-inside: avoid-page;
-	}
-
-	#resume-content section > div:first-child {
-		margin-bottom: var(--print-gap-lg) !important;
-	}
-
-	/* Compact resume header */
+	/* Masthead */
 	#resume-content > header {
-		margin-bottom: var(--print-gap-xl) !important;
+		margin-bottom: 14px !important;
 	}
 
-	#resume-content > header > div:first-child {
-		margin-bottom: var(--print-gap-lg) !important;
+	#resume-content > header h1 {
+		font-size: 34pt !important;
+		font-weight: 800 !important;
+		color: #3f4041 !important;
+		letter-spacing: -0.02em !important;
 	}
 
-	#resume-content > header p.resume-dropcap {
-		margin-top: var(--print-gap-lg) !important;
+	/* Lede paragraph */
+	.resume-dropcap {
+		font-size: 10.5pt !important;
+		font-weight: 700 !important;
+		color: #77787b !important;
 	}
 
-	#resume-content > header > div:last-child {
-		margin-top: var(--print-gap-md) !important;
-	}
-
-	/* Compact entry cards */
-	.resume-entry {
-		padding-top: var(--print-gap-lg) !important;
-		padding-bottom: var(--print-gap-lg) !important;
-	}
-
-	.resume-entry > div:first-child { margin-bottom: var(--print-gap-xs) !important; }
-	.resume-entry p { margin-top: var(--print-gap-sm) !important; }
-	.resume-entry ul { margin-top: var(--print-gap-sm) !important; }
-	.resume-entry .flex.flex-wrap { margin-top: var(--print-gap-sm) !important; gap: var(--print-gap-sm) !important; }
-
-	.group { break-inside: avoid; }
-
-	h1 { font-size: 22pt !important; color: #1e3a5f !important; }
-	h2 { font-size: 10pt !important; color: #1e3a5f !important; }
-
-	/* Print accent: rose underline on section headers */
-	#resume-content section > div:first-child .h-px {
-		background: #c9365e !important;
-		height: 1.5px !important;
-	}
-
-	/* Rose accent on drop-cap and date labels */
-	.resume-dropcap::first-letter { color: #c9365e !important; }
-
-	a { text-decoration: none !important; color: inherit !important; }
-
-	/* Compact skills and education */
-	#resume-content .grid { gap: var(--print-gap-lg) !important; }
-	#resume-content .space-y-5 > * + * { margin-top: var(--print-gap-md) !important; }
-	#resume-content .space-y-2 > * + * { margin-top: var(--print-gap-xs) !important; }
-
-	/* Reduce drop-cap size for print */
 	.resume-dropcap::first-letter {
 		font-size: 2.4em !important;
 		line-height: 0.9 !important;
+		color: #e8308a !important;
 	}
+
+	/* Section grid */
+	#resume-content section {
+		margin-top: 20px !important;
+		break-inside: avoid-page;
+	}
+
+	/* Entry cards — Signature colors */
+	.resume-entry {
+		margin-bottom: 15px !important;
+		break-inside: avoid;
+		page-break-inside: avoid;
+	}
+
+	.resume-entry + .resume-entry {
+		border-top: none !important;
+	}
+
+	/* Show meta column in print */
+	.resume-entry > .hidden.sm\:block {
+		display: block !important;
+	}
+
+	/* Hide mobile-only meta in print */
+	.resume-entry .sm\:hidden {
+		display: none !important;
+	}
+
+	/* Show rail labels in print */
+	.hidden.sm\:block {
+		display: block !important;
+	}
+
+	/* Hide mobile rail labels in print */
+	.sm\:hidden.col-span-full {
+		display: none !important;
+	}
+
+	a { text-decoration: none !important; color: inherit !important; }
+	strong { font-weight: 700 !important; color: #3f4041 !important; }
 
 	/* Tighter line-height for print body text */
 	.leading-relaxed { line-height: 1.35 !important; }
