@@ -50,6 +50,8 @@ export interface ResumeProject {
   summary: string;
   url?: string;
   highlights?: string[];
+  /** Flagship projects get a ★ in exports, like the handmade resume */
+  featured?: boolean;
 }
 
 export interface ResumeEducation {
@@ -68,9 +70,28 @@ export interface ResumeSkill {
   keywords: string[];
 }
 
-export interface ResumeInterest { name: string; }
-export interface ResumeAward { title: string; awarder: string; date: string; }
-export interface ResumeReference { reference: string; name: string; }
-export interface ResumeLanguage { language: string; fluency: string; }
+export interface ResumeInterest {
+  name: string;
+}
+export interface ResumeAward {
+  title: string;
+  awarder: string;
+  date: string;
+}
+export interface ResumeReference {
+  reference: string;
+  name: string;
+}
+export interface ResumeLanguage {
+  language: string;
+  fluency: string;
+}
 
-export type SectionKey = "work" | "projects" | "skills" | "education" | "interests" | "awards" | "references";
+export type SectionKey =
+  | "work"
+  | "projects"
+  | "skills"
+  | "education"
+  | "interests"
+  | "awards"
+  | "references";
