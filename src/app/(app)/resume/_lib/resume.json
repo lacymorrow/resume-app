@@ -81,13 +81,15 @@
       "name": "Lacy Shell",
       "startDate": "2024-01-01",
       "summary": "AI Coding Agent for Your Terminal. Integrate Codex, Claude Code, or your favorite AI coding CLI into your existing shell. Natural language routes through an LLM agent with tool calling and safe command execution.",
-      "url": "https://github.com/lacymorrow/lacy-shell"
+      "url": "https://github.com/lacymorrow/lacy-shell",
+      "featured": true
     },
     {
       "name": "Juno AI",
       "startDate": "2025-01-01",
       "summary": "Voice-Operate Your Computer. Rust + Tauri Desktop app built on OpenAI Whisper and Anthropic Computer-use. Also functions as an MCP server (npx juno-cua) for Claude Code, Cursor, and other AI agents.",
-      "url": "https://github.com/lacymorrow/juno-ai"
+      "url": "https://github.com/lacymorrow/juno-ai",
+      "featured": true
     },
     {
       "name": "Vibe Rehab",
@@ -117,13 +119,15 @@
       "name": "Shipkit",
       "startDate": "2024-01-01",
       "summary": "Next.js Accelerator. Full-featured Next.js Starter and toolkit for building, launching, and monetizing MVPs.",
-      "url": "https://github.com/lacymorrow/shipkit"
+      "url": "https://github.com/lacymorrow/shipkit",
+      "featured": true
     },
     {
       "name": "Uibrary",
       "startDate": "2024-01-01",
       "summary": "Live Collections of UI Component Libraries. UI libraries (like shadcn) presented in live, dynamic fashion. Available to remix or install.",
-      "url": "https://uibrary.com"
+      "url": "https://uibrary.com",
+      "featured": true
     },
     {
       "name": "React Component Libraries",
@@ -149,7 +153,8 @@
         "Built with Electron",
         "Over 1000 stars on Github",
         "Featured in Windows app store and Snapcraft store"
-      ]
+      ],
+      "featured": true
     },
     {
       "name": "NPM Libraries",
@@ -169,7 +174,8 @@
       "startDate": "2014-03-31",
       "summary": "A Ghost-like WordPress theme. A gorgeous open-source Wordpress theme, inspired by the default theme of the Ghost blogging platform. Custom PHP WP theme.",
       "url": "http://www.lacymorrow.com/projects/casper",
-      "endDate": "2014-03-31"
+      "endDate": "2014-03-31",
+      "featured": true
     },
     {
       "name": "Boone Community Network",
@@ -197,7 +203,8 @@
       "startDate": "2006-01-01",
       "summary": "Flash Audio + Video Player. The XSPF Jukebox is a fully skinnable, open source Flash media player. Based on my revisions of Fabricio Zuardi's original creation. A full featured media player, the Jukebox supports both mp3 audio and flv video parsed through an external .XSPF or .XML playlist. Widespread use on popular websites and packaged with PHP framework SocialEngine; Python/PHP backend playlist generation.",
       "url": "http://lacymorrow.github.io/xspf-jukebox/",
-      "endDate": "2009-04-30"
+      "endDate": "2009-04-30",
+      "featured": true
     }
   ],
   "work": [
@@ -448,22 +455,52 @@
     {
       "name": "Devops",
       "level": "Senior",
-      "keywords": ["Docker", "AWS", "G Cloud", "Vercel", "Netlify", "Heroku", "Caching", "CI/CD", "Testing"]
+      "keywords": [
+        "Docker",
+        "AWS",
+        "G Cloud",
+        "Vercel",
+        "Netlify",
+        "Heroku",
+        "Caching",
+        "CI/CD",
+        "Testing"
+      ]
     },
     {
       "name": "Growth & GTM",
       "level": "Senior",
-      "keywords": ["SEO", "Google Tag Manager", "Google Analytics", "Landing Pages / Funnels", "E-commerce (Stripe, CommerceTools)", "Localization / i18n", "Marketing & Outbound Automation (RPA, AI Agents)", "Product Launches", "WordPress / CMS"]
+      "keywords": [
+        "SEO",
+        "Google Tag Manager",
+        "Google Analytics",
+        "Landing Pages / Funnels",
+        "E-commerce (Stripe, CommerceTools)",
+        "Localization / i18n",
+        "Marketing & Outbound Automation (RPA, AI Agents)",
+        "Product Launches",
+        "WordPress / CMS"
+      ]
     },
     {
       "name": "Platform",
       "level": "Expert",
-      "keywords": ["Electron", "Tauri", "React Native", "Flutter"]
+      "keywords": [
+        "Electron",
+        "Tauri",
+        "React Native",
+        "Flutter"
+      ]
     },
     {
       "name": "Application Development",
       "level": "Senior",
-      "keywords": ["Electron", "Rust", "Java", "C/C++/C#"]
+      "keywords": [
+        "Electron",
+        "Rust",
+        "Java",
+        "C/C++/C#"
+      ]
     },
     {
       "name": "Tools & Integrations",
@@ -501,7 +538,16 @@
     {
       "name": "Other Languages",
       "level": "Intermediate",
-      "keywords": ["Actionscript", "Java", "C", "C#", "C++", "Haskell", "F#", "Prolog"]
+      "keywords": [
+        "Actionscript",
+        "Java",
+        "C",
+        "C#",
+        "C++",
+        "Haskell",
+        "F#",
+        "Prolog"
+      ]
     }
   ]
 }
