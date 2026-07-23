@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direction 03 — Swiss · resume.lacy.sh design exploration</title>
+<meta name="description" content="Design exploration LAC-3036 · Direction 03 of 04 · Swiss — International Typographic Style direction for resume.lacy.sh">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #FFFFFF;
+    --ink: #111111;
+    --hairline: #E4E4E4;
+    --accent: #E8420C;        /* display sizes, indicators */
+    --accent-ink: #C33705;    /* same vermilion, tuned darker for AA at text size */
+    --measure: 62ch;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-variation-settings: "wdth" 100;
+    background: var(--white);
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.5;
+    font-feature-settings: "tnum" 1;
+  }
+
+  a { color: var(--accent-ink); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  .skip-link { position: absolute; left: -9999px; top: 0; background: var(--ink); color: var(--white); padding: 0.5rem 1rem; z-index: 10; }
+  .skip-link:focus { left: 0; }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 clamp(1.25rem, 4vw, 4rem);
+  }
+
+  /* ---------- Top bar: slug + flavor rail ---------- */
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .slug { color: var(--ink); font-weight: 500; }
+  .slug .n { color: var(--accent-ink); }
+
+  .flavor-rail {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+
+  .flavor-rail button {
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink);
+    font-weight: 500;
+    padding: 0.15rem 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .flavor-rail button[aria-pressed="true"] {
+    border-bottom-color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 1.5rem;
+    padding: clamp(2.5rem, 6vw, 5rem) 0 clamp(2rem, 4vw, 3.5rem);
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .masthead h1 {
+    grid-column: 1 / 13;
+    font-size: clamp(3.5rem, 11vw, 10.5rem);
+    line-height: 0.86;
+    font-weight: 800;
+    font-variation-settings: "wdth" 118;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .masthead .meta {
+    grid-column: 9 / 13;
+    margin-top: 2.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+  }
+
+  .meta dt {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    font-weight: 700;
+    margin-top: 0.75rem;
+  }
+  .meta dt:first-child { margin-top: 0; }
+  .meta dd { margin: 0; }
+
+  .render-index { padding: 0.875rem 0; border-bottom: 1px solid var(--hairline); font-size: 0.8125rem; letter-spacing: 0.02em; }
+  .render-index strong { color: var(--accent-ink); font-weight: 700; }
+
+  /* ---------- Numbered sections ---------- */
+
+  .section {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 1.5rem;
+    padding: clamp(2.5rem, 5vw, 4rem) 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .section-label { grid-column: 1 / 3; }
+
+  .section-label .num {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    font-variation-settings: "wdth" 118;
+  }
+
+  .section-label h2 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+  }
+
+  .section-body { grid-column: 3 / 13; }
+
+  /* ---------- 01 Profile ---------- */
+
+  .profile p {
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    line-height: 1.35;
+    font-weight: 500;
+    max-width: var(--measure);
+    letter-spacing: -0.01em;
+  }
+
+  .profile .sub {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 58ch;
+    color: var(--ink);
+  }
+
+  /* ---------- 02 Experience table ---------- */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  thead th {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0 1rem 0.625rem 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  tbody td {
+    padding: 0.875rem 1rem 0.875rem 0;
+    border-bottom: 1px solid var(--hairline);
+    vertical-align: baseline;
+    font-size: 0.9375rem;
+  }
+
+  td.year { white-space: nowrap; font-variant-numeric: tabular-nums; width: 9ch; color: var(--ink); }
+  td.company { font-weight: 700; width: 22%; }
+  td.role { width: 34%; }
+  td.stack { font-size: 0.8125rem; color: var(--ink); }
+
+  tr.note-row td { padding-top: 0; font-size: 0.875rem; line-height: 1.55; }
+  tr.note-row p { max-width: 72ch; }
+  tr.flagship td { border-bottom: none; }
+  tr[hidden] { display: none; }
+
+  /* ---------- 03 Projects ---------- */
+
+  .project-row {
+    display: grid;
+    grid-template-columns: 9ch 22% 1fr auto;
+    column-gap: 1rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.9375rem;
+    align-items: baseline;
+  }
+  .project-row:first-child { padding-top: 0; }
+
+  .project-row .year { font-variant-numeric: tabular-nums; }
+  .project-row .name { font-weight: 700; }
+  .project-row .desc { font-size: 0.875rem; }
+  .project-row .link { font-size: 0.8125rem; white-space: nowrap; }
+
+  /* ---------- 04 Capabilities ---------- */
+
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 1.5rem;
+    row-gap: 2rem;
+  }
+
+  .cap-grid h3 {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.625rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .cap-grid ul { list-style: none; font-size: 0.875rem; line-height: 1.7; }
+
+  /* ---------- 05 Education ---------- */
+
+  .edu p { font-size: 0.9375rem; max-width: var(--measure); }
+  .edu .degree { font-weight: 700; }
+  .edu .award { margin-top: 1rem; font-size: 0.875rem; }
+
+  /* ---------- Footer ---------- */
+
+  footer.section { border-bottom: none; }
+
+  .foot-contact { font-size: clamp(1.125rem, 2vw, 1.5rem); font-weight: 700; }
+  .foot-links { margin-top: 0.75rem; font-size: 0.875rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+  .colophon { margin-top: 3rem; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink); }
+
+  /* ---------- Motion: this direction is still ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 900px) {
+    .masthead h1 { grid-column: 1 / 13; }
+    .masthead .meta {
+      grid-column: 1 / 13;
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.5rem;
+    }
+    .section { display: block; }
+    .section-label {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-label .num { font-size: 1.25rem; }
+    .section-label h2 { margin-top: 0; }
+    .cap-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 700px) {
+    /* Table collapses to stacked rows */
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    table, tbody, tr, td { display: block; }
+    tbody tr { padding: 1rem 0; border-bottom: 1px solid var(--hairline); }
+    tbody td { padding: 0; border-bottom: none; }
+    td.year, td.company, td.role, td.stack { width: auto; }
+    td.year { font-size: 0.75rem; letter-spacing: 0.04em; }
+    td.company { font-size: 1rem; }
+    td.stack { margin-top: 0.25rem; }
+    tr.flagship { border-bottom: none; padding-bottom: 0; }
+    tr.note-row { padding-top: 0.5rem; }
+    tr[hidden] { display: none; }
+
+    .project-row {
+      grid-template-columns: 1fr;
+      row-gap: 0.125rem;
+      padding: 1rem 0;
+    }
+    .cap-grid { grid-template-columns: 1fr; }
+    .flavor-rail { gap: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="page">
+
+  <header class="topbar">
+    <p class="slug">Design exploration <span class="n">LAC-3036</span> · Direction 03 of 04 · Swiss</p>
+    <nav aria-label="Résumé flavor">
+      <ul class="flavor-rail" id="flavor-rail">
+        <li><button type="button" data-flavor="complete" aria-pressed="true">Complete</button></li>
+        <li><button type="button" data-flavor="ai" aria-pressed="false">AI</button></li>
+        <li><button type="button" data-flavor="frontend" aria-pressed="false">Frontend</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="masthead">
+    <h1>Lacy<br>Morrow</h1>
+    <dl class="meta">
+      <dt>Location</dt>
+      <dd>Charlotte, NC — Remote</dd>
+      <dt>Practice</dt>
+      <dd>20 yrs full-stack · AI/agentic</dd>
+      <dt>Contact</dt>
+      <dd><a href="mailto:me@lacymorrow.com">me@lacymorrow.com</a></dd>
+      <dt>Elsewhere</dt>
+      <dd><a href="https://github.com/lacymorrow">github.com/lacymorrow</a></dd>
+      <dd><a href="https://linkedin.com/in/lacymorrow">linkedin.com/in/lacymorrow</a></dd>
+    </dl>
+  </div>
+
+  <p class="render-index" aria-live="polite">Rendering: <strong id="index-flavor">Complete</strong> — <span id="index-count">18 of 18</span> engagements shown</p>
+
+  <main id="main">
+
+    <section class="section profile" aria-labelledby="s1">
+      <div class="section-label">
+        <span class="num" aria-hidden="true">01</span>
+        <h2 id="s1">Profile</h2>
+      </div>
+      <div class="section-body">
+        <p id="profile-tagline">Twenty years shipping accessible, well-architected web software — from design systems at Twilio to autonomous agent fleets at American City Business Journals.</p>
+        <p class="sub" id="profile-sub">Full-stack and agentic engineer. TypeScript, React, Next.js, Python, Rust. Open-source developer (CrossOver, Shipkit, thousands of weekly npm downloads) and hardware hacker (Twilio HackPack v4).</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="s2">
+      <div class="section-label">
+        <span class="num" aria-hidden="true">02</span>
+        <h2 id="s2">Experience</h2>
+      </div>
+      <div class="section-body">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Year</th>
+              <th scope="col">Company</th>
+              <th scope="col">Role</th>
+              <th scope="col">Stack</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="flagship" data-id="acbj">
+              <td class="year">2025–26</td>
+              <td class="company">American City Business Journals</td>
+              <td class="role" data-role>Backend Developer + Agentic Engineer</td>
+              <td class="stack">Laravel · Claude · LangGraph · RAG · MCP</td>
+            </tr>
+            <tr class="note-row" data-id="acbj">
+              <td class="year" aria-hidden="true"></td>
+              <td colspan="3"><p>Architected an AI orchestration layer of 12 autonomous agents completing engineering tasks across 48 U.S. markets — task routing, guardrails, human-in-the-loop review, RAG over platform docs and code.</p></td>
+            </tr>
+            <tr class="flagship" data-id="duke">
+              <td class="year">2025–26</td>
+              <td class="company">Duke Energy</td>
+              <td class="role" data-role>Agentic Engineer + Senior Developer</td>
+              <td class="stack">Python · React · LangChain · Azure OpenAI</td>
+            </tr>
+            <tr class="note-row" data-id="duke">
+              <td class="year" aria-hidden="true"></td>
+              <td colspan="3"><p>Led internal AI adoption: built a company-wide GPT/LLM platform with RAG over internal documentation, prompt libraries, and Azure OpenAI integration.</p></td>
+            </tr>
+            <tr data-id="ck">
+              <td class="year">2025</td>
+              <td class="company">Credit Karma</td>
+              <td class="role" data-role>Full-Stack Next.js Developer</td>
+              <td class="stack">TypeScript · Next.js · React Native</td>
+            </tr>
+            <tr data-id="optum">
+              <td class="year">2024</td>
+              <td class="company">OptumRX / Red Ventures</td>
+              <td class="role" data-role>Senior React Developer + DevOps</td>
+              <td class="stack">Next.js · Contentful · Stripe · Algolia</td>
+            </tr>
+            <tr data-id="viasat">
+              <td class="year">2022–23</td>
+              <td class="company">Viasat</td>
+              <td class="role" data-role>Senior React Developer, In-Flight</td>
+              <td class="stack">React · TypeScript · Jenkins · AWS</td>
+            </tr>
+            <tr class="flagship" data-id="twilio">
+              <td class="year">2017–21</td>
+              <td class="company">Twilio</td>
+              <td class="role" data-role>Senior Web Engineer</td>
+              <td class="stack">React · Python · Django · i18n</td>
+            </tr>
+            <tr class="note-row" data-id="twilio">
+              <td class="year" aria-hidden="true"></td>
+              <td colspan="3"><p>Owned twilio.com and all sub-sites. Built a React design system, launched WhatsApp / Studio / Flex product pages, and designed the SIGNAL HackPack v4 hardware badge.</p></td>
+            </tr>
+            <tr data-id="invitae">
+              <td class="year">2014–15</td>
+              <td class="company">Invitae</td>
+              <td class="role" data-role>Software Engineer</td>
+              <td class="stack">Python · Django · Angular · AWS</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="s3">
+      <div class="section-label">
+        <span class="num" aria-hidden="true">03</span>
+        <h2 id="s3">Projects</h2>
+      </div>
+      <div class="section-body">
+        <div class="project-row">
+          <span class="year">2024–</span>
+          <span class="name">Lacy Shell</span>
+          <span class="desc">AI coding agent for your terminal — natural language routed through an LLM with tool calling and safe execution.</span>
+          <a class="link" href="https://github.com/lacymorrow/lacy-shell">github ↗</a>
+        </div>
+        <div class="project-row">
+          <span class="year">2025–</span>
+          <span class="name">Juno AI</span>
+          <span class="desc">Voice-operate your computer. Rust + Tauri on Whisper and Anthropic computer-use; doubles as an MCP server.</span>
+          <a class="link" href="https://github.com/lacymorrow/juno-ai">github ↗</a>
+        </div>
+        <div class="project-row">
+          <span class="year">2015–</span>
+          <span class="name">CrossOver</span>
+          <span class="desc">Cross-platform crosshair overlay in Electron. 1,000+ GitHub stars; featured in the Windows and Snapcraft stores.</span>
+          <a class="link" href="https://github.com/lacymorrow/crossover">github ↗</a>
+        </div>
+        <div class="project-row">
+          <span class="year">2024–</span>
+          <span class="name">Shipkit</span>
+          <span class="desc">Next.js accelerator — full-featured starter and toolkit for building, launching, and monetizing MVPs.</span>
+          <a class="link" href="https://github.com/lacymorrow/shipkit">github ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="s4">
+      <div class="section-label">
+        <span class="num" aria-hidden="true">04</span>
+        <h2 id="s4">Capabilities</h2>
+      </div>
+      <div class="section-body">
+        <div class="cap-grid">
+          <div>
+            <h3>Frontend</h3>
+            <ul>
+              <li>TypeScript / JavaScript</li>
+              <li>React / Next.js</li>
+              <li>Svelte / Vue / Astro</li>
+              <li>Tailwind / CSS architecture</li>
+              <li>React Native</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Backend</h3>
+            <ul>
+              <li>Node / Python / PHP</li>
+              <li>Rust / Go</li>
+              <li>PostgreSQL / MySQL / Redis</li>
+              <li>Serverless / microservices</li>
+            </ul>
+          </div>
+          <div>
+            <h3>AI &amp; Agentic</h3>
+            <ul>
+              <li>LLMs — Claude, GPT, Gemini</li>
+              <li>LangChain / LangGraph</li>
+              <li>RAG / vector databases</li>
+              <li>Agent orchestration / MCP</li>
+              <li>Prompt engineering / evals</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Platform &amp; Ops</h3>
+            <ul>
+              <li>Docker / AWS / Azure</li>
+              <li>CI/CD / testing</li>
+              <li>Electron / Tauri</li>
+              <li>SEO / analytics / i18n</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section edu" aria-labelledby="s5">
+      <div class="section-label">
+        <span class="num" aria-hidden="true">05</span>
+        <h2 id="s5">Education</h2>
+      </div>
+      <div class="section-body">
+        <p><span class="degree">BS, Computer Science</span> — Appalachian State University, 2009–2014. Coursework in AI, data structures, databases, software engineering.</p>
+        <p class="award">GitHub Arctic Code Vault Contributor, 2020.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="section" aria-label="Contact">
+    <div class="section-label">
+      <span class="num" aria-hidden="true">→</span>
+      <h2>Contact</h2>
+    </div>
+    <div class="section-body">
+      <p class="foot-contact"><a href="mailto:me@lacymorrow.com">me@lacymorrow.com</a></p>
+      <div class="foot-links">
+        <a href="https://github.com/lacymorrow">GitHub</a>
+        <a href="https://linkedin.com/in/lacymorrow">LinkedIn</a>
+        <a href="https://lacymorrow.com">lacymorrow.com</a>
+      </div>
+      <p class="colophon">Design exploration LAC-3036 · Direction 03 of 04 · Swiss · resume.lacy.sh</p>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // One canonical résumé, re-rendered per flavor. Instant state change — no motion.
+  const FLAVORS = {
+    complete: {
+      label: "Complete",
+      count: "18 of 18",
+      tagline: "Twenty years shipping accessible, well-architected web software — from design systems at Twilio to autonomous agent fleets at American City Business Journals.",
+      sub: "Full-stack and agentic engineer. TypeScript, React, Next.js, Python, Rust. Open-source developer (CrossOver, Shipkit, thousands of weekly npm downloads) and hardware hacker (Twilio HackPack v4).",
+      roles: {},
+      hidden: []
+    },
+    ai: {
+      label: "AI / Agentic",
+      count: "12 of 18",
+      tagline: "Agentic engineer building production AI systems — 12-agent orchestration at ACBJ, a company-wide RAG platform at Duke Energy, MCP servers and coding agents in the open.",
+      sub: "LLM orchestration with Claude, LangChain, and LangGraph. RAG pipelines, agent guardrails, human-in-the-loop review, MCP tooling — grounded in 20 years of full-stack engineering.",
+      roles: {
+        acbj: "AI Orchestration Engineer",
+        duke: "Agentic Engineer — Internal LLM Platform",
+        ck: "Full-Stack Developer (AI Tooling)"
+      },
+      hidden: ["viasat", "optum"]
+    },
+    frontend: {
+      label: "Frontend",
+      count: "14 of 18",
+      tagline: "Frontend engineer with two decades of pixel-perfect, accessible interfaces — React design systems, in-flight entertainment portals, and e-commerce at national scale.",
+      sub: "TypeScript, React, Next.js, and modern CSS. Design-system thinking, WCAG accessibility, performance budgets, and progressive enhancement as defaults.",
+      roles: {
+        acbj: "Frontend Platform Developer",
+        duke: "Senior Frontend Developer",
+        twilio: "Senior Frontend Engineer — twilio.com"
+      },
+      hidden: ["invitae"]
+    }
+  };
+
+  const rail = document.getElementById("flavor-rail");
+  const tagline = document.getElementById("profile-tagline");
+  const sub = document.getElementById("profile-sub");
+  const indexFlavor = document.getElementById("index-flavor");
+  const indexCount = document.getElementById("index-count");
+  const rows = document.querySelectorAll("tbody tr[data-id]");
+
+  // Remember canonical role titles so flavors can restore them.
+  document.querySelectorAll("[data-role]").forEach((cell) => {
+    cell.dataset.canonical = cell.textContent;
+  });
+
+  function render(name) {
+    const flavor = FLAVORS[name];
+    if (!flavor) return;
+
+    tagline.textContent = flavor.tagline;
+    sub.textContent = flavor.sub;
+    indexFlavor.textContent = flavor.label;
+    indexCount.textContent = flavor.count;
+
+    rows.forEach((row) => {
+      const id = row.dataset.id;
+      row.hidden = flavor.hidden.includes(id);
+      const roleCell = row.querySelector("[data-role]");
+      if (roleCell) {
+        roleCell.textContent = flavor.roles[id] || roleCell.dataset.canonical;
+      }
+    });
+
+    rail.querySelectorAll("button").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(btn.dataset.flavor === name));
+    });
+  }
+
+  rail.addEventListener("click", (event) => {
+    const btn = event.target.closest("button[data-flavor]");
+    if (btn) render(btn.dataset.flavor);
+  });
+</script>
+</body>
+</html>
