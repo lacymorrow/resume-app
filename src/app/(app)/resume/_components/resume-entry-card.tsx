@@ -1,90 +1,121 @@
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
 import type { MatchResult } from "../_lib/resume-filters";
+import { SIGNATURE, formatYearRange, formatProjectYear, isTechLine, splitTrailingTechList, splitProjectSummary } from "../_lib/resume-export-shared";
 
 interface ResumeEntryCardProps {
-  title: string; subtitle: string; dateRange: string; location?: string;
-  summary: string; tags: string[]; url?: string; highlights?: string[];
-  match?: MatchResult; sector?: string;
+  title: string;
+  subtitle: string;
+  startDate: string;
+  endDate?: string;
+  location?: string;
+  summary: string;
+  tags: string[];
+  url?: string;
+  highlights?: string[];
+  match?: MatchResult;
+  sector?: string;
+  featured?: boolean;
+  variant?: "work" | "project";
 }
 
-function formatDateRange(startDate: string, endDate?: string): string {
-  const fmt = (d: string) => new Date(d).toLocaleDateString(undefined, { month: "short", year: "numeric", timeZone: "UTC" });
-  const start = fmt(startDate);
-  if (!endDate) return `${start} — Present`;
-  const end = fmt(endDate);
-  if (start === end) return start;
-  const startYear = new Date(startDate).getUTCFullYear();
-  const endYear = new Date(endDate).getUTCFullYear();
-  if (startYear === endYear) {
-    const startMonth = new Date(startDate).toLocaleDateString(undefined, { month: "short", timeZone: "UTC" });
-    const endMonth = new Date(endDate).toLocaleDateString(undefined, { month: "short", timeZone: "UTC" });
-    return startMonth === endMonth ? `${start}` : `${startMonth} — ${endMonth} ${endYear}`;
-  }
-  return `${start} — ${end}`;
-}
-
-export { formatDateRange };
-
-export function ResumeEntryCard({ title, subtitle, dateRange, location, summary, tags, url, highlights, match, sector }: ResumeEntryCardProps) {
+export function ResumeEntryCard({
+  title, subtitle, startDate, endDate, location, summary, tags, url,
+  highlights, match, sector, featured, variant = "work",
+}: ResumeEntryCardProps) {
   const isMatched = !match || match.matched;
+  const dateStr = variant === "project"
+    ? formatProjectYear(startDate, endDate)
+    : formatYearRange(startDate, endDate);
+
+  const { body: summaryBody, tech: summaryTech } = splitTrailingTechList(summary ?? "");
+  let displayTitle = title;
+  let displayBody = summaryBody;
+
+  if (variant === "project") {
+    const { tagline, body } = splitProjectSummary(summary);
+    if (tagline) {
+      displayTitle = `${title}: ${tagline}`;
+      displayBody = body;
+    }
+  }
+
   return (
-    <div data-match={isMatched} className="resume-entry group relative py-5 transition-all duration-500 data-[match=false]:opacity-20 data-[match=false]:grayscale">
-      {/* Date + Location as a prominent typographic element */}
-      <div className="mb-2 flex items-baseline gap-3">
-        <span className="font-serif text-xs font-medium uppercase tracking-[0.15em] text-primary/70">
-          {dateRange}
-        </span>
-        {location && (
-          <>
-            <span className="text-border">·</span>
-            <span className="text-xs text-muted-foreground/60">{location}</span>
-          </>
+    <div
+      data-match={isMatched}
+      className="resume-entry group grid gap-x-4 mb-4 break-inside-avoid transition-all duration-500 data-[match=false]:opacity-20 data-[match=false]:grayscale"
+      style={{ gridTemplateColumns: "128px 1fr" }}
+    >
+      {/* Meta column — right-aligned */}
+      <div className="text-right hidden sm:block">
+        <div className="text-sm font-bold" style={{ color: SIGNATURE.pink }}>
+          {dateStr}
+        </div>
+        <div className="text-xs font-bold leading-tight mt-0.5" style={{ color: SIGNATURE.ink }}>
+          {url ? (
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+              style={{ textDecorationColor: SIGNATURE.underline, textUnderlineOffset: "2px" }}
+            >
+              {subtitle}
+            </a>
+          ) : (
+            subtitle
+          )}
+          {featured && <span className="font-normal ml-1">★</span>}
+        </div>
+        {sector && (
+          <div className="text-[7.5pt] mt-0.5" style={{ color: SIGNATURE.muted }}>
+            ({sector})
+          </div>
         )}
       </div>
 
-      {/* Title + Company */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h3 className="font-serif text-xl font-semibold leading-tight text-foreground">
-            {url ? (
-              <a href={url} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 decoration-primary/30 decoration-1 underline-offset-4 hover:underline">
-                {title}
-                <ExternalLink className="h-3 w-3 text-primary/40" />
-              </a>
-            ) : title}
-          </h3>
-          <p className="mt-0.5 text-sm font-medium text-muted-foreground">
-            {subtitle}
-            {sector && <span className="ml-2 text-xs font-normal italic text-primary/50">{sector}</span>}
+      {/* Detail column */}
+      <div className="min-w-0">
+        {/* Mobile-only meta (visible below sm breakpoint) */}
+        <div className="sm:hidden mb-1">
+          <span className="text-xs font-bold" style={{ color: SIGNATURE.pink }}>{dateStr}</span>
+          <span className="mx-1.5" style={{ color: SIGNATURE.rail }}>·</span>
+          <span className="text-xs font-bold" style={{ color: SIGNATURE.ink }}>{subtitle}</span>
+          {featured && <span className="font-normal ml-1">★</span>}
+          {sector && <span className="text-[10px] ml-1" style={{ color: SIGNATURE.muted }}>({sector})</span>}
+        </div>
+
+        <h3
+          className="text-base font-bold leading-snug mb-1"
+          style={{ color: SIGNATURE.blue }}
+        >
+          {displayTitle}
+        </h3>
+
+        {displayBody && (
+          <p className="text-sm leading-relaxed mb-1 whitespace-pre-wrap" style={{ color: SIGNATURE.body }}>
+            {displayBody}
           </p>
-        </div>
+        )}
+
+        {summaryTech && (
+          <p className="text-sm mb-1">
+            <strong style={{ color: SIGNATURE.ink }}>{summaryTech}</strong>
+          </p>
+        )}
+
+        {highlights && highlights.length > 0 && (
+          <ul className="pl-3 text-sm leading-relaxed list-disc" style={{ color: SIGNATURE.body }}>
+            {highlights.map((h, i) => {
+              const isLast = i === highlights.length - 1;
+              const tech = isLast && isTechLine(h);
+              return (
+                <li key={h} className="mb-0.5" style={{ color: tech ? SIGNATURE.ink : undefined }}>
+                  {tech ? <strong>{h}</strong> : h}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
-
-      {/* Summary */}
-      <p className="mt-3 text-sm leading-relaxed text-foreground/70">{summary}</p>
-
-      {/* Highlights as refined bullet list */}
-      {highlights && highlights.length > 0 && (
-        <ul className="mt-3 space-y-1.5 border-l border-primary/15 pl-4">
-          {highlights.map((h) => (
-            <li key={h} className="text-sm leading-relaxed text-foreground/65">{h}</li>
-          ))}
-        </ul>
-      )}
-
-      {/* Technology tags */}
-      {tags.length > 0 && (
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="outline"
-              className="border-border/60 bg-transparent text-[11px] font-normal text-muted-foreground hover:border-primary/40 hover:text-primary transition-colors">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
