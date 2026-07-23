@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Direction 04 — Spectrum · resume.lacy.sh design exploration</title>
+<meta name="description" content="Design exploration LAC-3036 · Direction 04 of 04 · Spectrum — one engineer, seven renderings." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0E0D0B;
+    --ink: #EDEAE3;
+    --dim: #8A867C;
+    --hairline: rgba(237, 234, 227, 0.12);
+    --accent: #EDEAE3;
+    --lift: rgba(237, 234, 227, 0.045);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Instrument Sans", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    transition: color 300ms ease;
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 300ms ease;
+  }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Thin top-of-page rule in accent */
+  .toprule {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: background 300ms ease;
+    z-index: 10;
+  }
+
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    gap: 4rem;
+  }
+
+  /* ---------- Rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 3.5rem 0 2.5rem;
+  }
+
+  .rail h1 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .rail .identity {
+    color: var(--dim);
+    font-size: 0.9rem;
+    margin-top: 0.35rem;
+    max-width: 24ch;
+  }
+
+  .rail .contact {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+  }
+  .rail .contact a { color: var(--dim); }
+  .rail .contact a:hover { color: var(--accent); }
+
+  /* ---------- Flavor desk ---------- */
+  .desk {
+    margin-top: auto;
+    padding-top: 2.5rem;
+  }
+  .desk-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--dim);
+    margin-bottom: 0.9rem;
+  }
+  .desk [role="radiogroup"] {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .flavor {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: none;
+    border: none;
+    color: var(--dim);
+    font: inherit;
+    font-size: 0.95rem;
+    padding: 0.45rem 0.6rem;
+    margin-left: -0.6rem;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 4px;
+    transition: color 300ms ease, background 200ms ease;
+  }
+  .flavor:hover { color: var(--ink); background: var(--lift); }
+  .flavor .dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--swatch);
+    flex-shrink: 0;
+    opacity: 0.75;
+    transition: opacity 200ms ease, box-shadow 200ms ease;
+  }
+  .flavor[aria-checked="true"] {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .flavor[aria-checked="true"] .dot {
+    opacity: 1;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--swatch) 22%, transparent);
+  }
+
+  .slug {
+    margin-top: 2rem;
+    font-size: 0.7rem;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- Main ---------- */
+  main {
+    padding: 6rem 0 4rem;
+    max-width: 720px;
+  }
+
+  .statement {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .statement em {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: 0;
+    transition: color 300ms ease;
+  }
+
+  .statement-sub {
+    margin-top: 1.5rem;
+    color: var(--dim);
+    font-size: 1.05rem;
+    max-width: 52ch;
+  }
+
+  .fade { transition: opacity 150ms ease; }
+  .fade.is-fading { opacity: 0; }
+
+  section { margin-top: 5.5rem; }
+
+  .section-head {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--dim);
+    font-weight: 500;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 0.5rem;
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline { list-style: none; }
+  .entry {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .entry:last-child { border-bottom: none; }
+  .entry[hidden] { display: none; }
+
+  .entry .years {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.15rem;
+    transition: color 300ms ease;
+  }
+  .entry h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .entry .org {
+    color: var(--dim);
+    font-size: 0.9rem;
+    margin-top: 0.15rem;
+  }
+  .entry .blurb {
+    margin-top: 0.6rem;
+    font-size: 0.95rem;
+    color: var(--ink);
+    max-width: 56ch;
+  }
+  .entry .stack {
+    margin-top: 0.55rem;
+    font-size: 0.8rem;
+    color: var(--dim);
+    letter-spacing: 0.01em;
+  }
+
+  /* ---------- Projects ---------- */
+  .projects {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .project { order: var(--ord, 0); }
+  .project[hidden] { display: none; }
+  .project a {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.15rem 0.75rem;
+    margin: 0 -0.75rem;
+    color: inherit;
+    border-bottom: 1px solid var(--hairline);
+    border-radius: 4px;
+    transition: background 200ms ease;
+  }
+  .project a:hover {
+    background: var(--lift);
+    text-decoration: none;
+  }
+  .project .p-name { font-weight: 600; font-size: 1rem; }
+  .project .p-desc { color: var(--dim); font-size: 0.9rem; }
+  .project .p-arrow {
+    color: var(--accent);
+    font-size: 0.95rem;
+    transition: color 300ms ease, transform 200ms ease;
+  }
+  .project a:hover .p-arrow { transform: translateX(3px); }
+
+  /* ---------- Skills / Education ---------- */
+  .skill-rows { display: flex; flex-direction: column; }
+  .skill-row {
+    display: grid;
+    grid-template-columns: 10rem minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.9rem;
+  }
+  .skill-row:last-child { border-bottom: none; }
+  .skill-row dt { font-weight: 600; }
+  .skill-row dd { color: var(--dim); }
+
+  .edu { padding: 1.15rem 0; font-size: 0.95rem; }
+  .edu .org { color: var(--dim); font-size: 0.9rem; margin-top: 0.15rem; }
+
+  /* ---------- Reference ---------- */
+  .reference { margin-top: 7rem; }
+  .reference blockquote p {
+    font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+    line-height: 1.35;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    max-width: 30ch;
+  }
+  .reference blockquote p em {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-style: italic;
+    color: var(--accent);
+    transition: color 300ms ease;
+  }
+  .reference cite {
+    display: block;
+    margin-top: 1.4rem;
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--dim);
+  }
+
+  footer {
+    margin-top: 6rem;
+    padding: 2rem 0 0;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--dim);
+  }
+  footer a { color: var(--dim); }
+  footer a:hover { color: var(--accent); }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 860px) {
+    .frame {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0 1.25rem;
+    }
+    .rail {
+      position: static;
+      height: auto;
+      padding: 3rem 0 0;
+    }
+    .desk { margin-top: 1.75rem; padding-top: 0; }
+    .desk [role="radiogroup"] {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.5rem;
+    }
+    .flavor { margin-left: 0; padding: 0.4rem 0.55rem; }
+    .rail .slug { display: none; }
+    main { padding-top: 4rem; }
+    .entry { grid-template-columns: 1fr; gap: 0.25rem; padding: 1.4rem 0; }
+    .project a { grid-template-columns: 1fr auto; }
+    .project .p-desc { grid-column: 1 / -1; }
+    .skill-row { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="toprule" aria-hidden="true"></div>
+
+<div class="frame">
+
+  <!-- ============ Rail ============ -->
+  <header class="rail">
+    <h1>Lacy Morrow</h1>
+    <p class="identity">Full-stack &amp; agentic engineer, open-source developer, hardware hacker. Charlotte, NC.</p>
+
+    <nav class="contact" aria-label="Contact">
+      <a href="mailto:me@lacymorrow.com">me@lacymorrow.com</a>
+      <a href="https://github.com/lacymorrow">github.com/lacymorrow</a>
+      <a href="https://linkedin.com/in/lacymorrow">linkedin.com/in/lacymorrow</a>
+    </nav>
+
+    <div class="desk">
+      <p class="desk-label" id="desk-label">Render as</p>
+      <div role="radiogroup" aria-labelledby="desk-label">
+        <button class="flavor" role="radio" aria-checked="true" data-flavor="complete" style="--swatch:#EDEAE3">
+          <span class="dot" aria-hidden="true"></span>Complete
+        </button>
+        <button class="flavor" role="radio" aria-checked="false" data-flavor="ai" style="--swatch:#9FE7C0">
+          <span class="dot" aria-hidden="true"></span>AI / Agentic
+        </button>
+        <button class="flavor" role="radio" aria-checked="false" data-flavor="frontend" style="--swatch:#F4B860">
+          <span class="dot" aria-hidden="true"></span>Frontend
+        </button>
+        <button class="flavor" role="radio" aria-checked="false" data-flavor="devops" style="--swatch:#97A8F0">
+          <span class="dot" aria-hidden="true"></span>DevOps
+        </button>
+      </div>
+      <p class="slug">Design exploration LAC-3036 · Direction 04 of 04 · Spectrum</p>
+    </div>
+  </header>
+
+  <!-- ============ Main ============ -->
+  <main>
+    <section aria-label="Introduction" style="margin-top:0">
+      <h2 class="statement fade" id="statement">
+        I build <em>agents</em>, <em>interfaces</em>, and <em>hardware</em> — twenty years of shipping the web.
+      </h2>
+      <p class="statement-sub fade" id="statement-sub">
+        One résumé, rendered per role. Pick a flavor on the left — titles retitle, entries re-rank, and the page re-tints to match.
+      </p>
+    </section>
+
+    <section aria-labelledby="work-head">
+      <h2 class="section-head" id="work-head">Selected Work</h2>
+      <ol class="timeline">
+        <li class="entry" data-id="acbj">
+          <span class="years">2025—26</span>
+          <div>
+            <h3 class="fade" data-title>Backend Developer + Agentic Engineer</h3>
+            <p class="org">American City Business Journals · Charlotte, NC</p>
+            <p class="blurb">Architected an AI orchestration layer of 12 autonomous agents completing engineering tasks with routing, guardrails, and human-in-the-loop review, on a Laravel platform serving 48 U.S. markets.</p>
+            <p class="stack">Laravel · PHP · Claude · LangGraph · RAG · MCP</p>
+          </div>
+        </li>
+        <li class="entry" data-id="duke">
+          <span class="years">2025—26</span>
+          <div>
+            <h3 class="fade" data-title>Agentic Engineer + Senior Developer</h3>
+            <p class="org">Duke Energy · Remote</p>
+            <p class="blurb">Led internal AI adoption: built a company-wide GPT/LLM platform with RAG over internal docs, prompt libraries, and Azure OpenAI integration; migrated a forecasting dashboard to AWS.</p>
+            <p class="stack">Python · React · LangChain · LlamaIndex · AWS · Azure</p>
+          </div>
+        </li>
+        <li class="entry" data-id="ck">
+          <span class="years">2025</span>
+          <div>
+            <h3 class="fade" data-title>Full-Stack Next.js Developer</h3>
+            <p class="org">Credit Karma · Remote</p>
+            <p class="blurb">Built the entire User Testing dashboard for the User Management team; migrated pages router to App Router with search and metrics across multiple system APIs.</p>
+            <p class="stack">TypeScript · Next.js · React · React Native</p>
+          </div>
+        </li>
+        <li class="entry" data-id="viasat">
+          <span class="years">2022—23</span>
+          <div>
+            <h3 class="fade" data-title>Senior React Developer — In-Flight Entertainment</h3>
+            <p class="org">Viasat · Remote</p>
+            <p class="blurb">Managed in-flight entertainment portals for dozens of airlines; owned client-stakeholder relations and turned polished designs into reusable components.</p>
+            <p class="stack">React · TypeScript · Next.js · Jenkins · AWS</p>
+          </div>
+        </li>
+        <li class="entry" data-id="twilio">
+          <span class="years">2017—21</span>
+          <div>
+            <h3 class="fade" data-title>Senior Web Engineer</h3>
+            <p class="org">Twilio · San Francisco, CA</p>
+            <p class="blurb">Owned twilio.com and all sub-sites. Created a React design system, launched WhatsApp, Studio, and Flex product pages, and built the SIGNAL HackPack v4 hardware badge.</p>
+            <p class="stack">TypeScript · React · Python · Django · i18n · Docker</p>
+          </div>
+        </li>
+        <li class="entry" data-id="invitae">
+          <span class="years">2014—15</span>
+          <div>
+            <h3 class="fade" data-title>Software Engineer</h3>
+            <p class="org">Invitae · San Francisco, CA</p>
+            <p class="blurb">Built HIPAA-compliant back-office software and data-science tools alongside the public invitae.com; managed CI, deployments, and an automated Selenium test workflow.</p>
+            <p class="stack">Python · Django · React · Jenkins · AWS · Docker</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="projects-head">
+      <h2 class="section-head" id="projects-head">Open Source &amp; Projects</h2>
+      <ul class="projects">
+        <li class="project" data-id="lacyshell">
+          <a href="https://github.com/lacymorrow/lacy-shell">
+            <span class="p-name">Lacy Shell</span>
+            <span class="p-desc">AI coding agent for your terminal — natural language routed through an LLM with safe command execution.</span>
+            <span class="p-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </li>
+        <li class="project" data-id="juno">
+          <a href="https://github.com/lacymorrow/juno-ai">
+            <span class="p-name">Juno AI</span>
+            <span class="p-desc">Voice-operate your computer. Rust + Tauri on Whisper and computer-use; doubles as an MCP server.</span>
+            <span class="p-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </li>
+        <li class="project" data-id="crossover">
+          <a href="https://github.com/lacymorrow/crossover">
+            <span class="p-name">CrossOver</span>
+            <span class="p-desc">Electron crosshair overlay for PC games — 1,000+ GitHub stars, featured in the Windows app store.</span>
+            <span class="p-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </li>
+        <li class="project" data-id="shipkit">
+          <a href="https://github.com/lacymorrow/shipkit">
+            <span class="p-name">Shipkit</span>
+            <span class="p-desc">Next.js accelerator — a full-featured starter for building, launching, and monetizing MVPs.</span>
+            <span class="p-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="skills-head">
+      <h2 class="section-head" id="skills-head">Skills</h2>
+      <dl class="skill-rows">
+        <div class="skill-row">
+          <dt>Frontend</dt>
+          <dd>TypeScript · React · Next.js · Svelte · Tailwind · React Native</dd>
+        </div>
+        <div class="skill-row">
+          <dt>Backend</dt>
+          <dd>Node · Python · PHP · Rust · Go · PostgreSQL · Redis</dd>
+        </div>
+        <div class="skill-row">
+          <dt>AI &amp; Agentic</dt>
+          <dd>LLMs · LangChain / LangGraph · RAG · MCP · agent orchestration · evals</dd>
+        </div>
+        <div class="skill-row">
+          <dt>DevOps</dt>
+          <dd>Docker · AWS · Azure · Vercel · CI/CD · testing</dd>
+        </div>
+        <div class="skill-row">
+          <dt>Platform</dt>
+          <dd>Electron · Tauri · React Native · embedded / IoT hardware</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="edu-head">
+      <h2 class="section-head" id="edu-head">Education</h2>
+      <div class="edu">
+        <p><strong>BS, Computer Science</strong></p>
+        <p class="org">Appalachian State University · Boone, NC · 2009—14</p>
+      </div>
+    </section>
+
+    <section class="reference" aria-labelledby="ref-head">
+      <h2 class="section-head" id="ref-head">Reference</h2>
+      <figure style="margin-top:2rem">
+        <blockquote>
+          <p>&ldquo;Lacy is truly a full stack developer, and his work output is incredible. If there is any opportunity to work with Lacy, I take it. He is the definition of <em>an A player</em>.&rdquo;</p>
+        </blockquote>
+        <cite>Ryan Kirkram — Senior Software Engineer, Yahoo</cite>
+      </figure>
+    </section>
+
+    <footer>
+      <span>&copy; 2026 Lacy Morrow · Charlotte, NC</span>
+      <span>Design exploration LAC-3036 · Direction 04 of 04 · Spectrum</span>
+    </footer>
+  </main>
+</div>
+
+<script>
+  (function () {
+    "use strict";
+
+    /* One engineer, rendered per role. Each flavor carries its hue,
+       positioning statement, retitled roles, and entry/project ranking. */
+    var FLAVORS = {
+      complete: {
+        accent: "#EDEAE3",
+        statement: "I build <em>agents</em>, <em>interfaces</em>, and <em>hardware</em> — twenty years of shipping the web.",
+        sub: "One résumé, rendered per role. Pick a flavor on the left — titles retitle, entries re-rank, and the page re-tints to match.",
+        titles: {},
+        hideWork: [],
+        projects: { order: ["lacyshell", "juno", "crossover", "shipkit"], hide: [] }
+      },
+      ai: {
+        accent: "#9FE7C0",
+        statement: "I build <em>autonomous agents</em> and the <em>orchestration</em> that keeps them honest.",
+        sub: "Multi-agent systems, RAG pipelines, and MCP tooling in production — from a 12-agent engineering fleet to voice-operated desktops.",
+        titles: {
+          acbj: "Agentic Engineer — AI Orchestration",
+          duke: "Agentic Engineer — Internal LLM Platform",
+          twilio: "Senior Engineer — Platform & Automation"
+        },
+        hideWork: ["viasat"],
+        projects: { order: ["lacyshell", "juno", "shipkit"], hide: ["crossover"] }
+      },
+      frontend: {
+        accent: "#F4B860",
+        statement: "I turn polished designs into <em>fast</em>, <em>accessible</em> interfaces people actually use.",
+        sub: "Design systems, App Router migrations, and pixel-perfect React — for airlines, fintech dashboards, and a million-visitor marketing site.",
+        titles: {
+          twilio: "Senior Frontend Engineer — twilio.com",
+          ck: "Frontend Developer — Next.js",
+          invitae: "UX/UI Engineer"
+        },
+        hideWork: ["duke"],
+        projects: { order: ["crossover", "shipkit", "juno"], hide: ["lacyshell"] }
+      },
+      devops: {
+        accent: "#97A8F0",
+        statement: "I keep the <em>pipelines</em> green and the <em>infrastructure</em> boring.",
+        sub: "CI/CD, cloud migrations, and on-call ownership — AWS and Azure deployments that ship every day without drama.",
+        titles: {
+          duke: "Cloud Engineer — AWS / Azure Migration",
+          twilio: "Senior Web Engineer + DevOps",
+          invitae: "Software Engineer + DevOps"
+        },
+        hideWork: ["ck"],
+        projects: { order: ["shipkit", "juno", "crossover"], hide: ["lacyshell"] }
+      }
+    };
+
+    /* Canonical titles, read from the DOM once so "complete" restores them. */
+    var baseTitles = {};
+    document.querySelectorAll(".entry").forEach(function (el) {
+      baseTitles[el.dataset.id] = el.querySelector("[data-title]").textContent;
+    });
+
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var statement = document.getElementById("statement");
+    var statementSub = document.getElementById("statement-sub");
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".flavor"));
+
+    function swapText(el, html, asHTML) {
+      var write = function () {
+        if (asHTML) { el.innerHTML = html; } else { el.textContent = html; }
+      };
+      if (reduceMotion.matches) { write(); return; }
+      el.classList.add("is-fading");
+      window.setTimeout(function () {
+        write();
+        el.classList.remove("is-fading");
+      }, 150);
+    }
+
+    function render(name) {
+      var f = FLAVORS[name];
+      if (!f) return;
+
+      document.documentElement.style.setProperty("--accent", f.accent);
+
+      swapText(statement, f.statement, true);
+      swapText(statementSub, f.sub, false);
+
+      document.querySelectorAll(".entry").forEach(function (el) {
+        var id = el.dataset.id;
+        el.hidden = f.hideWork.indexOf(id) !== -1;
+        var titleEl = el.querySelector("[data-title]");
+        var next = f.titles[id] || baseTitles[id];
+        if (titleEl.textContent !== next) swapText(titleEl, next, false);
+      });
+
+      document.querySelectorAll(".project").forEach(function (el) {
+        var id = el.dataset.id;
+        el.hidden = f.projects.hide.indexOf(id) !== -1;
+        var ord = f.projects.order.indexOf(id);
+        el.style.setProperty("--ord", ord === -1 ? 99 : ord);
+      });
+
+      buttons.forEach(function (btn) {
+        btn.setAttribute("aria-checked", String(btn.dataset.flavor === name));
+      });
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () { render(btn.dataset.flavor); });
+    });
+
+    /* Arrow-key support for the radio group. */
+    var group = document.querySelector('[role="radiogroup"]');
+    group.addEventListener("keydown", function (e) {
+      var keys = ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft"];
+      var i = buttons.indexOf(document.activeElement);
+      if (keys.indexOf(e.key) === -1 || i === -1) return;
+      e.preventDefault();
+      var delta = (e.key === "ArrowDown" || e.key === "ArrowRight") ? 1 : -1;
+      var next = buttons[(i + delta + buttons.length) % buttons.length];
+      next.focus();
+      render(next.dataset.flavor);
+    });
+
+    render("complete");
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Design explorations · resume.lacy.sh · LAC-3036</title>
+<style>
+  :root {
+    --ink: #16150f;
+    --paper: #f5f2ec;
+    --dim: #77726a;
+    --rule: #d9d4ca;
+    --accent: #8c2b1e;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 16px/1.6 ui-serif, Georgia, "Times New Roman", serif;
+    padding: clamp(1.5rem, 6vw, 5rem);
+    min-height: 100vh;
+  }
+  main { max-width: 44rem; margin: 0 auto; }
+  .slug {
+    font: 600 0.72rem/1 ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    line-height: 1.15;
+    font-weight: 700;
+    margin: 0.75rem 0 1rem;
+    letter-spacing: -0.01em;
+  }
+  .intro { color: var(--dim); max-width: 38rem; }
+  ol {
+    list-style: none;
+    padding: 0;
+    margin-top: 2.5rem;
+    border-top: 2px solid var(--ink);
+  }
+  li { border-bottom: 1px solid var(--rule); }
+  li a {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.25rem 1rem;
+    padding: 1.25rem 0.25rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  li a:hover .name, li a:focus-visible .name { color: var(--accent); }
+  li a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .num {
+    grid-row: span 2;
+    font: 500 0.9rem/1.9 ui-monospace, "SF Mono", Menlo, monospace;
+    color: var(--dim);
+  }
+  .name { font-size: 1.35rem; font-weight: 700; }
+  .desc { color: var(--dim); font-size: 0.95rem; }
+  footer { margin-top: 3rem; }
+  footer p { color: var(--dim); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<main>
+  <p class="slug">Design exploration · LAC-3036 · resume.lacy.sh</p>
+  <h1>Four directions for the résumé</h1>
+  <p class="intro">
+    Static stubs, not finished pages. Each one takes the same idea — one canonical résumé that
+    re-renders itself per role — and gives it a different visual personality. Pick and choose:
+    a direction, or elements across directions.
+  </p>
+  <ol>
+    <li><a href="./01-broadsheet.html">
+      <span class="num">01</span>
+      <span class="name">Broadsheet</span>
+      <span class="desc">Editorial print. Serif typography, hairline rules, oxblood accent. Flavors as newspaper “editions.” Doubles as the printable résumé.</span>
+    </a></li>
+    <li><a href="./02-manpage.html">
+      <span class="num">02</span>
+      <span class="name">Manpage</span>
+      <span class="desc">The résumé as <code>man lacymorrow</code>. One mono family, warm amber on charcoal, flavors as command flags. The Lacy Shell product story.</span>
+    </a></li>
+    <li><a href="./03-swiss.html">
+      <span class="num">03</span>
+      <span class="name">Swiss</span>
+      <span class="desc">International Typographic Style. Huge grotesque type, numbered sections, tabular experience rows. Optimized for the 30-second recruiter scan.</span>
+    </a></li>
+    <li><a href="./04-spectrum.html">
+      <span class="num">04</span>
+      <span class="name">Spectrum</span>
+      <span class="desc">Dark studio portfolio. Each flavor has its own hue and re-tints the whole page — the switcher becomes the design idea itself.</span>
+    </a></li>
+  </ol>
+  <footer>
+    <p>Content is stubbed from the real resume.json; flavor switchers demo 3–4 flavors each. Nothing here ships as-is.</p>
+  </footer>
+</main>
+</body>
+</html>

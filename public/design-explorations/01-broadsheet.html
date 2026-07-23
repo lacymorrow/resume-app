@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Direction 01 — Broadsheet · resume.lacy.sh design exploration</title>
+<meta name="description" content="Design exploration LAC-3036 — Direction 01: Broadsheet. The résumé as an editorial monograph.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F3EA;
+    --ink: #1A1712;
+    --oxblood: #8C2B1E;
+    --hairline: rgba(26, 23, 18, 0.35);
+    --measure: 71ch;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Newsreader", Georgia, "Times New Roman", serif;
+    font-optical-sizing: auto;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    padding: 2.5rem 1.25rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    max-width: var(--measure);
+    margin: 0 auto;
+  }
+
+  a {
+    color: var(--oxblood);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--oxblood);
+    outline-offset: 3px;
+  }
+
+  /* ---------- Masthead ---------- */
+
+  .masthead { text-align: center; }
+
+  .masthead .overline {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .masthead .overline .ox { color: var(--oxblood); }
+
+  .masthead h1 {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 144;
+    font-weight: 560;
+    font-size: clamp(2.75rem, 11.5vw, 6.25rem);
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin: 0 0 1.1rem;
+  }
+
+  .dateline {
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 0.45rem 0;
+    font-size: 0.9375rem;
+    font-style: italic;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 0.65ch;
+  }
+  .dateline .sep { font-style: normal; color: var(--hairline); }
+  .dateline a { color: var(--ink); }
+  .dateline a:hover { color: var(--oxblood); }
+
+  /* ---------- Editions (flavor switcher) ---------- */
+
+  .editions {
+    margin-top: 0.5rem;
+    border-bottom: 1px solid var(--ink);
+    padding: 0.45rem 0 0.55rem;
+    text-align: center;
+  }
+  .editions .editions-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .editions ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 2ch;
+    row-gap: 0.2rem;
+  }
+  .editions button {
+    font-family: "Newsreader", serif;
+    font-size: 1rem;
+    font-style: italic;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink);
+    padding: 0.1rem 0.15rem;
+    border-bottom: 1px solid transparent;
+    transition: color 120ms ease;
+  }
+  .editions button:hover { color: var(--oxblood); }
+  .editions button[aria-pressed="true"] {
+    color: var(--oxblood);
+    font-weight: 600;
+    border-bottom-color: var(--oxblood);
+  }
+
+  .tagline {
+    text-align: center;
+    font-style: italic;
+    font-size: 1.125rem;
+    margin: 1.6rem auto 0;
+    max-width: 52ch;
+  }
+
+  /* ---------- Sections ---------- */
+
+  section { margin-top: 3.25rem; }
+
+  section > h2 {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 40;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border-top: 3px solid var(--ink);
+    padding-top: 10px;
+    position: relative;
+    margin-bottom: 1.75rem;
+  }
+  section > h2::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--ink);
+  }
+
+  /* ---------- Intro ---------- */
+
+  .intro { margin-top: 2.6rem; }
+  .intro p + p { margin-top: 1rem; }
+  .intro p:first-of-type::first-letter {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 144;
+    font-weight: 600;
+    color: var(--oxblood);
+    float: left;
+    font-size: 3.6em;
+    line-height: 0.82;
+    padding: 0.06em 0.12em 0 0;
+  }
+  .expertise-line {
+    margin-top: 1.1rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.75rem;
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+  }
+  .expertise-line strong {
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+  }
+
+  /* ---------- Work articles ---------- */
+
+  article.entry {
+    padding: 1.4rem 0;
+    border-top: 1px solid var(--hairline);
+  }
+  article.entry:first-of-type { border-top: none; padding-top: 0; }
+  article.entry[hidden] { display: none; }
+
+  article.entry h3 {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 60;
+    font-weight: 600;
+    font-size: 1.375rem;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .entry .byline {
+    font-style: italic;
+    font-size: 0.9375rem;
+    margin: 0.15rem 0 0.6rem;
+  }
+  .entry .byline .co { font-style: normal; font-weight: 600; }
+  .entry .byline .sep { color: var(--hairline); font-style: normal; }
+  .entry p.body { max-width: 100%; }
+  .entry .stack {
+    display: block;
+    margin-top: 0.55rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.71875rem;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+  }
+  .entry .stack::before {
+    content: "TOOLING — ";
+    color: var(--oxblood);
+    letter-spacing: 0.12em;
+  }
+
+  /* ---------- Pull quote ---------- */
+
+  .pullquote {
+    margin: 3.25rem auto;
+    max-width: 56ch;
+    text-align: center;
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 1.9rem 1rem 1.6rem;
+    position: relative;
+  }
+  .pullquote::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .pullquote blockquote p {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 72;
+    font-style: italic;
+    font-weight: 480;
+    font-size: 1.4375rem;
+    line-height: 1.42;
+    quotes: "\201C" "\201D";
+  }
+  .pullquote blockquote p::before { content: open-quote; color: var(--oxblood); }
+  .pullquote blockquote p::after { content: close-quote; color: var(--oxblood); }
+  .pullquote figcaption {
+    margin-top: 0.9rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Projects ---------- */
+
+  .projects dl { margin: 0; }
+  .projects dt {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 40;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    margin-top: 1.15rem;
+  }
+  .projects dt:first-of-type { margin-top: 0; }
+  .projects dt .proj-meta {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 400;
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    margin-left: 0.75ch;
+  }
+  .projects dd { margin: 0.1rem 0 0; }
+
+  /* ---------- Proficiencies ---------- */
+
+  .skills-table { border-top: 1px solid var(--hairline); }
+  .skills-row {
+    display: grid;
+    grid-template-columns: 12.5rem 1fr;
+    gap: 1.25rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .skills-row dt {
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .skills-row dt .level {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-caps: normal;
+    font-weight: 400;
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+  }
+  .skills-row dd {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.75rem;
+    line-height: 1.8;
+  }
+
+  /* ---------- Education / colophon ---------- */
+
+  .education p + p { margin-top: 0.45rem; }
+  .education .degree { font-weight: 600; }
+  .education .meta { font-style: italic; font-size: 0.9375rem; }
+
+  .colophon {
+    margin-top: 3.5rem;
+    border-top: 3px solid var(--ink);
+    padding-top: 12px;
+    position: relative;
+    text-align: center;
+    font-size: 0.9375rem;
+    font-style: italic;
+  }
+  .colophon::before {
+    content: "";
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .colophon .contact-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 0.65ch;
+    margin-bottom: 0.35rem;
+  }
+  .colophon .sep { color: var(--hairline); font-style: normal; }
+  .colophon .fine {
+    font-family: "IBM Plex Mono", monospace;
+    font-style: normal;
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 0.7rem;
+    opacity: 0.75;
+  }
+
+  /* ---------- Exploration slug ---------- */
+
+  .slug {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.65625rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.45rem 1rem;
+    z-index: 10;
+  }
+
+  /* ---------- Responsive ---------- */
+
+  @media (max-width: 540px) {
+    body { font-size: 1rem; padding: 1.75rem 1.1rem 5.5rem; }
+    .skills-row { grid-template-columns: 1fr; gap: 0.2rem; padding: 0.85rem 0; }
+    .dateline { font-size: 0.875rem; }
+    .editions ul { column-gap: 1.25ch; }
+    .pullquote blockquote p { font-size: 1.25rem; }
+  }
+
+  /* ---------- Print: this IS the résumé ---------- */
+
+  @media print {
+    :root { --paper: #fff; --ink: #000; --hairline: rgba(0,0,0,0.4); }
+    @page { margin: 1.4cm 1.6cm; }
+    body { background: #fff; color: #000; font-size: 10.5pt; line-height: 1.5; padding: 0; }
+    .sheet { max-width: none; }
+    .slug, .editions { display: none; }
+    a { color: var(--oxblood); text-decoration: none; }
+    .colophon a[href^="mailto"]::after,
+    .colophon a[href^="https"]::after { content: none; }
+    .masthead h1 { font-size: 34pt; }
+    section { margin-top: 1.4rem; }
+    article.entry { padding: 0.7rem 0; break-inside: avoid; }
+    .pullquote { margin: 1.2rem auto; padding: 1rem 0.5rem 0.8rem; break-inside: avoid; }
+    .pullquote blockquote p { font-size: 12.5pt; }
+    .skills-row { padding: 0.35rem 0; break-inside: avoid; }
+    .projects dt { margin-top: 0.5rem; break-after: avoid; }
+    .colophon { margin-top: 1.4rem; }
+    .intro p:first-of-type::first-letter { font-size: 3em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- ============ Masthead ============ -->
+  <header class="masthead">
+    <p class="overline">A Curriculum Vitae in the Form of a Monograph <span class="ox">·</span> Vol. XX, No. 1</p>
+    <h1>Lacy Morrow</h1>
+    <p class="dateline">
+      <span>Charlotte, NC</span> <span class="sep" aria-hidden="true">·</span>
+      <span>Est. 2006</span> <span class="sep" aria-hidden="true">·</span>
+      <span>20 Years in Practice</span> <span class="sep" aria-hidden="true">·</span>
+      <a href="mailto:me@lacymorrow.com">me@lacymorrow.com</a>
+    </p>
+
+    <!-- ============ Editions (flavor switcher) ============ -->
+    <nav class="editions" aria-label="Résumé editions">
+      <span class="editions-label" id="editions-label">Available Editions</span>
+      <ul role="group" aria-labelledby="editions-label">
+        <li><button type="button" data-edition="complete" aria-pressed="true">The Complete Edition</button></li>
+        <li><button type="button" data-edition="ai" aria-pressed="false">The AI Edition</button></li>
+        <li><button type="button" data-edition="frontend" aria-pressed="false">The Frontend Edition</button></li>
+      </ul>
+    </nav>
+
+    <p class="tagline" id="tagline" aria-live="polite">Agentic &amp; web engineer, open-source developer, and hardware hacker — twenty years of building for the web.</p>
+  </header>
+
+  <main>
+
+    <!-- ============ Introduction ============ -->
+    <section class="intro" aria-label="Introduction">
+      <p>Over twenty years as a web developer building accessible, well-architected
+      sites and applications — pixel-perfect and mobile-first, with graceful degradation
+      and progressive enhancement as a matter of principle. Equal parts engineer,
+      tech lead, and tinkerer: from AI orchestration layers and RAG pipelines to
+      design systems, e-commerce funnels, and hardware badges soldered by hand.</p>
+      <p>I especially enjoy TypeScript, React, Next.js, and Electron&#8202;/&#8202;Tauri.</p>
+      <p class="expertise-line"><strong>Expertise</strong> — Agentic engineering · Full-stack development · GTM / growth engineering · Tech lead · Software architecture · DevOps · Hardware</p>
+    </section>
+
+    <!-- ============ Work ============ -->
+    <section aria-labelledby="work-head">
+      <h2 id="work-head">In Practice — Selected Engagements</h2>
+
+      <article class="entry" data-entry="acbj">
+        <h3 data-role="acbj">Backend Developer + Agentic Engineer</h3>
+        <p class="byline"><span class="co">American City Business Journals</span> <span class="sep" aria-hidden="true">·</span> Dec 2025 – Jun 2026 <span class="sep" aria-hidden="true">·</span> Charlotte, NC</p>
+        <p class="body">Built and migrated the backend platform powering business publications
+        across 48 U.S. markets. Architected an AI orchestration layer managing twelve autonomous
+        agents that independently pick up and complete engineering tasks — task routing, guardrails,
+        and human-in-the-loop review — with RAG pipelines grounding agents in platform documentation
+        and code.</p>
+        <span class="stack">Laravel · PHP · Claude · LangGraph · RAG · MCP · Autonomous Agents</span>
+      </article>
+
+      <article class="entry" data-entry="duke">
+        <h3 data-role="duke">Agentic Engineer + Senior Developer</h3>
+        <p class="byline"><span class="co">Duke Energy</span> <span class="sep" aria-hidden="true">·</span> Jun 2025 – Apr 2026 <span class="sep" aria-hidden="true">·</span> Remote</p>
+        <p class="body">Led internal AI adoption: built a company-wide GPT/LLM platform with
+        retrieval-augmented generation over internal documentation, prompt libraries, and Azure
+        OpenAI integration. Refactored a weather-forecasting dashboard for AWS deployment and
+        migrated authentication to Azure Active Directory.</p>
+        <span class="stack">Python · React · LangChain · LlamaIndex · RAG · Docker · AWS · Azure</span>
+      </article>
+
+      <article class="entry" data-entry="creditkarma">
+        <h3 data-role="creditkarma">Full-Stack Next.js Developer</h3>
+        <p class="byline"><span class="co">Credit Karma</span> <span class="sep" aria-hidden="true">·</span> 2025 <span class="sep" aria-hidden="true">·</span> Remote</p>
+        <p class="body">Created the entire User Testing dashboard for the User Management team.
+        Converted the Pages Router to the App Router and built tooling for creating test and
+        production users across web and mobile, with search and metrics coordinated across
+        multiple system APIs.</p>
+        <span class="stack">TypeScript · Next.js · React · React Native</span>
+      </article>
+
+      <article class="entry" data-entry="viasat">
+        <h3 data-role="viasat">Senior React Developer — In-Flight Entertainment</h3>
+        <p class="byline"><span class="co">Viasat</span> <span class="sep" aria-hidden="true">·</span> Jun 2022 – Jan 2023 <span class="sep" aria-hidden="true">·</span> Remote</p>
+        <p class="body">Managed in-flight entertainment portals for dozens of airlines. Ran
+        workflow management and client-stakeholder relations, demoed product updates to
+        stakeholders, and transformed polished designs into reusable components. On-call.</p>
+        <span class="stack">React · TypeScript · Next.js · Jenkins · AWS · MySQL</span>
+      </article>
+
+      <article class="entry" data-entry="twilio">
+        <h3 data-role="twilio">Senior Web Engineer</h3>
+        <p class="byline"><span class="co">Twilio Inc.</span> <span class="sep" aria-hidden="true">·</span> Nov 2017 – Nov 2021 <span class="sep" aria-hidden="true">·</span> San Francisco, CA</p>
+        <p class="body">In charge of twilio.com and all sub-sites. Led multiple projects, created
+        a React design system, and built the SIGNAL HackPack v4 hardware badge. Launched the
+        WhatsApp, Studio, and Flex product pages; drove localization and regionalization;
+        migrated the blog and legal sites to a CMS. Emergency on-call.</p>
+        <span class="stack">TypeScript · React · Docker · Python · Django · Wagtail · PHP · i18n</span>
+      </article>
+
+      <article class="entry" data-entry="invitae">
+        <h3 data-role="invitae">Software Engineer</h3>
+        <p class="byline"><span class="co">Invitae</span> <span class="sep" aria-hidden="true">·</span> Jun 2014 – Sep 2015 <span class="sep" aria-hidden="true">·</span> San Francisco, CA</p>
+        <p class="body">Created and maintained HIPAA-compliant back-office software, data-science
+        tools, and the public-facing invitae.com. Managed database health, continuous integration,
+        and bi-weekly deployments; built an automated Selenium testing workflow; served as a
+        technical interviewer.</p>
+        <span class="stack">Python · Django · Flask · PHP · React · Angular · ElasticSearch · Docker · AWS</span>
+      </article>
+    </section>
+
+    <!-- ============ Pull quote ============ -->
+    <figure class="pullquote">
+      <blockquote>
+        <p>Lacy is truly a full-stack developer, and his work output is incredible.
+        If there is any opportunity to work with Lacy, I take it. He is the
+        definition of an A&#8202;player.</p>
+      </blockquote>
+      <figcaption>— Ryan Kirkram, Senior Software Engineer, Yahoo</figcaption>
+    </figure>
+
+    <!-- ============ Projects ============ -->
+    <section class="projects" aria-labelledby="projects-head">
+      <h2 id="projects-head">Independent Works — Open Source</h2>
+      <dl>
+        <dt><a href="https://github.com/lacymorrow/lacy-shell">Lacy Shell</a> <span class="proj-meta">2024—</span></dt>
+        <dd>An AI coding agent for your terminal. Natural language routes through an LLM agent
+        with tool calling and safe command execution; integrates Codex, Claude Code, or any
+        AI coding CLI into your existing shell.</dd>
+
+        <dt><a href="https://github.com/lacymorrow/juno-ai">Juno AI</a> <span class="proj-meta">2025—</span></dt>
+        <dd>Voice-operate your computer. A Rust + Tauri desktop app built on OpenAI Whisper and
+        Anthropic computer use; doubles as an MCP server (<code>npx juno-cua</code>) for Claude
+        Code, Cursor, and other agents.</dd>
+
+        <dt><a href="https://github.com/lacymorrow/crossover">CrossOver</a> <span class="proj-meta">2015—</span></dt>
+        <dd>Cross-platform crosshair overlay for PC games, built with Electron. Over 1,000 stars
+        on GitHub; featured in the Windows app store and Snapcraft store.</dd>
+
+        <dt><a href="https://github.com/lacymorrow/shipkit">Shipkit</a> <span class="proj-meta">2024—</span></dt>
+        <dd>A Next.js accelerator: full-featured starter and toolkit for building, launching,
+        and monetizing MVPs.</dd>
+      </dl>
+    </section>
+
+    <!-- ============ Proficiencies ============ -->
+    <section aria-labelledby="skills-head">
+      <h2 id="skills-head">Proficiencies — A Condensed Index</h2>
+      <dl class="skills-table">
+        <div class="skills-row">
+          <dt>AI &amp; Agentic Systems <span class="level">Expert</span></dt>
+          <dd>LLMs (Claude, GPT, Gemini) · LangChain / LangGraph · RAG · MCP · agent orchestration · vector databases · prompt engineering &amp; evals</dd>
+        </div>
+        <div class="skills-row">
+          <dt>Frontend <span class="level">Expert</span></dt>
+          <dd>TypeScript / JavaScript · React / Next.js · Svelte · Astro · Vue · HTML / JSX / MDX · CSS / SCSS · Tailwind · React Native</dd>
+        </div>
+        <div class="skills-row">
+          <dt>Backend <span class="level">Expert</span></dt>
+          <dd>Node · Python · PHP · Rust · Go · SQL / PostgreSQL / MySQL · Redis · serverless · microservices · distributed systems</dd>
+        </div>
+        <div class="skills-row">
+          <dt>DevOps <span class="level">Senior</span></dt>
+          <dd>Docker · AWS · Google Cloud · Vercel · Netlify · CI/CD · caching · testing</dd>
+        </div>
+        <div class="skills-row">
+          <dt>Growth &amp; GTM <span class="level">Senior</span></dt>
+          <dd>SEO · analytics / GTM · landing pages &amp; funnels · e-commerce (Stripe, CommerceTools) · i18n · marketing automation (RPA, AI agents) · product launches</dd>
+        </div>
+        <div class="skills-row">
+          <dt>Desktop &amp; Platform <span class="level">Expert</span></dt>
+          <dd>Electron · Tauri · React Native · Flutter · Rust</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- ============ Education ============ -->
+    <section class="education" aria-labelledby="edu-head">
+      <h2 id="edu-head">Formation &amp; Honors</h2>
+      <p><span class="degree">Bachelor of Science, Computer Science</span> — Appalachian State University</p>
+      <p class="meta">2009–2014 · Artificial Intelligence, Data Structures, Software Engineering, Client- &amp; Server-side Web Programming</p>
+      <p class="meta">Arctic Code Vault Contributor, GitHub, 2020</p>
+    </section>
+
+  </main>
+
+  <!-- ============ Colophon ============ -->
+  <footer class="colophon">
+    <p class="contact-row">
+      <a href="mailto:me@lacymorrow.com">me@lacymorrow.com</a> <span class="sep" aria-hidden="true">·</span>
+      <a href="https://github.com/lacymorrow">github.com/lacymorrow</a> <span class="sep" aria-hidden="true">·</span>
+      <a href="https://www.linkedin.com/in/lacymorrow/">linkedin.com/in/lacymorrow</a>
+    </p>
+    <p>Set in Fraunces, Newsreader, and IBM Plex Mono. Printed on demand — this page is the résumé.</p>
+    <p class="fine">One canonical record · re-typeset per edition · resume.lacy.sh</p>
+  </footer>
+
+</div>
+
+<!-- ============ Exploration slug ============ -->
+<div class="slug" role="note">Design exploration LAC-3036 · Direction 01 of 04 · Broadsheet</div>
+
+<script>
+  (function () {
+    "use strict";
+
+    /* One canonical résumé, re-typeset per edition. Each edition may swap the
+       tagline, retitle positions, and withdraw entries from the record. */
+    var EDITIONS = {
+      complete: {
+        tagline: "Agentic & web engineer, open-source developer, and hardware hacker — twenty years of building for the web.",
+        titles: {},
+        hidden: []
+      },
+      ai: {
+        tagline: "Agentic engineer — LLM orchestration, RAG pipelines, and multi-agent systems, shipped to production.",
+        titles: {
+          acbj: "Agentic Engineer — AI Orchestration",
+          duke: "Agentic Engineer — Internal LLM Platform",
+          twilio: "Senior Engineer — Platform & Automation"
+        },
+        hidden: ["viasat"]
+      },
+      frontend: {
+        tagline: "Frontend engineer — accessible, pixel-perfect interfaces in React and TypeScript since the table-layout era.",
+        titles: {
+          duke: "Senior Frontend Developer",
+          creditkarma: "Senior Next.js Developer",
+          twilio: "Senior Frontend Engineer — twilio.com",
+          viasat: "Senior React Developer — In-Flight UI"
+        },
+        hidden: ["acbj"]
+      }
+    };
+
+    var DEFAULT_TITLES = {};
+    var roleEls = document.querySelectorAll("[data-role]");
+    roleEls.forEach(function (el) {
+      DEFAULT_TITLES[el.getAttribute("data-role")] = el.textContent;
+    });
+
+    var tagline = document.getElementById("tagline");
+    var buttons = document.querySelectorAll(".editions button[data-edition]");
+    var entries = document.querySelectorAll("article.entry[data-entry]");
+
+    function setEdition(name) {
+      var edition = EDITIONS[name];
+      if (!edition) return;
+
+      tagline.textContent = edition.tagline;
+
+      roleEls.forEach(function (el) {
+        var key = el.getAttribute("data-role");
+        el.textContent = edition.titles[key] || DEFAULT_TITLES[key];
+      });
+
+      entries.forEach(function (el) {
+        var key = el.getAttribute("data-entry");
+        el.hidden = edition.hidden.indexOf(key) !== -1;
+      });
+
+      buttons.forEach(function (btn) {
+        btn.setAttribute("aria-pressed", String(btn.getAttribute("data-edition") === name));
+      });
+    }
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        setEdition(btn.getAttribute("data-edition"));
+      });
+    });
+
+    setEdition("complete");
+  })();
+</script>
+
+</body>
+</html>
