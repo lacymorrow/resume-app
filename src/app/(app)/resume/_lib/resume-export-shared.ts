@@ -1,3 +1,4 @@
+import type { ContactKind } from "./resume-contact-icons";
 import type { FilterState, MatchResult } from "./resume-filters";
 import type { ResumeProject, ResumeSchema, ResumeWork } from "./resume-types";
 
@@ -137,25 +138,42 @@ export function splitProjectSummary(summary: string): { tagline: string | null; 
   return { tagline: null, body: summary };
 }
 
+export interface ContactRow {
+  kind: ContactKind;
+  text: string;
+  href?: string;
+}
+
+/** Networks we render in the contact block, with their display labels. */
+const PROFILE_NETWORKS: Record<string, { kind: ContactKind; label: string }> = {
+  github: { kind: "github", label: "GitHub" },
+  linkedin: { kind: "linkedin", label: "LinkedIn" },
+  twitter: { kind: "x", label: "X" },
+  x: { kind: "x", label: "X" },
+};
+
 /** Contact rows for the header block, derived from basics + profiles. */
-export function contactRows(
-  basics: ExportData["basics"]
-): { glyph: string; text: string; href?: string }[] {
-  const rows: { glyph: string; text: string; href?: string }[] = [];
-  if (basics.phone) rows.push({ glyph: "✆", text: basics.phone });
-  if (basics.email) rows.push({ glyph: "✉", text: basics.email, href: `mailto:${basics.email}` });
+export function contactRows(basics: ExportData["basics"]): ContactRow[] {
+  const rows: ContactRow[] = [];
+  if (basics.phone) rows.push({ kind: "phone", text: basics.phone });
+  if (basics.email) {
+    rows.push({ kind: "email", text: basics.email, href: `mailto:${basics.email}` });
+  }
   if (basics.url) {
     rows.push({
-      glyph: "⌂",
+      kind: "website",
       text: basics.url.replace(/^https?:\/\//, "").replace(/\/$/, ""),
       href: basics.url,
     });
   }
   for (const profile of basics.profiles ?? []) {
-    const network = profile.network.toLowerCase();
-    if (network === "github" || network === "linkedin") {
-      const label = network === "github" ? "GitHub" : "LinkedIn";
-      rows.push({ glyph: "", text: `${label} /${profile.username}`, href: profile.url });
+    const network = PROFILE_NETWORKS[profile.network.toLowerCase()];
+    if (network) {
+      rows.push({
+        kind: network.kind,
+        text: `${network.label} /${profile.username}`,
+        href: profile.url,
+      });
     }
   }
   return rows;
