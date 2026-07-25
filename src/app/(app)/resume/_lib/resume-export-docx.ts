@@ -66,6 +66,15 @@ export function exportDocx(data: ExportData, filename: string) {
   const work = getVisibleWork(data);
   const projects = getVisibleProjects(data);
 
+  const hyperlinks: { id: string; url: string }[] = [];
+  let linkCounter = 0;
+
+  function addHyperlink(url: string, textXml: string): string {
+    const id = `rLink${++linkCounter}`;
+    hyperlinks.push({ id, url });
+    return `<w:hyperlink r:id="${id}">${textXml}</w:hyperlink>`;
+  }
+
   let body = "";
 
   // ---- Masthead ----
@@ -73,7 +82,10 @@ export function exportDocx(data: ExportData, filename: string) {
   body += p(basics.label, { size: 10.5, color: MUTED }, 60);
   body += para(
     contactRows(basics)
-      .map((row) => run(row.text, { size: 8.5, color: INK }))
+      .map((row) => {
+        const textXml = run(row.text, { size: 8.5, color: INK });
+        return row.href ? addHyperlink(row.href, textXml) : textXml;
+      })
       .join(run("   |   ", { size: 8.5, color: RAIL })),
     120
   );
@@ -92,13 +104,14 @@ export function exportDocx(data: ExportData, filename: string) {
     body += sectionLabel("Developer Experience");
     for (const entry of work) {
       body += para(run(entry.position, { bold: true, size: 11, color: BLUE }), 20);
+      const orgRun = run(`   ${entry.name}`, { bold: true, size: 9.5, color: INK });
       body += para(
         run(formatYearRange(entry.startDate, entry.endDate), {
           bold: true,
           size: 10,
           color: PINK,
         }) +
-          run(`   ${entry.name}`, { bold: true, size: 9.5, color: INK }) +
+          (entry.url ? addHyperlink(entry.url, orgRun) : orgRun) +
           (entry.sector ? run(`  (${entry.sector})`, { size: 8.5, color: MUTED }) : ""),
         40
       );
@@ -168,12 +181,14 @@ export function exportDocx(data: ExportData, filename: string) {
     body += sectionLabel("Open-Source");
     for (const project of projects) {
       const { tagline, body: projBody } = splitProjectSummary(project.summary);
+      const projTitleRun = run(tagline ? `${project.name}: ${tagline}` : project.name, {
+        bold: true,
+        size: 11,
+        color: BLUE,
+      });
       body += para(
-        run(tagline ? `${project.name}: ${tagline}` : project.name, {
-          bold: true,
-          size: 11,
-          color: BLUE,
-        }) + (project.featured ? run(" ★", { size: 11, color: INK }) : ""),
+        (project.url ? addHyperlink(project.url, projTitleRun) : projTitleRun) +
+          (project.featured ? run(" ★", { size: 11, color: INK }) : ""),
         20
       );
       body += para(
@@ -200,10 +215,17 @@ export function exportDocx(data: ExportData, filename: string) {
       body += p(`— ${ref.name}`, { size: 9.5, color: INK }, 100);
     }
   }
-  body += p(FOOTER_TEXT, { size: 8, color: FOOTER }, 0);
+  const footerParts = FOOTER_TEXT.split("lacymorrow.com");
+  const footerLinkRun = run("lacymorrow.com", { size: 8, color: FOOTER });
+  body += para(
+    run(footerParts[0] ?? "", { size: 8, color: FOOTER }) +
+      addHyperlink("https://lacymorrow.com", footerLinkRun) +
+      run(footerParts[1] ?? "", { size: 8, color: FOOTER }),
+    0
+  );
 
   const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
 <w:body>${body}</w:body>
 </w:document>`;
 
@@ -219,8 +241,16 @@ export function exportDocx(data: ExportData, filename: string) {
 <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
 </Relationships>`;
 
+  const linkRels = hyperlinks
+    .map(
+      (h) =>
+        `<Relationship Id="${h.id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" Target="${escXml(h.url)}" TargetMode="External"/>`
+    )
+    .join("\n");
   const wordRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"/>`;
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+${linkRels}
+</Relationships>`;
 
   void import("jszip").then((mod) => {
     const JSZip = mod.default;
