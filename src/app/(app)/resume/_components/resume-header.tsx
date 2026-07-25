@@ -1,5 +1,6 @@
 import type { ResumeBasics } from "../_lib/resume-types";
 import { SIGNATURE, SIGNATURE_FONT_STACK, parseSummary, contactRows } from "../_lib/resume-export-shared";
+import { CONTACT_ICONS } from "../_lib/resume-contact-icons";
 
 export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
   const summary = parseSummary(basics.summary);
@@ -31,7 +32,7 @@ export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
           )}
           {contact.map((row) => (
             <div key={row.text}>
-              <span style={{ color: SIGNATURE.muted }} className="inline-block w-4">{row.glyph || ""}</span>
+              <svg width={12} height={12} viewBox={`0 0 ${CONTACT_ICONS[row.kind].viewBox} ${CONTACT_ICONS[row.kind].viewBox}`} aria-hidden="true" className="inline-block mr-1 align-[-1px]"><path fill={SIGNATURE.muted} fillRule="evenodd" d={CONTACT_ICONS[row.kind].d} /></svg>
               {row.href ? (
                 <a href={row.href} className="hover:underline" style={{ color: SIGNATURE.ink }}>
                   {row.text}
