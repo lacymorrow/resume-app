@@ -1,4 +1,5 @@
 import type { jsPDF } from "jspdf";
+import { type ContactKind, iconPathOps } from "./resume-contact-icons";
 import {
   contactRows,
   type ExportData,
@@ -62,6 +63,20 @@ function drawStar(doc: jsPDF, cx: number, cy: number, r: number, color: Rgb) {
   }
   doc.setFillColor(...color);
   doc.lines(deltas, pts[0]![0], pts[0]![1], [1, 1], "F", true);
+}
+
+/** Contact icon (brand mark or glyph) as a filled vector path. */
+function drawContactIcon(
+  doc: jsPDF,
+  kind: ContactKind,
+  x: number,
+  y: number,
+  size: number,
+  color: Rgb
+) {
+  doc.setFillColor(...color);
+  doc.path(iconPathOps(kind, x, y, size));
+  doc.fillEvenOdd();
 }
 
 /** Small filled heart: two circles + a triangle. */
@@ -271,10 +286,20 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
   doc.text(basics.name, MARGIN, nameY);
   drawStar(doc, MARGIN + doc.getTextWidth(basics.name) + 16, nameY - 10, 10, INK);
 
+  // Contact block: icon rail + left-aligned text, right edge pinned to margin
   setStyle(doc, 8, "normal", INK);
+  const contact = contactRows(basics);
+  const contactTextW = Math.max(...contact.map((row) => doc.getTextWidth(row.text)), 0);
+  const contactTextX = CONTENT_RIGHT - contactTextW;
+  const iconSize = 6.5;
+  const iconX = contactTextX - iconSize - 5.5;
   let contactY = MARGIN + 4;
-  for (const row of contactRows(basics)) {
-    doc.text(row.text, CONTENT_RIGHT, contactY, { align: "right" });
+  for (const row of contact) {
+    drawContactIcon(doc, row.kind, iconX, contactY - 5.7, iconSize, MUTED);
+    doc.text(row.text, contactTextX, contactY);
+    if (row.href) {
+      doc.link(iconX, contactY - 6.5, CONTENT_RIGHT - iconX, 9, { url: row.href });
+    }
     contactY += 10.5;
   }
 
@@ -282,6 +307,8 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
   cur.y = nameY + 17;
   doc.text(doc.splitTextToSize(basics.label, 380) as string[], MARGIN, cur.y);
   cur.y += 20;
+  // The lede spans nearly full width — keep it clear of the contact block
+  cur.y = Math.max(cur.y, contactY + 2);
 
   setStyle(doc, 10.5, "bold", MUTED);
   const ledeLines = doc.splitTextToSize(summary.intro, CONTENT_RIGHT - MARGIN - 40) as string[];

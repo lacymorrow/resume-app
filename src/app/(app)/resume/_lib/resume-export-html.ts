@@ -1,3 +1,4 @@
+import { contactIconSvg } from "./resume-contact-icons";
 import {
   boldTechTermsHtml,
   buildTechKeywords,
@@ -32,8 +33,9 @@ export function buildHtmlContent(data: ExportData): string {
 
   const contact = contactRows(basics)
     .map((row) => {
+      const icon = contactIconSvg(row.kind, 9, SIGNATURE.muted);
       const inner = row.href ? `<a href="${esc(row.href)}">${esc(row.text)}</a>` : esc(row.text);
-      return `<div class="contact-row">${row.glyph ? `<span class="glyph">${row.glyph}</span>` : `<span class="glyph"></span>`}${inner}</div>`;
+      return `<div class="contact-row"><span class="glyph">${icon}</span>${inner}</div>`;
     })
     .join("\n");
 
@@ -164,6 +166,7 @@ h1 .star { font-weight: 400; font-size: 0.82em; }
 .tagline { margin-top: 8px; font-size: 10pt; color: ${SIGNATURE.muted}; }
 .contact { font-size: 8pt; color: ${SIGNATURE.ink}; line-height: 1.6; white-space: nowrap; padding-top: 4px; }
 .contact-row .glyph { display: inline-block; width: 14px; color: ${SIGNATURE.muted}; }
+.contact-row .glyph svg { vertical-align: -1px; }
 .contact-row a { color: ${SIGNATURE.ink}; }
 .lede { margin: 14px 0 0; font-size: 10.5pt; font-weight: 700; color: ${SIGNATURE.muted}; max-width: 6.6in; }
 
