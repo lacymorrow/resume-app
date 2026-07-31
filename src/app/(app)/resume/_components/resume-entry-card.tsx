@@ -49,7 +49,7 @@ export function ResumeEntryCard({
         <div className="text-sm font-bold" style={{ color: SIGNATURE.pink }}>
           {dateStr}
         </div>
-        <div className="text-xs font-bold leading-tight mt-0.5" style={{ color: SIGNATURE.ink }}>
+        <div className="text-xs font-bold leading-tight mt-0.5 [overflow-wrap:anywhere]" style={{ color: SIGNATURE.ink }}>
           {url ? (
             <a
               href={url}
@@ -78,7 +78,7 @@ export function ResumeEntryCard({
         <div className="sm:hidden mb-1">
           <span className="text-xs font-bold" style={{ color: SIGNATURE.pink }}>{dateStr}</span>
           <span className="mx-1.5" style={{ color: SIGNATURE.rail }}>·</span>
-          <span className="text-xs font-bold" style={{ color: SIGNATURE.ink }}>{subtitle}</span>
+          <span className="text-xs font-bold [overflow-wrap:anywhere]" style={{ color: SIGNATURE.ink }}>{subtitle}</span>
           {featured && <span className="font-normal ml-1">★</span>}
           {sector && <span className="text-[10px] ml-1" style={{ color: SIGNATURE.muted }}>({sector})</span>}
         </div>

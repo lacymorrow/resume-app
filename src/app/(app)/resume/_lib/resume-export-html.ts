@@ -180,7 +180,7 @@ section { display: grid; grid-template-columns: 76px 1fr; gap: 0 18px; margin-to
 .entry { display: grid; grid-template-columns: 128px 1fr; gap: 0 16px; margin-bottom: 15px; break-inside: avoid; page-break-inside: avoid; }
 .meta { text-align: right; }
 .dates { color: ${SIGNATURE.pink}; font-weight: 700; font-size: 10.5pt; }
-.org { font-weight: 700; font-size: 9pt; color: ${SIGNATURE.ink}; line-height: 1.35; }
+.org { font-weight: 700; font-size: 9pt; color: ${SIGNATURE.ink}; line-height: 1.35; overflow-wrap: anywhere; }
 .org a { text-decoration: underline; text-decoration-color: ${SIGNATURE.underline}; text-underline-offset: 2px; }
 .org .star { text-decoration: none; font-weight: 400; }
 .sector { font-size: 7.5pt; color: ${SIGNATURE.muted}; }
