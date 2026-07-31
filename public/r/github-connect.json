@@ -24,7 +24,7 @@
     },
     {
       "path": "src/app/(app)/connect/github/layout.tsx",
-      "content": "import type { Metadata } from \"next\";\nimport { constructMetadata } from \"@/config/metadata\";\n\nexport const metadata: Metadata = constructMetadata({\n  title: \"Connect GitHub\",\n  description:\n    \"Connect your GitHub account to access repository features and collaborate on projects.\",\n  noIndex: true,\n});\n\nexport default function GitHubConnectLayout({ children }: { children: React.ReactNode }) {\n  return children;\n}\n",
+      "content": "import type { Metadata } from \"next\";\nimport { constructMetadata } from \"@/config/metadata\";\n\nexport const dynamic = \"force-dynamic\";\n\nexport const metadata: Metadata = constructMetadata({\n  title: \"Connect GitHub\",\n  description:\n    \"Connect your GitHub account to access repository features and collaborate on projects.\",\n  noIndex: true,\n});\n\nexport default function GitHubConnectLayout({ children }: { children: React.ReactNode }) {\n  return children;\n}\n",
       "type": "registry:component",
       "target": "~/src/app/(app)/connect/github/layout.tsx"
     },

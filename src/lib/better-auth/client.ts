@@ -4,7 +4,7 @@ import { env } from "@/env";
 
 /**
  * Better Auth client for frontend use
- * @see https://www.better-auth.com/docs/authentication/client
+ * @see https://better-auth.com/docs/authentication/client
  *
  * This provides hooks and utilities for authentication in React components.
  * Only available when Better Auth is enabled.

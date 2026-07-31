@@ -2,7 +2,7 @@ import { env } from "@/env";
 
 /**
  * Better Auth API route handler
- * @see https://www.better-auth.com/docs/installation/nextjs
+ * @see https://better-auth.com/docs/installation/nextjs
  *
  * This handles all Better Auth endpoints:
  * - /api/better-auth/sign-in

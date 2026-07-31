@@ -7,7 +7,7 @@ import { betterAuthSchema } from "./schema";
 
 /**
  * Main Better Auth configuration
- * @see https://www.better-auth.com/docs/configuration
+ * @see https://better-auth.com/docs/configuration
  *
  * This configuration is only used when Better Auth is enabled
  * via the BETTER_AUTH_ENABLED environment variable.
@@ -107,7 +107,7 @@ export const auth = (() => {
     },
 
     // Advanced options can be configured here if needed
-    // See: https://www.better-auth.com/docs/reference/options
+    // See: https://better-auth.com/docs/reference/options
   });
 })();
 

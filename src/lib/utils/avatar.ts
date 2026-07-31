@@ -9,7 +9,7 @@ export type AvatarType = "personal" | "workspace";
 interface AvatarConfig {
   /**
    * The style of avatar to generate
-   * @see https://www.dicebear.com/styles/
+   * @see https://dicebear.com/styles/
    */
   style: "glass" | "pixel-art";
   /**
