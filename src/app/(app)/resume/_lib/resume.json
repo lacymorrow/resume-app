@@ -160,7 +160,7 @@
       "name": "NPM Libraries",
       "startDate": "2015-01-01",
       "summary": "Collection of Open-Source NPM Libraries. album-art | movie-art | movie-info | movie-trailer; etc thousands of weekly downloads",
-      "url": "https://www.npmjs.com/~lacymorrow"
+      "url": "https://npmjs.com/~lacymorrow"
     },
     {
       "name": "Cinematic",
@@ -173,7 +173,7 @@
       "name": "Casper",
       "startDate": "2014-03-31",
       "summary": "A Ghost-like WordPress theme. A gorgeous open-source Wordpress theme, inspired by the default theme of the Ghost blogging platform. Custom PHP WP theme.",
-      "url": "http://www.lacymorrow.com/projects/casper",
+      "url": "https://lacymorrow.com/projects/casper",
       "endDate": "2014-03-31",
       "featured": true
     },
@@ -181,14 +181,14 @@
       "name": "Boone Community Network",
       "startDate": "2012-08-31",
       "summary": "A local, community-based social network for the city of Boone, North Carolina. Connect locally and interact with your community; Discover businesses, deals, and people around you; Hear about the latest events and keep your roots local.",
-      "url": "http://www.boonecommunitynetwork.com",
+      "url": "https://boonecommunitynetwork.com",
       "endDate": "2012-08-31"
     },
     {
       "name": "Phase2Productions",
       "startDate": "2012-04-30",
       "summary": "Phase2Productions is a video production agency by Emmy Award-winning news anchor Kim Brattain. Phase2Productions' team of Emmy and Telly award-winning professionals can sharpen your image and build your brand.",
-      "url": "http://www.kimbrattain.com",
+      "url": "https://kimbrattain.com",
       "endDate": "2012-04-30"
     },
     {
@@ -214,7 +214,7 @@
       "startDate": "2025-12-01",
       "endDate": "2026-06-01",
       "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer managing 12 autonomous agents that independently picked up and completed engineering tasks — agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG (Retrieval-Augmented Generation) pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets across multiple services and platforms for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents, LangGraph, RAG, MCP",
-      "url": "https://www.bizjournals.com/",
+      "url": "https://bizjournals.com/",
       "location": "Charlotte, NC",
       "sector": "Media"
     },
@@ -338,7 +338,7 @@
       "endDate": "2016-11-30",
       "highlights": [],
       "summary": "Contract - Helped create a startup's initial mobile app: React web-app and second-iteration React Native app for IOS and Android; Saw first launch to 100+ beta users. AWS; NodeJS; Docker; SequelizeJS; React Native",
-      "url": "https://www.truist.com/long-game",
+      "url": "https://truist.com/long-game",
       "location": "San Francisco, CA",
       "sector": "Fintech"
     },
@@ -360,7 +360,7 @@
       "endDate": "2015-09-30",
       "highlights": [],
       "summary": "Senior Full-Stack Web Developer - Created and maintained HIPAA-compliant back office software, data science tools, and analytics software as well as the public-facing invitae.com; UX/UI Developer - Developed navigation, modals, and interactions; Made custom WordPress theme; DevOps - Managed database health, configured continuous integration instances, web-hooks, bi-weekly deployments. Created an automated Selenium testing workflow; Tech Interviewer;\n\nPython, PHP, MySQL, Django, Flask, Angular, Backbone, React, WordPress, ElasticSearch, NightwatchJS, Git & Mercurial, Docker, Jenkins, Splunk, Apache, AWS EC2, Linux",
-      "url": "https://www.invitae.com/",
+      "url": "https://invitae.com/",
       "location": "San Francisco, CA",
       "sector": "Genomics"
     },
@@ -382,7 +382,7 @@
       "endDate": "2010-08-31",
       "highlights": [],
       "summary": "Front-End Web Developer - Created 10+ branded advertising websites and unique user interactions; Created promotional sites and emails. Sliced Photoshop files to create HTML email; \n\nPHP, MySQL, Linux",
-      "url": "https://www.redventures.com/",
+      "url": "https://redventures.com/",
       "location": "Rock Hill, SC",
       "sector": "Digital Marketing"
     }
