@@ -50,13 +50,13 @@ interface Tool {
 }
 
 const tools: Tool[] = [
-  // https://www.bgvault.tech/
+  // https://bgvault.tech/
   {
     title: "BG Vault - Backgrounds",
     description:
       "Free, beautiful backgrounds for your project.Built with Tailwind CSS.Click to preview, toggle light / dark mode, and copy the code.Works with any project with tailwind css.",
     icon: FileIcon,
-    href: "https://www.bgvault.tech/",
+    href: "https://bgvault.tech/",
     isExternal: true,
     category: "Design",
     keywords: ["background", "tailwind", "css", "design"],
@@ -81,12 +81,12 @@ const tools: Tool[] = [
     category: "Testing",
     keywords: ["broken", "link", "checker", "test", "link", "check"],
   },
-  // https://www.radix-ui.com/colors/custom
+  // https://radix-ui.com/colors/custom
   {
     title: "Radix UI Colors",
     description: "Customize your Radix UI colors",
     icon: Palette,
-    href: "https://www.radix-ui.com/colors/custom",
+    href: "https://radix-ui.com/colors/custom",
     isExternal: true,
     category: "Design",
     keywords: ["radix", "ui", "colors", "custom"],
@@ -101,24 +101,24 @@ const tools: Tool[] = [
     category: "Design",
     keywords: ["shadcn", "ui", "theme", "tweak"],
   },
-  // https://www.openstatus.dev/play/curl
+  // https://openstatus.dev/play/curl
   {
     title: "cURL Builder",
     description:
       "An online curl command line builder. Generate curl commands to test your API endpoints.",
     icon: TerminalIcon,
-    href: "https://www.openstatus.dev/play/curl",
+    href: "https://openstatus.dev/play/curl",
     isExternal: true,
     category: "Testing",
     keywords: ["curl", "api", "testing", "performance", "speed"],
   },
-  // https://www.openstatus.dev/play/checker
+  // https://openstatus.dev/play/checker
   {
     title: "Global Speed Checker",
     description:
       "Is your endpoint globally fast? Test your website and API performance across all continents.",
     icon: IconBrandSpeedtest,
-    href: "https://www.openstatus.dev/play/checker",
+    href: "https://openstatus.dev/play/checker",
     isExternal: true,
     category: "Testing",
     keywords: ["api", "testing", "performance", "speed"],
@@ -188,7 +188,7 @@ const tools: Tool[] = [
     title: "Shadcn Form Builder",
     description: "Shadcn Form is a library for building forms with Shadcn UI components.",
     icon: FileIcon,
-    href: "https://www.shadcn-form.com/",
+    href: "https://shadcn-form.com/",
     isExternal: true,
     category: "Generators",
     keywords: ["form", "shadcn", "ui", "library", "component"],
@@ -231,7 +231,7 @@ const tools: Tool[] = [
     title: "CSS Springs",
     description: "Generate spring easing for CSS animations with real-world physics",
     icon: LineChart,
-    href: "https://www.kvin.me/css-springs",
+    href: "https://kvin.me/css-springs",
     isExternal: true,
     category: "Design",
     keywords: [

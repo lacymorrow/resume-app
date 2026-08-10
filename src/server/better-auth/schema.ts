@@ -7,7 +7,7 @@ import { boolean, integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/p
  * These tables are separate from the existing Auth.js tables
  * to avoid conflicts and allow for coexistence.
  *
- * @see https://www.better-auth.com/docs/concepts/database
+ * @see https://better-auth.com/docs/concepts/database
  */
 
 // Better Auth User table
