@@ -161,8 +161,8 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
                   />
                 ))}
               </div>
-              <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
-                {(["pdf", "docx"] as ExportFormat[]).map((fmt) => (
+              <div style={{ marginTop: "2rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+                {(["pdf", "docx", "html"] as ExportFormat[]).map((fmt) => (
                   <button
                     key={fmt}
                     onClick={() => handleExport(fmt)}
@@ -176,6 +176,17 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
                     ↓ {fmt.toUpperCase()}
                   </button>
                 ))}
+                <button
+                  onClick={() => window.print()}
+                  style={{
+                    background: "none", border: "none", color: S.dim, fontFamily: SF,
+                    fontSize: "0.75rem", cursor: "pointer", padding: 0,
+                    textTransform: "uppercase", letterSpacing: "0.08em", transition: "color 200ms ease",
+                  }}
+                  className="ha"
+                >
+                  ⎙ Print
+                </button>
               </div>
             </div>
           </header>
@@ -189,7 +200,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
                 <SectionHead id="sh-work">Selected Work</SectionHead>
                 <ol style={{ margin: 0, padding: 0 }}>
                   {workEntries.map((e) => (
-                    <WorkEntry key={`${e.name}-${e.startDate}`} position={e.position} name={e.name} startDate={e.startDate} endDate={e.endDate} summary={e.summary ?? undefined} highlights={e.highlights} />
+                    <WorkEntry key={`${e.name}-${e.startDate}`} position={e.position} name={e.name} startDate={e.startDate} endDate={e.endDate} summary={e.summary ?? undefined} highlights={e.highlights} url={e.url} />
                   ))}
                 </ol>
               </section>

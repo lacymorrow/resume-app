@@ -68,6 +68,7 @@ export function WorkEntry({
   endDate,
   summary,
   highlights,
+  url,
 }: {
   position: string;
   name: string;
@@ -75,6 +76,7 @@ export function WorkEntry({
   endDate?: string;
   summary?: string;
   highlights?: string[];
+  url?: string;
 }) {
   const years = formatYearRange(startDate, endDate);
   return (
@@ -103,7 +105,11 @@ export function WorkEntry({
       </span>
       <div>
         <h3 style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "-0.01em" }}>{position}</h3>
-        <p style={{ color: S.dim, fontSize: "0.9rem", marginTop: "0.15rem" }}>{name}</p>
+        <p style={{ color: S.dim, fontSize: "0.9rem", marginTop: "0.15rem" }}>
+          {url ? (
+            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: S.dim, textDecoration: "none", transition: "color 300ms ease" }} className="ha">{name}</a>
+          ) : name}
+        </p>
         {summary && (
           <p style={{ marginTop: "0.6rem", fontSize: "0.95rem", maxWidth: "56ch" }}>{summary}</p>
         )}

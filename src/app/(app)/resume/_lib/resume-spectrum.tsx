@@ -31,38 +31,38 @@ export interface FlavorStatement {
 export const SPECTRUM_STATEMENTS: Record<string, FlavorStatement> = {
   complete: {
     statement:
-      "I build <em>agents</em>, <em>interfaces</em>, and <em>hardware</em> — twenty years of shipping the web.",
-    sub: "One résumé, rendered per role. Pick a flavor — titles retitle, entries re-rank, and the page re-tints to match.",
+      "I build <em>agents</em>, <em>interfaces</em>, and <em>hardware</em>. Twenty years of shipping the web.",
+    sub: "One resume, rendered per role. Pick a flavor and the page retints, retitles, and re-ranks to match.",
   },
   ai: {
     statement:
       "I build <em>autonomous agents</em> and the <em>orchestration</em> that keeps them honest.",
-    sub: "Multi-agent systems, RAG pipelines, and MCP tooling in production — from a 12-agent engineering fleet to voice-operated desktops.",
+    sub: "Multi-agent systems, RAG pipelines, and MCP tooling in production. Twelve engineering agents at BizJournals; a voice-operated desktop with Juno.",
   },
   frontend: {
     statement:
       "I turn polished designs into <em>fast</em>, <em>accessible</em> interfaces people actually use.",
-    sub: "Design systems, App Router migrations, and pixel-perfect React — for airlines, fintech dashboards, and a million-visitor marketing site.",
+    sub: "Design systems, App Router migrations, and pixel-perfect React for airlines, fintech dashboards, and a million-visitor marketing site.",
   },
   devops: {
     statement:
       "I keep the <em>pipelines</em> green and the <em>infrastructure</em> boring.",
-    sub: "CI/CD, cloud migrations, and on-call ownership — AWS and Azure deployments that ship every day without drama.",
+    sub: "CI/CD, cloud migrations, and on-call ownership. AWS and Azure deployments that ship every day without drama.",
   },
   fullstack: {
     statement:
       "I build the <em>frontend</em>, the <em>backend</em>, and everything in between.",
-    sub: "React + Node / Python / PHP end-to-end — API design, database architecture, and deployment for products that scale.",
+    sub: "React plus Node, Python, and PHP end-to-end. API design, database architecture, and deployment for products that scale.",
   },
   gtm: {
     statement:
-      "I ship <em>products</em> to <em>market</em> — from landing page to growth loop.",
-    sub: "Launch engineering, e-commerce funnels, marketing sites, and AI-powered GTM automation — getting products in front of users.",
+      "I ship <em>products</em> to <em>market</em>, from landing page to growth loop.",
+    sub: "Launch engineering, e-commerce funnels, marketing sites, and AI-powered GTM automation. Getting products in front of users.",
   },
   lead: {
     statement:
       "I lead <em>teams</em> that ship <em>great software</em> on time.",
-    sub: "Technical architecture, project management, and hiring — building engineering cultures from startup to enterprise.",
+    sub: "Technical architecture, project management, and hiring. Building engineering cultures from startup to enterprise.",
   },
 };
 

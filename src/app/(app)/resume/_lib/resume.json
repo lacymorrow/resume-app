@@ -100,13 +100,13 @@
     {
       "name": "Hitchhiker's Guide to the Galaxy",
       "startDate": "2025-01-01",
-      "summary": "Completely dynamic website that generates entries as they are requested — LLM-powered generative content with retrieval of prior entries for consistency. Mimicking the guide from the famous Douglas Adams novel.",
+      "summary": "Completely dynamic website that generates entries as they are requested. LLM-powered generative content with retrieval of prior entries for consistency. Mimicking the guide from the famous Douglas Adams novel.",
       "url": "https://github.com/lacymorrow/hitchhikers-guide"
     },
     {
       "name": "OpenClaw Trading Skills",
       "startDate": "2024-01-01",
-      "summary": "AI agent skills for the OpenClaw platform. Built autonomous trading agents in Rust, Go, and Shell for stock/crypto (Alpaca), prediction markets (Polymarket, Kalshi) — agent-based workflows with scheduled evaluation loops and risk guardrails. Runs a brokerage account and posts trades to Twitter.",
+      "summary": "AI agent skills for the OpenClaw platform. Built autonomous trading agents in Rust, Go, and Shell for stock/crypto (Alpaca), prediction markets (Polymarket, Kalshi). Agent-based workflows with scheduled evaluation loops and risk guardrails. Runs a brokerage account and posts trades to Twitter.",
       "url": "https://github.com/lacymorrow/openclaw-alpaca-trading-skill"
     },
     {
@@ -213,7 +213,7 @@
       "position": "Backend Developer + Agentic Engineer",
       "startDate": "2025-12-01",
       "endDate": "2026-06-01",
-      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer managing 12 autonomous agents that independently picked up and completed engineering tasks — agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG (Retrieval-Augmented Generation) pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets across multiple services and platforms for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents, LangGraph, RAG, MCP",
+      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer managing 12 autonomous agents that independently picked up and completed engineering tasks. Agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets across multiple services and platforms for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents, LangGraph, RAG, MCP",
       "url": "https://bizjournals.com/",
       "location": "Charlotte, NC",
       "sector": "Media"
