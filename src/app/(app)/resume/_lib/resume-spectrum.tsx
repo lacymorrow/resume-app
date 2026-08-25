@@ -32,7 +32,7 @@ export const SPECTRUM_STATEMENTS: Record<string, FlavorStatement> = {
   complete: {
     statement:
       "I build <em>agents</em>, <em>interfaces</em>, and <em>hardware</em>. Twenty years of shipping the web.",
-    sub: "Full-stack engineering, AI agents, design systems, and infrastructure. From startup to enterprise, from pixel to pipeline.",
+    sub: "Full-stack engineering, AI agents, design systems, and infrastructure. Twenty years across startups, agencies, and enterprise teams.",
   },
   ai: {
     statement:
