@@ -1,4 +1,9 @@
-import { Outfit as FontSans, Cormorant_Garamond as FontSerif } from "next/font/google";
+import {
+  Outfit as FontSans,
+  Cormorant_Garamond as FontSerif,
+  Instrument_Sans as InstrumentSans,
+  Instrument_Serif as InstrumentSerif,
+} from "next/font/google";
 
 export const fontSerif = FontSerif({
   weight: ["300", "400", "500", "600", "700"],
@@ -12,6 +17,21 @@ export const fontSans = FontSans({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+export const instrumentSans = InstrumentSans({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-instrument-sans",
+  display: "swap",
+});
+
+export const instrumentSerif = InstrumentSerif({
+  weight: ["400"],
+  style: ["italic"],
+  subsets: ["latin"],
+  variable: "--font-instrument-serif",
   display: "swap",
 });
 

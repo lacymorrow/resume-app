@@ -6,7 +6,7 @@ import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { ReactGrab } from "@/components/modules/devtools/react-grab";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
-import { fontSans, fontSerif } from "@/config/fonts";
+import { fontSans, fontSerif, instrumentSans, instrumentSerif } from "@/config/fonts";
 import { siteConfig } from "@/config/site-config";
 import {
   metadata as defaultMetadata,
@@ -89,7 +89,7 @@ export default async function Layout({
       </head>
       {/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
       <body
-        className={`${fontSans.variable} ${fontSerif.variable} min-h-screen font-sans antialiased`}
+        className={`${fontSans.variable} ${fontSerif.variable} ${instrumentSans.variable} ${instrumentSerif.variable} min-h-screen font-sans antialiased`}
       >
         <AppRouterLayout>
           <main>{children}</main>
