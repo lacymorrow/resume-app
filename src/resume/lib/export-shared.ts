@@ -126,43 +126,18 @@ export function summaryBlockLabel(key: string): string {
 }
 
 /**
- * The handmade resume ends most entries with a bold tech line
- * ("TypeScript, NextJS, React, Tachyons, React Native"). Detect those.
+ * The tech line for an entry, ready to render bold beneath its summary.
+ *
+ * This is read from the entry's explicit `tech` array. It used to be guessed
+ * out of the summary prose, which disagreed with itself: a list ending in a
+ * period, or separated by semicolons, was silently left unbolded while its
+ * neighbours were bolded. `bun run scripts/migrate-tech-lines.ts` lifted the
+ * existing lists into data.
  */
-export function isTechLine(highlight: string): boolean {
-  const parts = highlight
-    .split(/[,;]/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-  if (parts.length < 3) return false;
-  return parts.every((p) => p.split(/\s+/).length <= 4 && !/[.!?]$/.test(p));
+export function entryTech(entry: { tech?: string[] }): string | null {
+  return entry.tech && entry.tech.length > 0 ? entry.tech.join(", ") : null;
 }
 
-/**
- * The handmade resume ends entries with the tech stack in bold. When a
- * summary's final paragraph or sentence is a comma-separated tech list,
- * split it off so renderers can bold it.
- */
-export function splitTrailingTechList(text: string): { body: string; tech: string | null } {
-  const paraIdx = text.lastIndexOf("\n\n");
-  if (paraIdx !== -1) {
-    const last = text.slice(paraIdx + 2).trim();
-    if (isTechLine(last)) return { body: text.slice(0, paraIdx).trimEnd(), tech: last };
-  }
-  const sentIdx = text.lastIndexOf(". ");
-  if (sentIdx !== -1) {
-    const last = text.slice(sentIdx + 2).trim();
-    if (last.split(",").length >= 4 && isTechLine(last)) {
-      return { body: text.slice(0, sentIdx + 1), tech: last };
-    }
-  }
-  return { body: text, tech: null };
-}
-
-/**
- * Split a project summary into a short tagline (for the blue title,
- * "Lacy Shell: AI Coding Agent for Your Terminal") and the remaining body.
- */
 export function splitProjectSummary(summary: string): { tagline: string | null; body: string } {
   const idx = summary.indexOf(". ");
   const first = idx === -1 ? summary : summary.slice(0, idx + 1);

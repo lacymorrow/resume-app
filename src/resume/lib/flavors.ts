@@ -17,6 +17,7 @@ export interface WorkOverride {
   position?: string;
   summary?: string;
   highlights?: string[];
+  tech?: string[];
 }
 
 export interface ProjectOverride {

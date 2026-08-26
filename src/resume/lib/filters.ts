@@ -83,6 +83,7 @@ export function resolveWork(
       position: override?.position ?? base.position,
       summary: override?.summary ?? base.summary,
       highlights: override?.highlights ?? base.highlights,
+      tech: override?.tech ?? base.tech,
     };
 
     entries.push(entry);
