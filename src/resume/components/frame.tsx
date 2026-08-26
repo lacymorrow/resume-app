@@ -41,6 +41,13 @@ export interface ResumeFrameProps {
    * fallback passes plain links, so flavors stay reachable without JavaScript.
    */
   desk: React.ReactNode;
+  /**
+   * Which render this is. Next streams the Suspense fallback and the hydrated
+   * viewer into the same document, so both are briefly present (and stay
+   * present with JavaScript disabled). This marks them apart for tests and for
+   * anyone debugging the DOM.
+   */
+  variant: "static" | "interactive";
   footerNote: string;
   footerLinkLabel: string;
   footerLinkHref: string;
@@ -60,6 +67,7 @@ export function ResumeFrame({
   statement,
   sections,
   desk,
+  variant,
   footerNote,
   footerLinkLabel,
   footerLinkHref,
@@ -71,6 +79,7 @@ export function ResumeFrame({
 
       <div
         className="resume-frame"
+        data-resume-render={variant}
         style={
           {
             "--accent": accent,
@@ -102,7 +111,13 @@ export function ResumeFrame({
               position: "sticky",
               top: 0,
               alignSelf: "start",
-              height: "100dvh",
+              maxHeight: "100dvh",
+              // The rail is a fixed-height sticky box, so anything past the
+              // fold used to be unreachable — it could not scroll and the page
+              // behind it does not move it. The builder panel makes that much
+              // easier to hit.
+              overflowY: "auto",
+              scrollbarWidth: "thin",
               display: "flex",
               flexDirection: "column",
               padding: "3.5rem 0 2.5rem",

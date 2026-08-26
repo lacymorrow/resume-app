@@ -79,6 +79,7 @@ export function ResumeStatic({
       statement={getStatement(flavor.id)}
       sections={sections}
       desk={desk}
+      variant="static"
       footerNote={`${basics.name} · ${resumeConfig.site.host}`}
       footerLinkLabel={basics.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
       footerLinkHref={basics.url}
