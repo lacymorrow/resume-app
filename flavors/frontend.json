@@ -1,0 +1,99 @@
+{
+  "id": "frontend",
+  "label": "Frontend Engineer",
+  "description": "React, Next.js, TypeScript, UI/UX",
+  "tagline": "Frontend engineer + open-source developer",
+  "expertise": "Frontend specialist; React/Next.js expert; TypeScript; UI/UX development; Design systems; Accessibility; Performance optimization",
+  "accent": "#F4B860",
+  "statement": {
+    "headline": "I turn polished designs into <em>fast</em>, <em>accessible</em> interfaces people actually use.",
+    "sub": "Design systems, App Router migrations, and pixel-perfect React for airlines, fintech dashboards, and a million-visitor marketing site."
+  },
+  "sections": {
+    "awards": false,
+    "interests": false,
+    "references": false
+  },
+  "work": {
+    "American City Business Journals": {
+      "visible": false
+    },
+    "Duke Energy": {
+      "position": "Senior Frontend Developer",
+      "summary": "Built React dashboards for weather forecasting. Migrated authentication UI to Azure AD. Python, React, Docker, AWS, Azure."
+    },
+    "Credit Karma": {
+      "summary": "Created the entire User Testing dashboard for Credit Karma. Converted pages router to App router. Built features for creating test/production users across web and mobile. Included search and metrics UI coordinated across multiple system APIs. TypeScript, NextJS, React, Tachyons, React Native"
+    },
+    "OptumRX Health / Red Ventures": {
+      "position": "Senior Frontend Developer",
+      "summary": "Built E-commerce frontend for RVO Health. Created the market UI, inventory displays, and ordering flows with polished component architecture. TypeScript, NextJS, React, Contentful, Stripe, Algolia"
+    },
+    "Swell Energy": {
+      "position": "Senior Frontend Developer - Grid Services",
+      "summary": "Developed interactive charts, dashboards, and control panel UIs to manage solar and power utilities. Authentication flows, data visualization, responsive CRUD interfaces. TypeScript, NextJS, React."
+    },
+    "Twilio Inc.": {
+      "summary": "In charge of twilio.com and all sub-sites. Created a React design system used across the organization. Managed and lead multiple frontend projects. Built the SIGNAL HackPack v4 badge. Launched WhatsApp, Studio, Flex product pages. Led localization/regionalization frontend effort. TypeScript, React, i18n."
+    },
+    "Invitae": {
+      "summary": "UX/UI Developer - Developed navigation, modals, and interactions for HIPAA-compliant healthcare platform. Made custom WordPress theme. Built data science visualization tools. React, Angular, Backbone, WordPress, SASS."
+    },
+    "LacyMorrow.com": {
+      "visible": false
+    },
+    "TekSystems": {
+      "visible": false
+    },
+    "Flymore (Startup)": {
+      "visible": false
+    },
+    "Long Game": {
+      "visible": false
+    },
+    "Appalachian State University": {
+      "visible": false
+    },
+    "Red Ventures": {
+      "visible": false
+    }
+  },
+  "projects": {
+    "Juno AI": {
+      "visible": false
+    },
+    "Vibe Rehab": {
+      "visible": false
+    },
+    "Hitchhiker's Guide to the Galaxy": {
+      "visible": false
+    },
+    "OpenClaw Trading Skills": {
+      "visible": false
+    },
+    "MCP Servers & Tools": {
+      "visible": false
+    },
+    "Twilio Hackpack v4": {
+      "visible": false
+    },
+    "Boone Community Network": {
+      "visible": false
+    },
+    "Phase2Productions": {
+      "visible": false
+    },
+    "XPlay.js": {
+      "visible": false
+    },
+    "XSPF Jukebox": {
+      "visible": false
+    },
+    "Cinematic": {
+      "visible": false
+    },
+    "Casper": {
+      "visible": false
+    }
+  }
+}

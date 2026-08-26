@@ -4,7 +4,7 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import resumeJson from "../src/resume/lib/resume.json";
+import resumeJson from "../resume.json";
 import { buildExportData } from "../src/resume/lib/export";
 import { buildHtmlContent } from "../src/resume/lib/export-html";
 import { buildPdfDoc } from "../src/resume/lib/export-pdf";

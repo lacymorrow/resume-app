@@ -1,4 +1,4 @@
-import { resumeConfig } from "../config";
+import { resumeConfig } from "../inputs";
 import type { ContactKind } from "./contact-icons";
 import type { FilterState, MatchResult } from "./filters";
 import type { ResumeProject, ResumeSchema, ResumeWork } from "./types";

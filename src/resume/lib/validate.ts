@@ -1,7 +1,6 @@
-import { resumeConfig } from "../config";
+import { resumeConfig } from "../inputs";
 import type { ResumeFlavor } from "./flavors";
 import { DEFAULT_SECTIONS, type SectionDefinition } from "./sections";
-import { FLAVOR_ACCENTS, FLAVOR_STATEMENTS } from "./theme";
 import type { ResumeSchema } from "./types";
 
 /**
@@ -162,11 +161,8 @@ export function validateResume(
       }
     }
 
-    if (!FLAVOR_ACCENTS[flavor.id]) {
-      warn(at, "No accent colour, so it falls back to the complete flavor's.");
-    }
-    if (!FLAVOR_STATEMENTS[flavor.id]) {
-      warn(at, "No hero statement, so it falls back to the complete flavor's copy.");
+    if (!flavor.statement.headline) {
+      warn(`${at}.statement`, "No headline, so the hero block renders empty.");
     }
   }
 

@@ -1,0 +1,96 @@
+{
+  "id": "ai",
+  "label": "AI / Agentic Engineer",
+  "description": "AI agents, LLMs, RAG, LangChain/LangGraph, automation",
+  "tagline": "Agentic engineer + AI systems builder + hardware hacker",
+  "expertise": "Agentic engineer; LLM & GenAI integration; LangChain / LangGraph / LlamaIndex; RAG pipelines; Agent orchestration & MCP; Vector databases; Automation & RPA; Full-stack developer (Node.js, TypeScript, React); Open-source maintainer",
+  "accent": "#9FE7C0",
+  "statement": {
+    "headline": "I build <em>autonomous agents</em> and the <em>orchestration</em> that keeps them honest.",
+    "sub": "Multi-agent systems, RAG pipelines, and MCP tooling in production. Twelve engineering agents at BizJournals; a voice-operated desktop with Juno."
+  },
+  "work": {
+    "American City Business Journals": {
+      "position": "Agentic Engineer",
+      "summary": "Contract - Architected an AI orchestration layer managing 12 autonomous agents that independently completed engineering tasks across a 48-market business publication platform. Agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents, LangGraph, RAG, MCP."
+    },
+    "Duke Energy": {
+      "position": "Agentic Engineer",
+      "summary": "Led internal AI adoption: built an internal GPT/LLM platform for company-wide use with RAG (Retrieval-Augmented Generation) over internal documentation, prompt libraries, and Azure OpenAI integration. Built agentic workflows for internal tooling. Python, React, LangChain, LlamaIndex, RAG, LLMs, Azure, AWS."
+    },
+    "Credit Karma": {
+      "summary": "Built automated User Testing dashboard with features for creating test/production users programmatically across web and mobile. Coordinated search and metrics across multiple system APIs. TypeScript, NextJS, React, React Native."
+    },
+    "Novant Health / Red Ventures": {
+      "visible": false
+    },
+    "OptumRX Health / Red Ventures": {
+      "visible": false
+    },
+    "Swell Energy": {
+      "visible": false
+    },
+    "Viasat": {
+      "visible": false
+    },
+    "Twilio Inc.": {
+      "summary": "In charge of twilio.com and all sub-sites. Built the SIGNAL HackPack v4 badge (open-source hardware). Created a React design system. Managed multiple engineering projects. TypeScript, React, Docker, Python, Django."
+    },
+    "Yahoo": {
+      "visible": false
+    },
+    "Invitae": {
+      "summary": "Created data science tools and analytics software for HIPAA-compliant healthcare platform. Built automated Selenium testing workflows. Python, Django, Flask, React, ElasticSearch, Docker."
+    },
+    "10up": {
+      "visible": false
+    },
+    "LacyMorrow.com": {
+      "visible": false
+    },
+    "Lumenai (Startup)": {
+      "summary": "Built RPA automation browser extension. Created foundational internal apps with automated deployments and self-built CI/CD. The company saw a 15% rise in productivity and experienced 35% growth in 6 months. React, Docker, Jest."
+    },
+    "TekSystems": {
+      "visible": false
+    },
+    "Flymore (Startup)": {
+      "summary": "Developed software to livestream 4 analog FPV drone feeds simultaneously. Co-founded drone education startup teaching kids software & electronics. ReactJS, GraphQL."
+    },
+    "Long Game": {
+      "visible": false
+    },
+    "Appalachian State University": {
+      "visible": false
+    },
+    "Red Ventures": {
+      "visible": false
+    }
+  },
+  "projects": {
+    "Uibrary": {
+      "visible": false
+    },
+    "CrossOver": {
+      "visible": false
+    },
+    "Casper": {
+      "visible": false
+    },
+    "Boone Community Network": {
+      "visible": false
+    },
+    "Phase2Productions": {
+      "visible": false
+    },
+    "XPlay.js": {
+      "visible": false
+    },
+    "XSPF Jukebox": {
+      "visible": false
+    },
+    "Cinematic": {
+      "visible": false
+    }
+  }
+}

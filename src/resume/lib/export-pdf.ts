@@ -1,5 +1,5 @@
 import type { jsPDF } from "jspdf";
-import { resumeConfig } from "../config";
+import { resumeConfig } from "../inputs";
 import { type ContactKind, iconPathOps } from "./contact-icons";
 import {
   contactRows,

@@ -6,8 +6,8 @@
  * do not fail.
  */
 
+import resumeJson from "../resume.json";
 import { FLAVORS } from "../src/resume/lib/flavors";
-import resumeJson from "../src/resume/lib/resume.json";
 import type { ResumeSchema } from "../src/resume/lib/types";
 import { formatValidation, validateResume } from "../src/resume/lib/validate";
 

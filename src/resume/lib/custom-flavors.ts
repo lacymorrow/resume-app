@@ -46,6 +46,8 @@ export function filterStateToCustomFlavor(
     description: "Custom flavor",
     tagline: baseFlavor.tagline,
     expertise: baseFlavor.expertise,
+    accent: baseFlavor.accent,
+    statement: baseFlavor.statement,
     sections: filters.sections as Record<SectionKey, boolean>,
     work: {
       ...baseFlavor.work,

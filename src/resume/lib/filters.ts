@@ -1,4 +1,4 @@
-import { resumeConfig } from "../config";
+import { resumeConfig } from "../inputs";
 import type { ResumeFlavor } from "./flavors";
 import { defaultSectionVisibility } from "./sections";
 import { extractProjectTags, extractWorkTags } from "./tags";

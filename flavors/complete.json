@@ -1,0 +1,12 @@
+{
+  "id": "complete",
+  "label": "Complete Resume",
+  "description": "Everything, unfiltered",
+  "tagline": "Agentic & web engineer + open-source developer + hardware hacker",
+  "expertise": "Agentic engineer + Full-stack developer + GTM/Growth engineer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); GTM engineering (product launches, e-commerce funnels, SEO/analytics, marketing automation); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master",
+  "accent": "#EDEAE3",
+  "statement": {
+    "headline": "I build <em>agents</em>, <em>interfaces</em>, and <em>hardware</em>. Twenty years of shipping the web.",
+    "sub": "Full-stack engineering, AI agents, design systems, and infrastructure. Twenty years across startups, agencies, and enterprise teams."
+  }
+}

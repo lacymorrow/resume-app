@@ -55,7 +55,7 @@ export function StatementBlock({ statement }: { statement: FlavorStatement }) {
           letterSpacing: "-0.02em",
         }}
       >
-        {renderStatement(statement.statement)}
+        {renderStatement(statement.headline)}
       </h2>
       <p style={{ marginTop: "1.5rem", color: S.dim, fontSize: "1.05rem", maxWidth: "52ch" }}>
         {statement.sub}
