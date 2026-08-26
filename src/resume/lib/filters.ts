@@ -1,10 +1,11 @@
-import type { ResumeSchema, ResumeWork, ResumeProject, SectionKey } from "./types";
+import { defaultSectionVisibility } from "./sections";
+import type { ResumeSchema, ResumeWork, ResumeProject, SectionVisibility } from "./types";
 import type { ResumeFlavor } from "./flavors";
 import { extractWorkTags, extractProjectTags } from "./tags";
 
 export interface FilterState {
   flavorId: string;
-  sections: Record<SectionKey, boolean>;
+  sections: SectionVisibility;
   selectedTags: string[];
   tagMatchMode: "any" | "all";
   hiddenCompanies: string[];
@@ -13,7 +14,7 @@ export interface FilterState {
 
 export const DEFAULT_FILTER_STATE: FilterState = {
   flavorId: "complete",
-  sections: { work: true, projects: true, skills: true, education: true, interests: true, awards: true, references: true },
+  sections: defaultSectionVisibility(),
   selectedTags: [],
   tagMatchMode: "any",
   hiddenCompanies: [],

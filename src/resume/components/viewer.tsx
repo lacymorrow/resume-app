@@ -9,8 +9,9 @@ import { type ExportFormat, exportResume, buildExportData } from "../lib/export"
 import { contactRows } from "../lib/export-shared";
 import { SPECTRUM, SPECTRUM_ACCENTS, getAccent, getStatement } from "../lib/spectrum";
 import {
-  TopRule, SectionHead, StatementBlock, WorkEntry, ProjectRow, FlavorButton, SF,
+  TopRule, StatementBlock, SectionBlock, FlavorButton, SF,
 } from "./spectrum-parts";
+import { buildSections } from "../lib/sections";
 
 const S = SPECTRUM;
 
@@ -50,6 +51,11 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
   );
   const { entries: workEntries } = useMemo(() => resolveWork(data, flavor, filters), [data, flavor, filters]);
   const { entries: projectEntries } = useMemo(() => resolveProjects(data, flavor, filters), [data, flavor, filters]);
+
+  const sections = useMemo(
+    () => buildSections(data, { work: workEntries, projects: projectEntries }, filters.sections),
+    [data, workEntries, projectEntries, filters.sections],
+  );
 
   const basics = useMemo(() => ({ ...data.basics, label: flavor.tagline }), [data.basics, flavor.tagline]);
   const contacts = useMemo(() => contactRows(basics), [basics]);
@@ -195,57 +201,9 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
           <main className="spectrum-main" style={{ padding: "6rem 0 4rem", maxWidth: 720 }}>
             <StatementBlock statement={statement} />
 
-            {filters.sections.work && workEntries.length > 0 && (
-              <section aria-labelledby="sh-work" style={{ marginTop: "5.5rem" }}>
-                <SectionHead id="sh-work">Selected Work</SectionHead>
-                <ol style={{ margin: 0, padding: 0 }}>
-                  {workEntries.map((e) => (
-                    <WorkEntry key={`${e.name}-${e.startDate}`} position={e.position} name={e.name} startDate={e.startDate} endDate={e.endDate} summary={e.summary ?? undefined} highlights={e.highlights} url={e.url} />
-                  ))}
-                </ol>
-              </section>
-            )}
-
-            {filters.sections.projects && projectEntries.length > 0 && (
-              <section aria-labelledby="sh-proj" style={{ marginTop: "5.5rem" }}>
-                <SectionHead id="sh-proj">Open Source &amp; Projects</SectionHead>
-                <ul style={{ margin: 0, padding: 0 }}>
-                  {projectEntries.map((e) => (
-                    <ProjectRow key={e.name} name={e.name} summary={e.summary} url={e.url} />
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {filters.sections.skills && data.skills.length > 0 && (
-              <section aria-labelledby="sh-skills" style={{ marginTop: "5.5rem" }}>
-                <SectionHead id="sh-skills">Skills</SectionHead>
-                <dl style={{ margin: 0, padding: 0 }}>
-                  {data.skills.map((skill) => (
-                    <div key={skill.name} style={{ display: "grid", gridTemplateColumns: "10rem minmax(0, 1fr)", gap: "1.5rem", padding: "0.85rem 0", borderBottom: `1px solid ${S.hairline}`, fontSize: "0.9rem" }}>
-                      <dt style={{ fontWeight: 600 }}>{skill.name}</dt>
-                      <dd style={{ color: S.dim, margin: 0 }}>{skill.keywords.join(", ")}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            )}
-
-            {filters.sections.references && data.references.length > 0 && (
-              <section aria-labelledby="sh-ref" style={{ marginTop: "5.5rem" }}>
-                <SectionHead id="sh-ref">References</SectionHead>
-                {data.references.slice(0, 1).map((ref) => (
-                  <blockquote key={ref.name} style={{ margin: 0 }}>
-                    <p style={{ fontSize: "clamp(1.15rem, 2.2vw, 1.55rem)", lineHeight: 1.4, letterSpacing: "-0.01em", maxWidth: "30ch" }}>
-                      &ldquo;{ref.reference}&rdquo;
-                    </p>
-                    <cite style={{ display: "block", marginTop: "1.4rem", fontStyle: "normal", fontSize: "0.85rem", color: S.dim }}>
-                      {ref.name}
-                    </cite>
-                  </blockquote>
-                ))}
-              </section>
-            )}
+            {sections.map((section) => (
+              <SectionBlock key={section.key} section={section} />
+            ))}
 
             <footer style={{ marginTop: "6rem", paddingTop: "2rem", borderTop: `1px solid ${S.hairline}`, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem", fontSize: "0.8rem", color: S.dim }}>
               <span>{basics.name} · resume.lacy.sh</span>

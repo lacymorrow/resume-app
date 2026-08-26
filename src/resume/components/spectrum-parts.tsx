@@ -1,6 +1,12 @@
 import React from "react";
 import { SPECTRUM, type FlavorStatement, renderStatement } from "../lib/spectrum";
 import { formatYearRange } from "../lib/export-shared";
+import type {
+  CredentialItem,
+  KeywordItem,
+  NormalizedSection,
+  QuoteItem,
+} from "../lib/sections";
 
 const S = SPECTRUM;
 export const SF = `var(--font-instrument-sans), 'Instrument Sans', system-ui, sans-serif`;
@@ -197,5 +203,172 @@ export function FlavorButton({
       />
       {label}
     </button>
+  );
+}
+
+/**
+ * Credentials cover education, awards, certificates, and publications — all
+ * "a thing, who issued it, when". One renderer, four collections.
+ */
+export function CredentialRow({ item }: { item: CredentialItem }) {
+  const year = item.endDate
+    ? formatYearRange(item.startDate ?? item.endDate, item.endDate)
+    : item.startDate
+      ? formatYearRange(item.startDate)
+      : "";
+  return (
+    <li
+      className="spectrum-entry"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "5.5rem minmax(0, 1fr)",
+        gap: "1.5rem",
+        padding: "1.1rem 0",
+        borderBottom: `1px solid ${S.hairline}`,
+        listStyle: "none",
+      }}
+    >
+      <span
+        style={{
+          fontSize: "0.85rem",
+          fontWeight: 600,
+          color: "var(--accent)",
+          fontVariantNumeric: "tabular-nums",
+          paddingTop: "0.15rem",
+          transition: "color 300ms ease",
+        }}
+      >
+        {year}
+      </span>
+      <div>
+        <h3 style={{ fontSize: "1rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
+          {item.url ? (
+            <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }} className="ha">
+              {item.title}
+            </a>
+          ) : (
+            item.title
+          )}
+        </h3>
+        {item.subtitle && (
+          <p style={{ color: S.dim, fontSize: "0.9rem", marginTop: "0.15rem" }}>{item.subtitle}</p>
+        )}
+        {item.summary && (
+          <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", maxWidth: "56ch" }}>{item.summary}</p>
+        )}
+      </div>
+    </li>
+  );
+}
+
+/** Skills, languages, interests: a label and its terms. */
+export function KeywordRow({ item }: { item: KeywordItem }) {
+  const terms = item.keywords.length > 0 ? item.keywords.join(", ") : (item.detail ?? "");
+  // A collapsed bare-name list has no label, so it runs the full width.
+  const unlabelled = item.name === "";
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: unlabelled ? "minmax(0, 1fr)" : "10rem minmax(0, 1fr)",
+        gap: "1.5rem",
+        padding: "0.85rem 0",
+        borderBottom: `1px solid ${S.hairline}`,
+        fontSize: "0.9rem",
+      }}
+    >
+      {!unlabelled && <dt style={{ fontWeight: 600 }}>{item.name}</dt>}
+      <dd style={{ color: S.dim, margin: 0 }}>{terms}</dd>
+    </div>
+  );
+}
+
+export function QuoteBlock({ item }: { item: QuoteItem }) {
+  return (
+    <blockquote style={{ margin: 0 }}>
+      <p
+        style={{
+          fontSize: "clamp(1.15rem, 2.2vw, 1.55rem)",
+          lineHeight: 1.4,
+          letterSpacing: "-0.01em",
+          maxWidth: "30ch",
+        }}
+      >
+        &ldquo;{item.quote}&rdquo;
+      </p>
+      <cite
+        style={{
+          display: "block",
+          marginTop: "1.4rem",
+          fontStyle: "normal",
+          fontSize: "0.85rem",
+          color: S.dim,
+        }}
+      >
+        {item.attribution}
+      </cite>
+    </blockquote>
+  );
+}
+
+/**
+ * Dispatches a normalized section to its renderer. Adding a section to the
+ * registry needs no change here unless it introduces a new renderer kind.
+ */
+export function SectionBlock({ section }: { section: NormalizedSection }) {
+  const headingId = `sh-${section.key}`;
+  const body = (() => {
+    switch (section.renderer) {
+      case "timeline":
+        return (
+          <ol style={{ margin: 0, padding: 0 }}>
+            {section.items.map((e) => (
+              <WorkEntry
+                key={e.key}
+                position={e.title}
+                name={e.org}
+                startDate={e.startDate ?? ""}
+                endDate={e.endDate}
+                summary={e.summary}
+                highlights={e.highlights}
+                url={e.url}
+              />
+            ))}
+          </ol>
+        );
+      case "projects":
+        return (
+          <ul style={{ margin: 0, padding: 0 }}>
+            {section.items.map((e) => (
+              <ProjectRow key={e.key} name={e.name} summary={e.summary} url={e.url} />
+            ))}
+          </ul>
+        );
+      case "keywords":
+        return (
+          <dl style={{ margin: 0, padding: 0 }}>
+            {section.items.map((e) => (
+              <KeywordRow key={e.key} item={e} />
+            ))}
+          </dl>
+        );
+      case "credentials":
+        return (
+          <ol style={{ margin: 0, padding: 0 }}>
+            {section.items.map((e) => (
+              <CredentialRow key={e.key} item={e} />
+            ))}
+          </ol>
+        );
+      case "quotes":
+        return section.items.map((e) => <QuoteBlock key={e.key} item={e} />);
+    }
+  })();
+
+  return (
+    <section aria-labelledby={headingId} style={{ marginTop: "5.5rem" }}>
+      <SectionHead id={headingId}>{section.label}</SectionHead>
+      {body}
+    </section>
   );
 }

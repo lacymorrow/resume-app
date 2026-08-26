@@ -1,4 +1,5 @@
-import type { SectionKey } from "./types";
+import { defaultSectionVisibility } from "./sections";
+import type { SectionVisibility } from "./types";
 
 /**
  * A flavor is a complete resume variant for a target role.
@@ -24,17 +25,19 @@ export interface ResumeFlavor {
   description: string;
   tagline: string;         // overrides basics.label
   expertise: string;       // overrides the expertise line in summary
-  sections: Record<SectionKey, boolean>;
+  sections: SectionVisibility;
   work: Record<string, WorkOverride>;       // keyed by company name
   projects: Record<string, ProjectOverride>; // keyed by project name
 }
 
 // ─── Flavor Definitions ────────────────────────────────────────────────────
 
-const ALL_SECTIONS: Record<SectionKey, boolean> = {
-  work: true, projects: true, skills: true, education: true,
-  interests: true, awards: true, references: true,
-};
+/**
+ * Baseline visibility from the section registry. Flavors spread this and switch
+ * off what they do not want, so adding a section to the registry does not mean
+ * editing every flavor.
+ */
+const ALL_SECTIONS: SectionVisibility = defaultSectionVisibility();
 
 export const FLAVORS: ResumeFlavor[] = [
   {

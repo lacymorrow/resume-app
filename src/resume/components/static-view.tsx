@@ -78,7 +78,7 @@ export function ResumeStatic({
             <ExpertiseBlock basics={basics} />
           </Section>
 
-          {flavor.sections.work && workEntries.length > 0 && (
+          {(flavor.sections.work ?? false) && workEntries.length > 0 && (
             <Section rail="Developer Experience">
               <StaticWorkSection
                 entries={workEntries}
@@ -95,14 +95,14 @@ export function ResumeStatic({
               education={data.education}
               awards={data.awards}
               qualities={summary.qualities}
-              showSkills={flavor.sections.skills}
-              showInterests={flavor.sections.interests}
-              showEducation={flavor.sections.education}
-              showAwards={flavor.sections.awards}
+              showSkills={flavor.sections.skills ?? false}
+              showInterests={flavor.sections.interests ?? false}
+              showEducation={flavor.sections.education ?? false}
+              showAwards={flavor.sections.awards ?? false}
             />
           </Section>
 
-          {flavor.sections.projects && projectEntries.length > 0 && (
+          {(flavor.sections.projects ?? false) && projectEntries.length > 0 && (
             <Section rail="Open-Source">
               <StaticProjectsSection
                 entries={projectEntries}
@@ -112,7 +112,7 @@ export function ResumeStatic({
             </Section>
           )}
 
-          {flavor.sections.references && data.references.length > 0 && (
+          {(flavor.sections.references ?? false) && data.references.length > 0 && (
             <Section rail="References">
               <ReferencesSection references={data.references} />
             </Section>

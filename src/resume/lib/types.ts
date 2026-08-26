@@ -1,13 +1,16 @@
 export interface ResumeSchema {
   basics: ResumeBasics;
   work: ResumeWork[];
+  volunteer: ResumeVolunteer[];
   projects: ResumeProject[];
   education: ResumeEducation[];
-  skills: ResumeSkill[];
-  interests: ResumeInterest[];
   awards: ResumeAward[];
-  references: ResumeReference[];
+  certificates: ResumeCertificate[];
+  publications: ResumePublication[];
+  skills: ResumeSkill[];
   languages: ResumeLanguage[];
+  interests: ResumeInterest[];
+  references: ResumeReference[];
 }
 
 export interface ResumeBasics {
@@ -72,6 +75,32 @@ export interface ResumeSkill {
 
 export interface ResumeInterest {
   name: string;
+  keywords?: string[];
+}
+
+export interface ResumeVolunteer {
+  organization: string;
+  position: string;
+  startDate: string;
+  endDate?: string;
+  summary?: string;
+  url?: string;
+  highlights?: string[];
+}
+
+export interface ResumeCertificate {
+  name: string;
+  date?: string;
+  issuer?: string;
+  url?: string;
+}
+
+export interface ResumePublication {
+  name: string;
+  publisher?: string;
+  releaseDate?: string;
+  summary?: string;
+  url?: string;
 }
 export interface ResumeAward {
   title: string;
@@ -87,11 +116,12 @@ export interface ResumeLanguage {
   fluency: string;
 }
 
-export type SectionKey =
-  | "work"
-  | "projects"
-  | "skills"
-  | "education"
-  | "interests"
-  | "awards"
-  | "references";
+/**
+ * Section keys are declared by the section registry (see ./sections.ts), not
+ * fixed here — a resume can define whatever sections it wants. Kept as a named
+ * alias so call sites still read as "this string is a section key".
+ */
+export type SectionKey = string;
+
+/** Visibility map keyed by section. A missing key falls back to the registry default. */
+export type SectionVisibility = Record<SectionKey, boolean>;
