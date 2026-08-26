@@ -10,11 +10,11 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Download, RotateCcw, X, ChevronDown, ChevronRight, BookmarkPlus, Trash2, FileText, FileCode, Printer } from "lucide-react";
-import type { FilterState, MatchResult } from "../_lib/resume-filters";
-import type { SectionKey } from "../_lib/resume-types";
-import type { ResumeFlavor } from "../_lib/resume-flavors";
-import type { CustomFlavor } from "../_lib/resume-custom-flavors";
-import type { ExportFormat } from "../_lib/resume-export";
+import type { FilterState, MatchResult } from "../lib/filters";
+import type { SectionKey } from "../lib/types";
+import type { ResumeFlavor } from "../lib/flavors";
+import type { CustomFlavor } from "../lib/custom-flavors";
+import type { ExportFormat } from "../lib/export";
 
 const SECTION_LABELS: Record<SectionKey, string> = {
   work: "Work Experience", projects: "Projects", skills: "Skills",

@@ -1,8 +1,8 @@
 "use client";
 
-import type { ResumeFlavor } from "./resume-flavors";
-import type { FilterState } from "./resume-filters";
-import type { SectionKey } from "./resume-types";
+import type { ResumeFlavor } from "./flavors";
+import type { FilterState } from "./filters";
+import type { SectionKey } from "./types";
 
 const STORAGE_KEY = "resume-custom-flavors";
 

@@ -1,5 +1,5 @@
 import type { jsPDF } from "jspdf";
-import { type ContactKind, iconPathOps } from "./resume-contact-icons";
+import { type ContactKind, iconPathOps } from "./contact-icons";
 import {
   contactRows,
   type ExportData,
@@ -13,7 +13,7 @@ import {
   SIGNATURE,
   splitProjectSummary,
   splitTrailingTechList,
-} from "./resume-export-shared";
+} from "./export-shared";
 
 // Letter page geometry (points). Three columns like the handmade resume:
 // gray rail labels | right-aligned pink dates + companies | content.

@@ -1,5 +1,5 @@
-import type { MatchResult } from "../_lib/resume-filters";
-import { SIGNATURE, formatYearRange, formatProjectYear, isTechLine, splitTrailingTechList, splitProjectSummary } from "../_lib/resume-export-shared";
+import type { MatchResult } from "../lib/filters";
+import { SIGNATURE, formatYearRange, formatProjectYear, isTechLine, splitTrailingTechList, splitProjectSummary } from "../lib/export-shared";
 
 interface ResumeEntryCardProps {
   title: string;

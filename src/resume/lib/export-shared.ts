@@ -1,6 +1,6 @@
-import type { ContactKind } from "./resume-contact-icons";
-import type { FilterState, MatchResult } from "./resume-filters";
-import type { ResumeProject, ResumeSchema, ResumeWork } from "./resume-types";
+import type { ContactKind } from "./contact-icons";
+import type { FilterState, MatchResult } from "./filters";
+import type { ResumeProject, ResumeSchema, ResumeWork } from "./types";
 
 /**
  * The "Signature" palette — sampled from Lacy's handmade 2026 resume.

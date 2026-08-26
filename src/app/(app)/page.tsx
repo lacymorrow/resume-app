@@ -2,10 +2,10 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { constructMetadata } from "@/config/metadata";
-import { resumeData } from "@/app/(app)/resume/_lib/resume-data";
-import { ResumeViewer } from "@/app/(app)/resume/_components/resume-viewer";
-import { ResumeStatic } from "@/app/(app)/resume/_components/resume-static";
-import { FLAVORS } from "@/app/(app)/resume/_lib/resume-flavors";
+import { resumeData } from "@/resume/lib/data";
+import { ResumeViewer } from "@/resume/components/viewer";
+import { ResumeStatic } from "@/resume/components/static-view";
+import { FLAVORS } from "@/resume/lib/flavors";
 
 type SearchParams = Promise<{
   flavor?: string;

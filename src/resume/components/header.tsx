@@ -1,6 +1,6 @@
-import type { ResumeBasics } from "../_lib/resume-types";
-import { SIGNATURE, SIGNATURE_FONT_STACK, parseSummary, contactRows } from "../_lib/resume-export-shared";
-import { CONTACT_ICONS } from "../_lib/resume-contact-icons";
+import type { ResumeBasics } from "../lib/types";
+import { SIGNATURE, SIGNATURE_FONT_STACK, parseSummary, contactRows } from "../lib/export-shared";
+import { CONTACT_ICONS } from "../lib/contact-icons";
 
 export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
   const summary = parseSummary(basics.summary);

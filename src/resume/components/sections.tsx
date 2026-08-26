@@ -1,10 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import type { ResumeSchema, ResumeWork, ResumeProject } from "../_lib/resume-types";
-import type { MatchResult } from "../_lib/resume-filters";
-import { SIGNATURE, SIGNATURE_FONT_STACK, formatYearRange, FOOTER_TEXT } from "../_lib/resume-export-shared";
-import { ResumeEntryCard } from "./resume-entry-card";
+import type { ResumeSchema, ResumeWork, ResumeProject } from "../lib/types";
+import type { MatchResult } from "../lib/filters";
+import { SIGNATURE, SIGNATURE_FONT_STACK, formatYearRange, FOOTER_TEXT } from "../lib/export-shared";
+import { ResumeEntryCard } from "./entry-card";
 
 interface SectionProps {
   rail: string;

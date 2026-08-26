@@ -13,7 +13,7 @@ import {
   SIGNATURE,
   splitProjectSummary,
   splitTrailingTechList,
-} from "./resume-export-shared";
+} from "./export-shared";
 
 const INK = SIGNATURE.ink.replace("#", "");
 const BODY = SIGNATURE.body.replace("#", "");

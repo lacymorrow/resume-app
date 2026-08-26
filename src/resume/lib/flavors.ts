@@ -1,4 +1,4 @@
-import type { SectionKey } from "./resume-types";
+import type { SectionKey } from "./types";
 
 /**
  * A flavor is a complete resume variant for a target role.

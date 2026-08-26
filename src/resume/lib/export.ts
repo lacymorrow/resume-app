@@ -1,14 +1,14 @@
-import { exportDocx } from "./resume-export-docx";
-import { buildHtmlContent } from "./resume-export-html";
-import { exportPdf } from "./resume-export-pdf";
-import { downloadBlob, type ExportData } from "./resume-export-shared";
-import type { FilterState } from "./resume-filters";
-import { resolveProjects, resolveWork } from "./resume-filters";
-import type { ResumeFlavor } from "./resume-flavors";
-import type { ResumeSchema } from "./resume-types";
+import { exportDocx } from "./export-docx";
+import { buildHtmlContent } from "./export-html";
+import { exportPdf } from "./export-pdf";
+import { downloadBlob, type ExportData } from "./export-shared";
+import type { FilterState } from "./filters";
+import { resolveProjects, resolveWork } from "./filters";
+import type { ResumeFlavor } from "./flavors";
+import type { ResumeSchema } from "./types";
 
 export type ExportFormat = "pdf" | "docx" | "html";
-export type { ExportData } from "./resume-export-shared";
+export type { ExportData } from "./export-shared";
 
 export async function exportResume(format: ExportFormat, data: ExportData) {
   const filename = `${data.basics.name.replace(/[^a-z0-9]/gi, "_")}_Resume`;

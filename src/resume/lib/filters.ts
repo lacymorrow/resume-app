@@ -1,6 +1,6 @@
-import type { ResumeSchema, ResumeWork, ResumeProject, SectionKey } from "./resume-types";
-import type { ResumeFlavor } from "./resume-flavors";
-import { extractWorkTags, extractProjectTags } from "./resume-tags";
+import type { ResumeSchema, ResumeWork, ResumeProject, SectionKey } from "./types";
+import type { ResumeFlavor } from "./flavors";
+import { extractWorkTags, extractProjectTags } from "./tags";
 
 export interface FilterState {
   flavorId: string;

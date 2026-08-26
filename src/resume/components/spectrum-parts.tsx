@@ -1,6 +1,6 @@
 import React from "react";
-import { SPECTRUM, type FlavorStatement, renderStatement } from "../_lib/resume-spectrum";
-import { formatYearRange } from "../_lib/resume-export-shared";
+import { SPECTRUM, type FlavorStatement, renderStatement } from "../lib/spectrum";
+import { formatYearRange } from "../lib/export-shared";
 
 const S = SPECTRUM;
 export const SF = `var(--font-instrument-sans), 'Instrument Sans', system-ui, sans-serif`;

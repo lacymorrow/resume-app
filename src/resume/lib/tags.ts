@@ -1,4 +1,4 @@
-import type { ResumeSchema } from "./resume-types";
+import type { ResumeSchema } from "./types";
 
 const TAG_ALIASES: Record<string, string> = {
   nextjs: "Next.js", "next.js": "Next.js", reactjs: "React", "react.js": "React",

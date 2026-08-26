@@ -1,24 +1,24 @@
 import type React from "react";
-import type { ResumeSchema } from "../_lib/resume-types";
-import type { ResumeFlavor } from "../_lib/resume-flavors";
+import type { ResumeSchema } from "../lib/types";
+import type { ResumeFlavor } from "../lib/flavors";
 import {
   DEFAULT_FILTER_STATE,
   resolveWork,
   resolveProjects,
-} from "../_lib/resume-filters";
+} from "../lib/filters";
 import {
   SIGNATURE,
   SIGNATURE_FONT_STACK,
   parseSummary,
-} from "../_lib/resume-export-shared";
-import { ResumeHeader, ExpertiseBlock } from "./resume-header";
-import { ResumeEntryCard } from "./resume-entry-card";
+} from "../lib/export-shared";
+import { ResumeHeader, ExpertiseBlock } from "./header";
+import { ResumeEntryCard } from "./entry-card";
 import {
   Section,
   PersonalSection,
   ReferencesSection,
   ResumeFooter,
-} from "./resume-sections";
+} from "./sections";
 
 /**
  * Server-rendered, no-JS static resume for crawlers, ATS, and link previews.

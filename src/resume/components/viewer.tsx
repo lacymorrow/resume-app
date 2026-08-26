@@ -2,12 +2,12 @@
 
 import { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useQueryState, parseAsString } from "nuqs";
-import type { ResumeSchema } from "../_lib/resume-types";
-import { resolveWork, resolveProjects, DEFAULT_FILTER_STATE } from "../_lib/resume-filters";
-import { FLAVORS } from "../_lib/resume-flavors";
-import { type ExportFormat, exportResume, buildExportData } from "../_lib/resume-export";
-import { contactRows } from "../_lib/resume-export-shared";
-import { SPECTRUM, SPECTRUM_ACCENTS, getAccent, getStatement } from "../_lib/resume-spectrum";
+import type { ResumeSchema } from "../lib/types";
+import { resolveWork, resolveProjects, DEFAULT_FILTER_STATE } from "../lib/filters";
+import { FLAVORS } from "../lib/flavors";
+import { type ExportFormat, exportResume, buildExportData } from "../lib/export";
+import { contactRows } from "../lib/export-shared";
+import { SPECTRUM, SPECTRUM_ACCENTS, getAccent, getStatement } from "../lib/spectrum";
 import {
   TopRule, SectionHead, StatementBlock, WorkEntry, ProjectRow, FlavorButton, SF,
 } from "./spectrum-parts";

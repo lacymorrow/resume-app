@@ -1,4 +1,4 @@
-import { contactIconSvg } from "./resume-contact-icons";
+import { contactIconSvg } from "./contact-icons";
 import {
   boldTechTermsHtml,
   buildTechKeywords,
@@ -16,7 +16,7 @@ import {
   SIGNATURE_FONT_STACK,
   splitProjectSummary,
   splitTrailingTechList,
-} from "./resume-export-shared";
+} from "./export-shared";
 
 /**
  * "Signature" HTML resume — a faithful systemization of Lacy's handmade
