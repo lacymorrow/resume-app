@@ -1,30 +1,15 @@
-import type React from "react";
+import { resumeConfig } from "../config";
+import { contactRows } from "../lib/export-shared";
+import { DEFAULT_FILTER_STATE, resolveProjects, resolveWork } from "../lib/filters";
+import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
+import { buildSections } from "../lib/sections";
+import { getAccent, getStatement, SPECTRUM, SPECTRUM_ACCENTS } from "../lib/spectrum";
 import type { ResumeSchema } from "../lib/types";
-import type { ResumeFlavor } from "../lib/flavors";
-import {
-  DEFAULT_FILTER_STATE,
-  resolveWork,
-  resolveProjects,
-} from "../lib/filters";
-import {
-  SIGNATURE,
-  SIGNATURE_FONT_STACK,
-  parseSummary,
-} from "../lib/export-shared";
-import { ResumeHeader, ExpertiseBlock } from "./header";
-import { ResumeEntryCard } from "./entry-card";
-import {
-  Section,
-  PersonalSection,
-  ReferencesSection,
-  ResumeFooter,
-} from "./sections";
+import { DeskLabel, ResumeFrame } from "./frame";
+import { SF } from "./spectrum-parts";
 
-/**
- * Server-rendered, no-JS static resume for crawlers, ATS, and link previews.
- * Same content the interactive viewer shows on load — no framer-motion,
- * no client hooks, so it survives Next.js CSR bailout and streams as HTML.
- */
+const S = SPECTRUM;
+
 interface ResumeStaticProps {
   data: ResumeSchema;
   flavor: ResumeFlavor;
@@ -32,6 +17,12 @@ interface ResumeStaticProps {
   hiddenProjects?: string[];
 }
 
+/**
+ * Server-rendered resume for crawlers, ATS, link previews, and the moment
+ * before hydration. Renders the same frame and sections as the interactive
+ * viewer — only the rail controls differ, since anchors work without
+ * JavaScript and buttons do not.
+ */
 export function ResumeStatic({
   data,
   flavor,
@@ -46,144 +37,103 @@ export function ResumeStatic({
     hiddenProjects,
   };
 
-  const { entries: workEntries, matches: workMatches, tags: workTags } =
-    resolveWork(data, flavor, filters);
-  const {
-    entries: projectEntries,
-    matches: projectMatches,
-    tags: projectTags,
-  } = resolveProjects(data, flavor, filters);
+  const { entries: workEntries } = resolveWork(data, flavor, filters);
+  const { entries: projectEntries } = resolveProjects(data, flavor, filters);
+  const sections = buildSections(
+    data,
+    { work: workEntries, projects: projectEntries },
+    filters.sections
+  );
 
-  const basics = {
-    ...data.basics,
-    label: flavor.tagline,
-    summary: data.basics.summary.replace(
-      /EXPERTISE:.*?(?=\n\n)/s,
-      `EXPERTISE: ${flavor.expertise}`,
-    ),
-  };
+  const basics = { ...data.basics, label: flavor.tagline };
+  const contacts = contactRows(basics);
+  const location = [basics.location.city, basics.location.state].filter(Boolean).join(", ");
 
-  const summary = parseSummary(basics.summary);
+  const desk = (
+    <>
+      <DeskLabel id="desk-label" />
+      <nav
+        aria-labelledby="desk-label"
+        style={{ display: "flex", flexDirection: "column", gap: "0.15rem" }}
+      >
+        {FLAVORS.map((f) => (
+          <StaticFlavorLink
+            key={f.id}
+            id={f.id}
+            label={f.label}
+            swatch={SPECTRUM_ACCENTS[f.id] ?? SPECTRUM_ACCENTS.complete!}
+            selected={flavor.id === f.id}
+          />
+        ))}
+      </nav>
+    </>
+  );
 
   return (
-    <div
-      className="resume-grain relative mx-auto max-w-6xl px-4 py-10 mt-[var(--header-height)]"
-      style={{ fontFamily: SIGNATURE_FONT_STACK, color: SIGNATURE.body }}
+    <ResumeFrame
+      accent={getAccent(flavor.id)}
+      name={basics.name}
+      tagline={basics.label}
+      location={location}
+      contacts={contacts}
+      statement={getStatement(flavor.id)}
+      sections={sections}
+      desk={desk}
+      footerNote={`${basics.name} · ${resumeConfig.site.host}`}
+      footerLinkLabel={basics.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+      footerLinkHref={basics.url}
+    />
+  );
+}
+
+/**
+ * The no-JS counterpart to FlavorButton. Real links, so every flavor is
+ * crawlable and reachable before hydration — each one has its own metadata.
+ */
+function StaticFlavorLink({
+  id,
+  label,
+  swatch,
+  selected,
+}: {
+  id: string;
+  label: string;
+  swatch: string;
+  selected: boolean;
+}) {
+  return (
+    <a
+      href={id === "complete" ? "/" : `/?flavor=${id}`}
+      aria-current={selected ? "page" : undefined}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.7rem",
+        color: selected ? "var(--accent)" : S.dim,
+        fontFamily: SF,
+        fontSize: "0.95rem",
+        fontWeight: selected ? 600 : 400,
+        padding: "0.45rem 0.6rem",
+        marginLeft: "-0.6rem",
+        textDecoration: "none",
+        borderRadius: 4,
+        transition: "color 300ms ease, background 200ms ease",
+      }}
+      className="ha"
     >
-      <div className="flex gap-10">
-        <main className="relative min-w-0 flex-1" id="resume-content">
-          <ResumeHeader basics={basics} />
-
-          <Section rail="Expertise">
-            <ExpertiseBlock basics={basics} />
-          </Section>
-
-          {(flavor.sections.work ?? false) && workEntries.length > 0 && (
-            <Section rail="Developer Experience">
-              <StaticWorkSection
-                entries={workEntries}
-                matches={workMatches}
-                tags={workTags}
-              />
-            </Section>
-          )}
-
-          <Section rail="Personal">
-            <PersonalSection
-              skills={data.skills}
-              interests={data.interests}
-              education={data.education}
-              awards={data.awards}
-              qualities={summary.qualities}
-              showSkills={flavor.sections.skills ?? false}
-              showInterests={flavor.sections.interests ?? false}
-              showEducation={flavor.sections.education ?? false}
-              showAwards={flavor.sections.awards ?? false}
-            />
-          </Section>
-
-          {(flavor.sections.projects ?? false) && projectEntries.length > 0 && (
-            <Section rail="Open-Source">
-              <StaticProjectsSection
-                entries={projectEntries}
-                matches={projectMatches}
-                tags={projectTags}
-              />
-            </Section>
-          )}
-
-          {(flavor.sections.references ?? false) && data.references.length > 0 && (
-            <Section rail="References">
-              <ReferencesSection references={data.references} />
-            </Section>
-          )}
-
-          <ResumeFooter />
-        </main>
-      </div>
-    </div>
-  );
-}
-
-function StaticWorkSection({
-  entries,
-  matches,
-  tags,
-}: {
-  entries: ReturnType<typeof resolveWork>["entries"];
-  matches: ReturnType<typeof resolveWork>["matches"];
-  tags: ReturnType<typeof resolveWork>["tags"];
-}) {
-  return (
-    <div>
-      {entries.map((entry) => (
-        <ResumeEntryCard
-          key={`${entry.name}-${entry.startDate}`}
-          title={entry.position}
-          subtitle={entry.name}
-          startDate={entry.startDate}
-          endDate={entry.endDate}
-          location={entry.location}
-          summary={entry.summary ?? ""}
-          tags={tags.get(entry.originalIndex) ?? []}
-          url={entry.url}
-          highlights={entry.highlights?.filter(Boolean)}
-          match={matches.get(entry.originalIndex)}
-          sector={entry.sector}
-          variant="work"
-        />
-      ))}
-    </div>
-  );
-}
-
-function StaticProjectsSection({
-  entries,
-  matches,
-  tags,
-}: {
-  entries: ReturnType<typeof resolveProjects>["entries"];
-  matches: ReturnType<typeof resolveProjects>["matches"];
-  tags: ReturnType<typeof resolveProjects>["tags"];
-}) {
-  return (
-    <div>
-      {entries.map((project) => (
-        <ResumeEntryCard
-          key={`${project.name}-${project.startDate}`}
-          title={project.name}
-          subtitle={project.url ? new URL(project.url).hostname : ""}
-          startDate={project.startDate}
-          endDate={project.endDate}
-          summary={project.summary ?? ""}
-          tags={tags.get(project.originalIndex) ?? []}
-          url={project.url}
-          highlights={project.highlights?.filter(Boolean)}
-          match={matches.get(project.originalIndex)}
-          featured={project.featured}
-          variant="project"
-        />
-      ))}
-    </div>
+      <span
+        aria-hidden="true"
+        style={{
+          width: 9,
+          height: 9,
+          borderRadius: "50%",
+          background: swatch,
+          flexShrink: 0,
+          opacity: selected ? 1 : 0.75,
+          boxShadow: selected ? `0 0 0 3px color-mix(in srgb, ${swatch} 22%, transparent)` : "none",
+        }}
+      />
+      {label}
+    </a>
   );
 }
