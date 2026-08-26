@@ -12,7 +12,7 @@
     "avatar": "https://avatars.githubusercontent.com/u/1311301?v=4",
     "email": "me@lacymorrow.com",
     "phone": "704-451-6680",
-    "url": "http://lacymorrow.com",
+    "url": "https://lacymorrow.com",
     "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nEXPERTISE: Agentic engineer + Full-stack developer + GTM/Growth engineer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); GTM engineering (product launches, e-commerce funnels, SEO/analytics, marketing automation); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
     "location": {
       "countryCode": "US",
@@ -202,7 +202,7 @@
       "name": "XSPF Jukebox",
       "startDate": "2006-01-01",
       "summary": "Flash Audio + Video Player. The XSPF Jukebox is a fully skinnable, open source Flash media player. Based on my revisions of Fabricio Zuardi's original creation. A full featured media player, the Jukebox supports both mp3 audio and flv video parsed through an external .XSPF or .XML playlist. Widespread use on popular websites and packaged with PHP framework SocialEngine; Python/PHP backend playlist generation.",
-      "url": "http://lacymorrow.github.io/xspf-jukebox/",
+      "url": "https://lacymorrow.github.io/xspf-jukebox/",
       "endDate": "2009-04-30",
       "featured": true
     }
@@ -308,7 +308,7 @@
       "endDate": "2025-01-01",
       "highlights": [],
       "summary": "Full-stack Web Design & Development \nwith 20+ years experience designing and building accessible, well-architected websites and web apps for desktop and mobile experiences.",
-      "url": "http://lacymorrow.com",
+      "url": "https://lacymorrow.com",
       "location": "San Francisco Bay Area & Charlotte, NC"
     },
     {

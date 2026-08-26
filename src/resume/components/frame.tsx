@@ -1,30 +1,30 @@
 import type React from "react";
 import type { ContactRow } from "../lib/export-shared";
 import type { NormalizedSection } from "../lib/sections";
-import { type FlavorStatement, SPECTRUM } from "../lib/spectrum";
-import { SectionBlock, SF, StatementBlock, TopRule } from "./spectrum-parts";
+import { type FlavorStatement, SCREEN } from "../lib/theme";
+import { SectionBlock, SF, StatementBlock, TopRule } from "./parts";
 
-const S = SPECTRUM;
+const S = SCREEN;
 
 /**
  * Hover and responsive rules that inline styles cannot express. Rendered once
  * by the frame so the server fallback and the interactive viewer share them.
  */
-export const SPECTRUM_CSS = `
-  .spectrum-frame a.ha:hover { color: var(--accent) !important; text-decoration: underline; text-underline-offset: 3px; }
-  .spectrum-frame .project-link:hover { background: ${S.lift} !important; }
-  .spectrum-frame .project-link:hover .project-arrow { transform: translateX(3px); }
+export const RESUME_CSS = `
+  .resume-frame a.ha:hover { color: var(--accent) !important; text-decoration: underline; text-underline-offset: 3px; }
+  .resume-frame .project-link:hover { background: ${S.lift} !important; }
+  .resume-frame .project-link:hover .project-arrow { transform: translateX(3px); }
   @media (prefers-reduced-motion: reduce) {
-    .spectrum-frame *, .spectrum-frame *::before, .spectrum-frame *::after { transition: none !important; }
+    .resume-frame *, .resume-frame *::before, .resume-frame *::after { transition: none !important; }
   }
   @media (max-width: 860px) {
-    .spectrum-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
-    .spectrum-rail { position: static !important; height: auto !important; }
-    .spectrum-desk { margin-top: 1.75rem !important; padding-top: 0 !important; }
-    .spectrum-desk [role="radiogroup"] { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
-    .spectrum-desk button, .spectrum-desk a { margin-left: 0 !important; }
-    .spectrum-main { padding-top: 3rem !important; }
-    .spectrum-entry { grid-template-columns: 1fr !important; gap: 0.25rem !important; }
+    .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    .resume-rail { position: static !important; height: auto !important; }
+    .resume-desk { margin-top: 1.75rem !important; padding-top: 0 !important; }
+    .resume-desk [role="radiogroup"] { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
+    .resume-desk button, .resume-desk a { margin-left: 0 !important; }
+    .resume-main { padding-top: 3rem !important; }
+    .resume-entry { grid-template-columns: 1fr !important; gap: 0.25rem !important; }
   }
 `;
 
@@ -66,11 +66,11 @@ export function ResumeFrame({
 }: ResumeFrameProps) {
   return (
     <>
-      <style>{SPECTRUM_CSS}</style>
+      <style>{RESUME_CSS}</style>
       <TopRule accent={accent} />
 
       <div
-        className="spectrum-frame"
+        className="resume-frame"
         style={
           {
             "--accent": accent,
@@ -86,7 +86,7 @@ export function ResumeFrame({
         }
       >
         <div
-          className="spectrum-grid"
+          className="resume-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "300px minmax(0, 1fr)",
@@ -97,7 +97,7 @@ export function ResumeFrame({
           }}
         >
           <header
-            className="spectrum-rail"
+            className="resume-rail"
             style={{
               position: "sticky",
               top: 0,
@@ -148,12 +148,12 @@ export function ResumeFrame({
               )}
             </nav>
 
-            <div className="spectrum-desk" style={{ marginTop: "auto", paddingTop: "2.5rem" }}>
+            <div className="resume-desk" style={{ marginTop: "auto", paddingTop: "2.5rem" }}>
               {desk}
             </div>
           </header>
 
-          <main className="spectrum-main" style={{ padding: "6rem 0 4rem", maxWidth: 720 }}>
+          <main className="resume-main" style={{ padding: "6rem 0 4rem", maxWidth: 720 }}>
             <StatementBlock statement={statement} />
 
             {sections.map((section) => (

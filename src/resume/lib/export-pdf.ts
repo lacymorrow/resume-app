@@ -1,25 +1,28 @@
 import type { jsPDF } from "jspdf";
+import { resumeConfig } from "../config";
 import { type ContactKind, iconPathOps } from "./contact-icons";
 import {
   contactRows,
   type ExportData,
-  FOOTER_TEXT,
+  footerText,
   formatProjectYear,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
   isTechLine,
+  PRINT,
   parseSummary,
-  SIGNATURE,
   splitProjectSummary,
   splitTrailingTechList,
+  summaryBlockLabel,
 } from "./export-shared";
 
-// Letter page geometry (points). Three columns like the handmade resume:
-// gray rail labels | right-aligned pink dates + companies | content.
-const PAGE_W = 612;
-const PAGE_H = 792;
-const MARGIN = 46;
+// Page geometry (points). Three columns: gray rail labels | right-aligned
+// accent dates + companies | content. Size comes from config, so A4 users get
+// a correctly-sized PDF instead of Letter.
+const PAGE_W = resumeConfig.page.width;
+const PAGE_H = resumeConfig.page.height;
+const MARGIN = resumeConfig.page.margin;
 const RAIL_X = MARGIN;
 const META_RIGHT = 244;
 const META_W = 112;
@@ -40,14 +43,14 @@ function rgb(hex: string): Rgb {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-const INK = rgb(SIGNATURE.ink);
-const BODY = rgb(SIGNATURE.body);
-const MUTED = rgb(SIGNATURE.muted);
-const RAIL = rgb(SIGNATURE.rail);
-const PINK = rgb(SIGNATURE.pink);
-const BLUE = rgb(SIGNATURE.blue);
-const UNDERLINE = rgb(SIGNATURE.underline);
-const FOOTER = rgb(SIGNATURE.footer);
+const INK = rgb(PRINT.ink);
+const BODY = rgb(PRINT.body);
+const MUTED = rgb(PRINT.muted);
+const RAIL = rgb(PRINT.rail);
+const PINK = rgb(PRINT.accent);
+const BLUE = rgb(PRINT.heading);
+const UNDERLINE = rgb(PRINT.underline);
+const FOOTER = rgb(PRINT.footer);
 
 /** Five-point star as a filled vector path (helvetica has no ★ glyph). */
 function drawStar(doc: jsPDF, cx: number, cy: number, r: number, color: Rgb) {
@@ -272,7 +275,7 @@ function drawSubLabel(doc: jsPDF, topY: number, label: string, withHeart?: boole
 
 export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
   const { jsPDF } = await import("jspdf");
-  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  const doc = new jsPDF({ unit: "pt", format: [PAGE_W, PAGE_H] });
   const cur: Cursor = { y: 0 };
 
   const { basics, filters } = data;
@@ -316,20 +319,20 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
   cur.y += ledeLines.length * 13;
 
   // ---- EXPERTISE ----
-  if (summary.expertise) {
+  if (summary.blocks.expertise) {
     cur.y += 16;
-    drawRail(doc, cur, "Expertise");
+    drawRail(doc, cur, summaryBlockLabel("expertise"));
     setStyle(doc, 9, "normal", BODY);
-    const lines = doc.splitTextToSize(summary.expertise, CONTENT_W) as string[];
+    const lines = doc.splitTextToSize(summary.blocks.expertise, CONTENT_W) as string[];
     for (const line of lines) {
       ensure(doc, cur, LINE_BODY);
       doc.text(line, CONTENT_X, cur.y);
       cur.y += LINE_BODY;
     }
-    if (summary.interested) {
+    if (summary.emphasis) {
       cur.y += 4;
       setStyle(doc, 9, "bold", INK);
-      const iLines = doc.splitTextToSize(summary.interested, CONTENT_W) as string[];
+      const iLines = doc.splitTextToSize(summary.emphasis, CONTENT_W) as string[];
       for (const line of iLines) {
         ensure(doc, cur, LINE_BODY);
         doc.text(line, CONTENT_X, cur.y);
@@ -400,11 +403,11 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
       }
       cur.y += 8;
     }
-    if (summary.qualities) {
+    if (summary.blocks.qualities) {
       ensure(doc, cur, 30);
-      drawSubLabel(doc, cur.y, "QUALITIES");
+      drawSubLabel(doc, cur.y, summaryBlockLabel("qualities").toUpperCase());
       setStyle(doc, 9, "normal", BODY);
-      const lines = doc.splitTextToSize(summary.qualities, CONTENT_W) as string[];
+      const lines = doc.splitTextToSize(summary.blocks.qualities, CONTENT_W) as string[];
       for (const line of lines) {
         ensure(doc, cur, LINE_BODY);
         doc.text(line, CONTENT_X, cur.y);
@@ -494,7 +497,7 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     setStyle(doc, 8, "normal", FOOTER);
-    doc.text(FOOTER_TEXT, PAGE_W / 2, FOOTER_Y, { align: "center" });
+    doc.text(footerText(basics.url), PAGE_W / 2, FOOTER_Y, { align: "center" });
   }
 
   return doc;

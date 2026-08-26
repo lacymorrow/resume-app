@@ -3,19 +3,22 @@ import {
   boldTechTermsHtml,
   buildTechKeywords,
   contactRows,
+  displayUrl,
   type ExportData,
   esc,
-  FOOTER_TEXT,
+  footerHref,
+  footerParts,
   formatProjectYear,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
   isTechLine,
+  PRINT,
+  PRINT_FONT_STACK,
   parseSummary,
-  SIGNATURE,
-  SIGNATURE_FONT_STACK,
   splitProjectSummary,
   splitTrailingTechList,
+  summaryBlockLabel,
 } from "./export-shared";
 
 /**
@@ -33,7 +36,7 @@ export function buildHtmlContent(data: ExportData): string {
 
   const contact = contactRows(basics)
     .map((row) => {
-      const icon = contactIconSvg(row.kind, 9, SIGNATURE.muted);
+      const icon = contactIconSvg(row.kind, 9, PRINT.muted);
       const inner = row.href ? `<a href="${esc(row.href)}">${esc(row.text)}</a>` : esc(row.text);
       return `<div class="contact-row"><span class="glyph">${icon}</span>${inner}</div>`;
     })
@@ -108,8 +111,13 @@ export function buildHtmlContent(data: ExportData): string {
       subEntry("INTERESTS", `<p>${esc(data.interests.map((i) => i.name).join(", "))}</p>`)
     );
   }
-  if (summary.qualities) {
-    personalBlocks.push(subEntry("QUALITIES", `<p>${esc(summary.qualities)}</p>`));
+  if (summary.blocks.qualities) {
+    personalBlocks.push(
+      subEntry(
+        summaryBlockLabel("qualities").toUpperCase(),
+        `<p>${esc(summary.blocks.qualities)}</p>`
+      )
+    );
   }
   if (filters.sections.education && data.education.length > 0) {
     const rows = data.education
@@ -148,68 +156,68 @@ export function buildHtmlContent(data: ExportData): string {
 <style>
 * { box-sizing: border-box; }
 body {
-	font-family: ${SIGNATURE_FONT_STACK};
-	font-size: 9.5pt; line-height: 1.45; color: ${SIGNATURE.body};
+	font-family: ${PRINT_FONT_STACK};
+	font-size: 9.5pt; line-height: 1.45; color: ${PRINT.body};
 	max-width: 8.5in; margin: 0 auto; padding: 0.5in 0.55in 0.7in;
 	-webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 a { color: inherit; text-decoration: none; }
-strong { font-weight: 700; color: ${SIGNATURE.ink}; }
+strong { font-weight: 700; color: ${PRINT.ink}; }
 
 /* ---- Masthead ---- */
 .masthead { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
 h1 {
-	font-size: 34pt; line-height: 1; margin: 0; color: ${SIGNATURE.ink};
+	font-size: 34pt; line-height: 1; margin: 0; color: ${PRINT.ink};
 	font-weight: 800; letter-spacing: -0.02em;
 }
 h1 .star { font-weight: 400; font-size: 0.82em; }
-.tagline { margin-top: 8px; font-size: 10pt; color: ${SIGNATURE.muted}; }
-.contact { font-size: 8pt; color: ${SIGNATURE.ink}; line-height: 1.6; white-space: nowrap; padding-top: 4px; }
-.contact-row .glyph { display: inline-block; width: 14px; color: ${SIGNATURE.muted}; }
+.tagline { margin-top: 8px; font-size: 10pt; color: ${PRINT.muted}; }
+.contact { font-size: 8pt; color: ${PRINT.ink}; line-height: 1.6; white-space: nowrap; padding-top: 4px; }
+.contact-row .glyph { display: inline-block; width: 14px; color: ${PRINT.muted}; }
 .contact-row .glyph svg { vertical-align: -1px; }
-.contact-row a { color: ${SIGNATURE.ink}; }
-.lede { margin: 14px 0 0; font-size: 10.5pt; font-weight: 700; color: ${SIGNATURE.muted}; max-width: 6.6in; }
+.contact-row a { color: ${PRINT.ink}; }
+.lede { margin: 14px 0 0; font-size: 10.5pt; font-weight: 700; color: ${PRINT.muted}; max-width: 6.6in; }
 
 /* ---- Section grid ---- */
 section { display: grid; grid-template-columns: 76px 1fr; gap: 0 18px; margin-top: 26px; }
 .rail {
 	font-size: 8.5pt; font-weight: 700; letter-spacing: 0.14em;
-	color: ${SIGNATURE.rail}; text-transform: uppercase; line-height: 1.5; padding-top: 2px;
+	color: ${PRINT.rail}; text-transform: uppercase; line-height: 1.5; padding-top: 2px;
 }
 .entries { min-width: 0; }
 .entry { display: grid; grid-template-columns: 128px 1fr; gap: 0 16px; margin-bottom: 15px; break-inside: avoid; page-break-inside: avoid; }
 .meta { text-align: right; }
-.dates { color: ${SIGNATURE.pink}; font-weight: 700; font-size: 10.5pt; }
-.org { font-weight: 700; font-size: 9pt; color: ${SIGNATURE.ink}; line-height: 1.35; overflow-wrap: anywhere; }
-.org a { text-decoration: underline; text-decoration-color: ${SIGNATURE.underline}; text-underline-offset: 2px; }
+.dates { color: ${PRINT.accent}; font-weight: 700; font-size: 10.5pt; }
+.org { font-weight: 700; font-size: 9pt; color: ${PRINT.ink}; line-height: 1.35; overflow-wrap: anywhere; }
+.org a { text-decoration: underline; text-decoration-color: ${PRINT.underline}; text-underline-offset: 2px; }
 .org .star { text-decoration: none; font-weight: 400; }
-.sector { font-size: 7.5pt; color: ${SIGNATURE.muted}; }
-.role { margin: 0 0 3px; font-size: 11pt; font-weight: 700; color: ${SIGNATURE.blue}; line-height: 1.25; }
+.sector { font-size: 7.5pt; color: ${PRINT.muted}; }
+.role { margin: 0 0 3px; font-size: 11pt; font-weight: 700; color: ${PRINT.heading}; line-height: 1.25; }
 .entry-summary { margin: 0 0 3px; white-space: pre-wrap; }
 .bullets { margin: 0; padding-left: 13px; }
 .bullets li { margin-bottom: 2.5px; }
-.bullets li::marker { color: ${SIGNATURE.ink}; }
-.tech-line, .tech-line strong { color: ${SIGNATURE.ink}; }
+.bullets li::marker { color: ${PRINT.ink}; }
+.tech-line, .tech-line strong { color: ${PRINT.ink}; }
 
 /* ---- Personal / sub-labeled blocks ---- */
 .sublabel {
 	font-size: 8.5pt; font-weight: 700; letter-spacing: 0.12em;
-	color: ${SIGNATURE.rail}; text-transform: uppercase; line-height: 1.5;
+	color: ${PRINT.rail}; text-transform: uppercase; line-height: 1.5;
 }
-.sublabel .heart { color: ${SIGNATURE.pink}; letter-spacing: 0; }
+.sublabel .heart { color: ${PRINT.accent}; letter-spacing: 0; }
 .skill-row { margin-bottom: 2px; }
-.skill-name { font-weight: 700; color: ${SIGNATURE.ink}; }
-.skill-level { color: ${SIGNATURE.muted}; font-style: italic; }
-.edu-inst { color: ${SIGNATURE.muted}; }
+.skill-name { font-weight: 700; color: ${PRINT.ink}; }
+.skill-level { color: ${PRINT.muted}; font-style: italic; }
+.edu-inst { color: ${PRINT.muted}; }
 .detail p { margin: 0 0 4px; }
 
 /* ---- References + footer ---- */
-.reference { margin: 4px 0 10px; font-style: italic; color: ${SIGNATURE.muted}; }
-.reference footer { font-style: normal; margin-top: 3px; color: ${SIGNATURE.ink}; }
+.reference { margin: 4px 0 10px; font-style: italic; color: ${PRINT.muted}; }
+.reference footer { font-style: normal; margin-top: 3px; color: ${PRINT.ink}; }
 .doc-footer {
-	margin-top: 34px; text-align: center; font-size: 8pt; color: ${SIGNATURE.footer};
+	margin-top: 34px; text-align: center; font-size: 8pt; color: ${PRINT.footer};
 }
-.doc-footer a { text-decoration: underline; color: ${SIGNATURE.footer}; }
+.doc-footer a { text-decoration: underline; color: ${PRINT.footer}; }
 
 @page { size: letter; margin: 0.5in 0; }
 @media print {
@@ -233,12 +241,12 @@ ${contact}
 </header>
 
 ${
-  summary.expertise
+  summary.blocks.expertise
     ? `<section>
-	<div class="rail">Expertise</div>
+	<div class="rail">${esc(summaryBlockLabel("expertise"))}</div>
 	<div class="entries"><div class="entry"><div class="meta"></div><div class="detail">
-		<p>${esc(summary.expertise)}</p>
-		${summary.interested ? `<p>${bold(summary.interested)}</p>` : ""}
+		<p>${esc(summary.blocks.expertise)}</p>
+		${summary.emphasis ? `<p>${bold(summary.emphasis)}</p>` : ""}
 	</div></div></div>
 </section>`
     : ""
@@ -286,10 +294,7 @@ ${
     : ""
 }
 
-<footer class="doc-footer">${FOOTER_TEXT.replace(
-    "lacymorrow.com",
-    `<a href="https://lacymorrow.com">lacymorrow.com</a>`
-  )}</footer>
+<footer class="doc-footer">${footerLinkHtml(basics.url)}</footer>
 </body></html>`;
 }
 
@@ -298,4 +303,11 @@ function subEntry(label: string, detailHtml: string): string {
 	<div class="meta"><div class="sublabel">${label}</div></div>
 	<div class="detail">${detailHtml}</div>
 </article>`;
+}
+
+/** Footer sentence with the portfolio URL rendered as a real link. */
+function footerLinkHtml(portfolioUrl: string): string {
+  const { before, after } = footerParts();
+  const href = footerHref(portfolioUrl);
+  return `${esc(before)}<a href="${esc(href)}">${esc(displayUrl(href))}</a>${esc(after)}`;
 }

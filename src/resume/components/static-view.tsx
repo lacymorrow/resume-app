@@ -3,12 +3,12 @@ import { contactRows } from "../lib/export-shared";
 import { DEFAULT_FILTER_STATE, resolveProjects, resolveWork } from "../lib/filters";
 import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
 import { buildSections } from "../lib/sections";
-import { getAccent, getStatement, SPECTRUM, SPECTRUM_ACCENTS } from "../lib/spectrum";
+import { FLAVOR_ACCENTS, getAccent, getStatement, SCREEN } from "../lib/theme";
 import type { ResumeSchema } from "../lib/types";
 import { DeskLabel, ResumeFrame } from "./frame";
-import { SF } from "./spectrum-parts";
+import { SF } from "./parts";
 
-const S = SPECTRUM;
+const S = SCREEN;
 
 interface ResumeStaticProps {
   data: ResumeSchema;
@@ -61,7 +61,7 @@ export function ResumeStatic({
             key={f.id}
             id={f.id}
             label={f.label}
-            swatch={SPECTRUM_ACCENTS[f.id] ?? SPECTRUM_ACCENTS.complete!}
+            swatch={FLAVOR_ACCENTS[f.id] ?? FLAVOR_ACCENTS.complete!}
             selected={flavor.id === f.id}
           />
         ))}

@@ -1,14 +1,9 @@
-import React from "react";
-import { SPECTRUM, type FlavorStatement, renderStatement } from "../lib/spectrum";
+import type React from "react";
 import { formatYearRange } from "../lib/export-shared";
-import type {
-  CredentialItem,
-  KeywordItem,
-  NormalizedSection,
-  QuoteItem,
-} from "../lib/sections";
+import type { CredentialItem, KeywordItem, NormalizedSection, QuoteItem } from "../lib/sections";
+import { type FlavorStatement, renderStatement, SCREEN } from "../lib/theme";
 
-const S = SPECTRUM;
+const S = SCREEN;
 export const SF = `var(--font-instrument-sans), 'Instrument Sans', system-ui, sans-serif`;
 
 export function TopRule({ accent }: { accent: string }) {
@@ -17,7 +12,9 @@ export function TopRule({ accent }: { accent: string }) {
       aria-hidden="true"
       style={{
         position: "fixed",
-        top: 0, left: 0, right: 0,
+        top: 0,
+        left: 0,
+        right: 0,
         height: 2,
         background: accent,
         transition: "background 300ms ease",
@@ -87,7 +84,7 @@ export function WorkEntry({
   const years = formatYearRange(startDate, endDate);
   return (
     <li
-      className="spectrum-entry"
+      className="resume-entry"
       style={{
         display: "grid",
         gridTemplateColumns: "5.5rem minmax(0, 1fr)",
@@ -110,11 +107,23 @@ export function WorkEntry({
         {years}
       </span>
       <div>
-        <h3 style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "-0.01em" }}>{position}</h3>
+        <h3 style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
+          {position}
+        </h3>
         <p style={{ color: S.dim, fontSize: "0.9rem", marginTop: "0.15rem" }}>
           {url ? (
-            <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: S.dim, textDecoration: "none", transition: "color 300ms ease" }} className="ha">{name}</a>
-          ) : name}
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: S.dim, textDecoration: "none", transition: "color 300ms ease" }}
+              className="ha"
+            >
+              {name}
+            </a>
+          ) : (
+            name
+          )}
         </p>
         {summary && (
           <p style={{ marginTop: "0.6rem", fontSize: "0.95rem", maxWidth: "56ch" }}>{summary}</p>
@@ -122,7 +131,9 @@ export function WorkEntry({
         {highlights && highlights.length > 0 && (
           <ul style={{ marginTop: "0.5rem", paddingLeft: "1.2rem" }}>
             {highlights.slice(0, 3).map((h, i) => (
-              <li key={i} style={{ fontSize: "0.85rem", color: S.dim, marginTop: "0.2rem" }}>{h}</li>
+              <li key={i} style={{ fontSize: "0.85rem", color: S.dim, marginTop: "0.2rem" }}>
+                {h}
+              </li>
             ))}
           </ul>
         )}
@@ -131,12 +142,30 @@ export function WorkEntry({
   );
 }
 
-export function ProjectRow({ name, summary, url }: { name: string; summary: string; url?: string }) {
+export function ProjectRow({
+  name,
+  summary,
+  url,
+}: {
+  name: string;
+  summary: string;
+  url?: string;
+}) {
   const inner = (
     <>
       <span style={{ fontWeight: 600, fontSize: "1rem" }}>{name}</span>
       <span style={{ color: S.dim, fontSize: "0.9rem" }}>{summary}</span>
-      <span aria-hidden="true" style={{ color: "var(--accent)", fontSize: "0.95rem", transition: "color 300ms ease, transform 200ms ease" }} className="project-arrow">→</span>
+      <span
+        aria-hidden="true"
+        style={{
+          color: "var(--accent)",
+          fontSize: "0.95rem",
+          transition: "color 300ms ease, transform 200ms ease",
+        }}
+        className="project-arrow"
+      >
+        →
+      </span>
     </>
   );
   const grid: React.CSSProperties = {
@@ -155,7 +184,15 @@ export function ProjectRow({ name, summary, url }: { name: string; summary: stri
   return (
     <li style={{ listStyle: "none" }}>
       {url ? (
-        <a href={url} target="_blank" rel="noopener noreferrer" style={grid} className="project-link">{inner}</a>
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={grid}
+          className="project-link"
+        >
+          {inner}
+        </a>
       ) : (
         <div style={grid}>{inner}</div>
       )}
@@ -164,7 +201,13 @@ export function ProjectRow({ name, summary, url }: { name: string; summary: stri
 }
 
 export function FlavorButton({
-  id, label, swatch, selected, onClick, onKeyDown, btnRef,
+  id,
+  label,
+  swatch,
+  selected,
+  onClick,
+  onKeyDown,
+  btnRef,
 }: {
   id: string;
   label: string;
@@ -183,19 +226,31 @@ export function FlavorButton({
       onKeyDown={onKeyDown}
       tabIndex={selected ? 0 : -1}
       style={{
-        display: "flex", alignItems: "center", gap: "0.7rem",
-        background: "none", border: "none",
+        display: "flex",
+        alignItems: "center",
+        gap: "0.7rem",
+        background: "none",
+        border: "none",
         color: selected ? "var(--accent)" : S.dim,
-        fontFamily: SF, fontSize: "0.95rem", fontWeight: selected ? 600 : 400,
-        padding: "0.45rem 0.6rem", marginLeft: "-0.6rem",
-        cursor: "pointer", textAlign: "left", borderRadius: 4,
+        fontFamily: SF,
+        fontSize: "0.95rem",
+        fontWeight: selected ? 600 : 400,
+        padding: "0.45rem 0.6rem",
+        marginLeft: "-0.6rem",
+        cursor: "pointer",
+        textAlign: "left",
+        borderRadius: 4,
         transition: "color 300ms ease, background 200ms ease",
       }}
     >
       <span
         aria-hidden="true"
         style={{
-          width: 9, height: 9, borderRadius: "50%", background: swatch, flexShrink: 0,
+          width: 9,
+          height: 9,
+          borderRadius: "50%",
+          background: swatch,
+          flexShrink: 0,
           opacity: selected ? 1 : 0.75,
           boxShadow: selected ? `0 0 0 3px color-mix(in srgb, ${swatch} 22%, transparent)` : "none",
           transition: "opacity 200ms ease, box-shadow 200ms ease",
@@ -218,7 +273,7 @@ export function CredentialRow({ item }: { item: CredentialItem }) {
       : "";
   return (
     <li
-      className="spectrum-entry"
+      className="resume-entry"
       style={{
         display: "grid",
         gridTemplateColumns: "5.5rem minmax(0, 1fr)",
@@ -243,7 +298,13 @@ export function CredentialRow({ item }: { item: CredentialItem }) {
       <div>
         <h3 style={{ fontSize: "1rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
           {item.url ? (
-            <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }} className="ha">
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "inherit", textDecoration: "none" }}
+              className="ha"
+            >
               {item.title}
             </a>
           ) : (
@@ -254,7 +315,9 @@ export function CredentialRow({ item }: { item: CredentialItem }) {
           <p style={{ color: S.dim, fontSize: "0.9rem", marginTop: "0.15rem" }}>{item.subtitle}</p>
         )}
         {item.summary && (
-          <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", maxWidth: "56ch" }}>{item.summary}</p>
+          <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", maxWidth: "56ch" }}>
+            {item.summary}
+          </p>
         )}
       </div>
     </li>

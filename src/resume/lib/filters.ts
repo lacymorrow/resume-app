@@ -1,7 +1,8 @@
-import { defaultSectionVisibility } from "./sections";
-import type { ResumeSchema, ResumeWork, ResumeProject, SectionVisibility } from "./types";
+import { resumeConfig } from "../config";
 import type { ResumeFlavor } from "./flavors";
-import { extractWorkTags, extractProjectTags } from "./tags";
+import { defaultSectionVisibility } from "./sections";
+import { extractProjectTags, extractWorkTags } from "./tags";
+import type { ResumeProject, ResumeSchema, ResumeWork, SectionVisibility } from "./types";
 
 export interface FilterState {
   flavorId: string;
@@ -21,9 +22,21 @@ export const DEFAULT_FILTER_STATE: FilterState = {
   hiddenProjects: [],
 };
 
-export interface MatchResult { matched: boolean; score: number; }
+export interface MatchResult {
+  matched: boolean;
+  score: number;
+}
 
-function matchesTags(entryTags: string[], selectedTags: string[], mode: "any" | "all"): MatchResult {
+/** Work entries config hides from every flavor. */
+function isExcluded(name: string): boolean {
+  return resumeConfig.data.excludeWork.includes(name);
+}
+
+function matchesTags(
+  entryTags: string[],
+  selectedTags: string[],
+  mode: "any" | "all"
+): MatchResult {
   if (selectedTags.length === 0) return { matched: true, score: 1 };
   const entrySet = new Set(entryTags.map((t) => t.toLowerCase()));
   const matchCount = selectedTags.filter((t) => entrySet.has(t.toLowerCase())).length;
@@ -34,27 +47,31 @@ function matchesTags(entryTags: string[], selectedTags: string[], mode: "any" | 
 /** Returns company names that are visible in the current flavor (not flavor-hidden) */
 export function getFlavorVisibleCompanies(data: ResumeSchema, flavor: ResumeFlavor): string[] {
   return data.work
-    .filter((w) => w.name !== "LacyMorrow.com" && flavor.work[w.name]?.visible !== false)
+    .filter((w) => !isExcluded(w.name) && flavor.work[w.name]?.visible !== false)
     .map((w) => w.name);
 }
 
 /** Returns project names that are visible in the current flavor (not flavor-hidden) */
 export function getFlavorVisibleProjects(data: ResumeSchema, flavor: ResumeFlavor): string[] {
-  return data.projects
-    .filter((p) => flavor.projects[p.name]?.visible !== false)
-    .map((p) => p.name);
+  return data.projects.filter((p) => flavor.projects[p.name]?.visible !== false).map((p) => p.name);
 }
 
 /** Apply flavor overrides to work entries and compute tag matches */
 export function resolveWork(
-  data: ResumeSchema, flavor: ResumeFlavor, filters: FilterState,
-): { entries: (ResumeWork & { originalIndex: number })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; } {
+  data: ResumeSchema,
+  flavor: ResumeFlavor,
+  filters: FilterState
+): {
+  entries: (ResumeWork & { originalIndex: number })[];
+  matches: Map<number, MatchResult>;
+  tags: Map<number, string[]>;
+} {
   const entries: (ResumeWork & { originalIndex: number })[] = [];
   const matches = new Map<number, MatchResult>();
 
   for (let i = 0; i < data.work.length; i++) {
     const base = data.work[i]!;
-    if (base.name === "LacyMorrow.com") continue;
+    if (isExcluded(base.name)) continue;
 
     const override = flavor.work[base.name];
     if (override?.visible === false) continue;
@@ -73,7 +90,12 @@ export function resolveWork(
 
   // Re-extract tags from overridden summaries
   const resolvedTags = new Map<number, string[]>();
-  const resolvedWork = entries.map(e => ({ ...e, name: e.name, summary: e.summary, highlights: e.highlights }));
+  const resolvedWork = entries.map((e) => ({
+    ...e,
+    name: e.name,
+    summary: e.summary,
+    highlights: e.highlights,
+  }));
   const freshTags = extractWorkTags(resolvedWork);
   for (let i = 0; i < entries.length; i++) {
     resolvedTags.set(entries[i]!.originalIndex, freshTags.get(i) ?? []);
@@ -82,7 +104,10 @@ export function resolveWork(
   // Recompute matches with resolved tags
   for (const entry of entries) {
     const entryTags = resolvedTags.get(entry.originalIndex) ?? [];
-    matches.set(entry.originalIndex, matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode));
+    matches.set(
+      entry.originalIndex,
+      matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode)
+    );
   }
 
   return { entries, matches, tags: resolvedTags };
@@ -90,8 +115,14 @@ export function resolveWork(
 
 /** Apply flavor overrides to project entries and compute tag matches */
 export function resolveProjects(
-  data: ResumeSchema, flavor: ResumeFlavor, filters: FilterState,
-): { entries: (ResumeProject & { originalIndex: number })[]; matches: Map<number, MatchResult>; tags: Map<number, string[]>; } {
+  data: ResumeSchema,
+  flavor: ResumeFlavor,
+  filters: FilterState
+): {
+  entries: (ResumeProject & { originalIndex: number })[];
+  matches: Map<number, MatchResult>;
+  tags: Map<number, string[]>;
+} {
   const entries: (ResumeProject & { originalIndex: number })[] = [];
   const matches = new Map<number, MatchResult>();
 
@@ -119,7 +150,10 @@ export function resolveProjects(
 
   for (const entry of entries) {
     const entryTags = resolvedTags.get(entry.originalIndex) ?? [];
-    matches.set(entry.originalIndex, matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode));
+    matches.set(
+      entry.originalIndex,
+      matchesTags(entryTags, filters.selectedTags, filters.tagMatchMode)
+    );
   }
 
   return { entries, matches, tags: resolvedTags };

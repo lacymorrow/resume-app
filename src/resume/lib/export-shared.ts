@@ -1,26 +1,41 @@
+import { resumeConfig } from "../config";
 import type { ContactKind } from "./contact-icons";
 import type { FilterState, MatchResult } from "./filters";
 import type { ResumeProject, ResumeSchema, ResumeWork } from "./types";
 
+/** Print palette. Values live in resume.config.ts. */
+export const PRINT = resumeConfig.theme.print;
+
+export const PRINT_FONT_STACK = PRINT.fontStack;
+
 /**
- * The "Signature" palette — sampled from Lacy's handmade 2026 resume.
- * Pink for dates/accents, cyan-blue for role titles, warm grays for structure.
+ * Footer text with a `{link}` placeholder. Exporters split on the placeholder
+ * to make the portfolio URL a real link, so no exporter has to know what the
+ * URL is or split the sentence on a literal domain.
  */
-export const SIGNATURE = {
-  ink: "#3f4041", // name + strong text (dark warm gray, not black)
-  body: "#404042",
-  muted: "#77787b",
-  rail: "#b9bbbd", // left-rail section labels
-  underline: "#9a9ca0",
-  pink: "#e8308a",
-  blue: "#29a5df",
-  footer: "#8a8c90",
-} as const;
+export const FOOTER_TEMPLATE = resumeConfig.footer.text;
+export const FOOTER_LINK_TOKEN = "{link}";
 
-export const SIGNATURE_FONT_STACK = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+/** Footer sentence with the link already flattened, for plain-text contexts. */
+export function footerText(portfolioUrl: string): string {
+  return FOOTER_TEMPLATE.replace(FOOTER_LINK_TOKEN, displayUrl(portfolioUrl));
+}
 
-export const FOOTER_TEXT =
-  "References available upon request. For a complete portfolio please visit lacymorrow.com";
+/** Footer split into the text before and after the link. */
+export function footerParts(): { before: string; after: string } {
+  const [before = "", after = ""] = FOOTER_TEMPLATE.split(FOOTER_LINK_TOKEN);
+  return { before, after };
+}
+
+/** Strips protocol and trailing slash so a URL reads as a label. */
+export function displayUrl(url: string): string {
+  return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
+}
+
+/** Where the footer link points: explicit config wins, else the resume's own URL. */
+export function footerHref(portfolioUrl: string): string {
+  return resumeConfig.footer.linkHref || portfolioUrl;
+}
 
 export interface ExportData {
   basics: ResumeSchema["basics"] & { label: string; summary: string };
@@ -52,11 +67,17 @@ export function getVisibleProjects(
   });
 }
 
-/** Year-only range, matching the handmade resume ("2025 - 2026", or "2024"). */
+/**
+ * Year-only range ("2025 - 2026", or "2024"). How an open-ended role reads is
+ * set by `dates.ongoing` in config: "current-year" runs the range to this year,
+ * anything else is used as a literal label such as "Present".
+ */
 export function formatYearRange(startDate: string, endDate?: string): string {
   const start = new Date(startDate).getUTCFullYear();
   if (!endDate) {
-    // Ongoing roles read "2025 - 2026" in the handmade resume, never "Present"
+    if (resumeConfig.dates.ongoing !== "current-year") {
+      return `${start} - ${resumeConfig.dates.ongoing}`;
+    }
     const now = new Date().getUTCFullYear();
     return start === now ? `${start}` : `${start} - ${now}`;
   }
@@ -72,21 +93,36 @@ export function formatProjectYear(startDate: string, endDate?: string): string {
 
 export interface ParsedSummary {
   intro: string;
-  expertise: string | null;
-  interested: string | null;
-  qualities: string | null;
+  /** Labeled paragraphs keyed by `summary.blocks[].key` from config. */
+  blocks: Record<string, string | null>;
+  /** Paragraph matching `summary.emphasisPattern`, rendered emphasized. */
+  emphasis: string | null;
 }
 
-/** Split the summary blob into its labeled paragraphs. */
+/**
+ * Splits `basics.summary` into its intro and any labeled paragraphs declared in
+ * config. Markers, labels, and the emphasis pattern are all configurable, so a
+ * resume can use "FOCUS:" or drop labeled blocks entirely.
+ */
 export function parseSummary(summary: string): ParsedSummary {
   const paragraphs = summary.split("\n\n").map((p) => p.trim());
   const intro = paragraphs[0] ?? "";
-  const expertise =
-    paragraphs.find((p) => p.startsWith("EXPERTISE:"))?.replace(/^EXPERTISE:\s*/, "") ?? null;
-  const qualities =
-    paragraphs.find((p) => p.startsWith("QUALITIES:"))?.replace(/^QUALITIES:\s*/, "") ?? null;
-  const interested = paragraphs.find((p) => /^I (especially|particularly)/i.test(p)) ?? null;
-  return { intro, expertise, interested, qualities };
+
+  const blocks: Record<string, string | null> = {};
+  for (const block of resumeConfig.summary.blocks) {
+    const match = paragraphs.find((p) => p.startsWith(block.marker));
+    blocks[block.key] = match ? match.slice(block.marker.length).trim() : null;
+  }
+
+  const emphasisRe = new RegExp(resumeConfig.summary.emphasisPattern, "i");
+  const emphasis = paragraphs.find((p) => emphasisRe.test(p)) ?? null;
+
+  return { intro, blocks, emphasis };
+}
+
+/** Label for a configured summary block, for exporters that title them. */
+export function summaryBlockLabel(key: string): string {
+  return resumeConfig.summary.blocks.find((b) => b.key === key)?.label ?? key;
 }
 
 /**

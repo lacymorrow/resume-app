@@ -1,27 +1,30 @@
 import {
   contactRows,
+  displayUrl,
   downloadBlob,
   type ExportData,
   escXml,
-  FOOTER_TEXT,
+  footerHref,
+  footerParts,
   formatProjectYear,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
   isTechLine,
+  PRINT,
   parseSummary,
-  SIGNATURE,
   splitProjectSummary,
   splitTrailingTechList,
+  summaryBlockLabel,
 } from "./export-shared";
 
-const INK = SIGNATURE.ink.replace("#", "");
-const BODY = SIGNATURE.body.replace("#", "");
-const MUTED = SIGNATURE.muted.replace("#", "");
-const RAIL = SIGNATURE.rail.replace("#", "");
-const PINK = SIGNATURE.pink.replace("#", "");
-const BLUE = SIGNATURE.blue.replace("#", "");
-const FOOTER = SIGNATURE.footer.replace("#", "");
+const INK = PRINT.ink.replace("#", "");
+const BODY = PRINT.body.replace("#", "");
+const MUTED = PRINT.muted.replace("#", "");
+const RAIL = PRINT.rail.replace("#", "");
+const PINK = PRINT.accent.replace("#", "");
+const BLUE = PRINT.heading.replace("#", "");
+const FOOTER = PRINT.footer.replace("#", "");
 
 interface RunOpts {
   bold?: boolean;
@@ -92,11 +95,10 @@ export function exportDocx(data: ExportData, filename: string) {
   body += p(summary.intro, { bold: true, size: 10.5, color: MUTED }, 160);
 
   // ---- Expertise ----
-  if (summary.expertise) {
-    body += sectionLabel("Expertise");
-    body += p(summary.expertise, { size: 9.5, color: BODY }, 60);
-    if (summary.interested)
-      body += p(summary.interested, { bold: true, size: 9.5, color: INK }, 160);
+  if (summary.blocks.expertise) {
+    body += sectionLabel(summaryBlockLabel("expertise"));
+    body += p(summary.blocks.expertise, { size: 9.5, color: BODY }, 60);
+    if (summary.emphasis) body += p(summary.emphasis, { bold: true, size: 9.5, color: INK }, 160);
   }
 
   // ---- Developer Experience ----
@@ -147,9 +149,9 @@ export function exportDocx(data: ExportData, filename: string) {
     body += sectionLabel("Interests");
     body += p(data.interests.map((i) => i.name).join(", "), { size: 9.5, color: BODY }, 100);
   }
-  if (summary.qualities) {
-    body += sectionLabel("Qualities");
-    body += p(summary.qualities, { size: 9.5, color: BODY }, 100);
+  if (summary.blocks.qualities) {
+    body += sectionLabel(summaryBlockLabel("qualities"));
+    body += p(summary.blocks.qualities, { size: 9.5, color: BODY }, 100);
   }
   if (filters.sections.education && data.education.length > 0) {
     body += sectionLabel("Education");
@@ -215,12 +217,13 @@ export function exportDocx(data: ExportData, filename: string) {
       body += p(`— ${ref.name}`, { size: 9.5, color: INK }, 100);
     }
   }
-  const footerParts = FOOTER_TEXT.split("lacymorrow.com");
-  const footerLinkRun = run("lacymorrow.com", { size: 8, color: FOOTER });
+  const { before, after } = footerParts();
+  const portfolioHref = footerHref(basics.url);
+  const footerLinkRun = run(displayUrl(portfolioHref), { size: 8, color: FOOTER });
   body += para(
-    run(footerParts[0] ?? "", { size: 8, color: FOOTER }) +
-      addHyperlink("https://lacymorrow.com", footerLinkRun) +
-      run(footerParts[1] ?? "", { size: 8, color: FOOTER }),
+    run(before, { size: 8, color: FOOTER }) +
+      addHyperlink(portfolioHref, footerLinkRun) +
+      run(after, { size: 8, color: FOOTER }),
     0
   );
 

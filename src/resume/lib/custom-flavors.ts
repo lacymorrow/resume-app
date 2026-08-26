@@ -1,7 +1,7 @@
 "use client";
 
-import type { ResumeFlavor } from "./flavors";
 import type { FilterState } from "./filters";
+import type { ResumeFlavor } from "./flavors";
 import type { SectionKey } from "./types";
 
 const STORAGE_KEY = "resume-custom-flavors";
@@ -37,7 +37,7 @@ export function deleteCustomFlavor(id: string): void {
 export function filterStateToCustomFlavor(
   filters: FilterState,
   name: string,
-  baseFlavor: ResumeFlavor,
+  baseFlavor: ResumeFlavor
 ): CustomFlavor {
   const id = `custom-${Date.now()}`;
   return {
