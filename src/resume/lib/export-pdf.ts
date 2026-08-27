@@ -4,15 +4,16 @@ import { type ContactKind, iconPathOps } from "./contact-icons";
 import {
   contactRows,
   type ExportData,
-  entryTech,
   footerText,
   formatProjectYear,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
+  isTechLine,
   PRINT,
   parseSummary,
   splitProjectSummary,
+  splitTrailingTechList,
   summaryBlockLabel,
 } from "./export-shared";
 
@@ -197,16 +198,16 @@ interface EntryBlock {
   title: string;
   summary?: string;
   highlights?: string[];
-  /** Explicit tech stack, rendered bold beneath the summary. */
-  tech?: string[];
+  boldLastTechLine?: boolean;
 }
 
 function drawEntry(doc: jsPDF, cur: Cursor, entry: EntryBlock) {
   setStyle(doc, 11, "bold", BLUE);
   const titleLines = doc.splitTextToSize(entry.title, CONTENT_W) as string[];
   setStyle(doc, 9, "normal", BODY);
-  const summaryBody = entry.summary ?? "";
-  const summaryTech = entryTech(entry);
+  const { body: summaryBody, tech: summaryTech } = entry.summary
+    ? splitTrailingTechList(entry.summary)
+    : { body: "", tech: null };
   const summaryLines = summaryBody ? (doc.splitTextToSize(summaryBody, CONTENT_W) as string[]) : [];
   const techLines = summaryTech ? (doc.splitTextToSize(summaryTech, CONTENT_W) as string[]) : [];
   const highlights = (entry.highlights ?? []).filter(Boolean);
@@ -243,7 +244,9 @@ function drawEntry(doc: jsPDF, cur: Cursor, entry: EntryBlock) {
     }
   }
   for (let i = 0; i < bulletLines.length; i++) {
-    setStyle(doc, 9, "normal", BODY);
+    const isTech =
+      entry.boldLastTechLine && i === highlights.length - 1 && isTechLine(highlights[i]!);
+    setStyle(doc, 9, isTech ? "bold" : "normal", isTech ? INK : BODY);
     const lines = bulletLines[i]!;
     for (let j = 0; j < lines.length; j++) {
       ensure(doc, cur, LINE_BODY);
@@ -354,7 +357,7 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
         title: entry.position,
         summary: entry.summary,
         highlights: entry.highlights,
-        tech: entry.tech,
+        boldLastTechLine: true,
       });
     }
   }

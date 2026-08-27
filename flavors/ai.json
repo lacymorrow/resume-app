@@ -12,40 +12,14 @@
   "work": {
     "American City Business Journals": {
       "position": "Agentic Engineer",
-      "summary": "Contract - Architected an AI orchestration layer managing 12 autonomous agents that independently completed engineering tasks across a 48-market business publication platform. Agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets for the development team.",
-      "tech": [
-        "Laravel",
-        "PHP",
-        "AI/LLM Orchestration",
-        "Claude",
-        "Autonomous Agents",
-        "LangGraph",
-        "RAG",
-        "MCP"
-      ]
+      "summary": "Contract - Architected an AI orchestration layer managing 12 autonomous agents that independently completed engineering tasks across a 48-market business publication platform. Agent-based workflows with task routing, guardrails, and human-in-the-loop review. Built RAG pipelines grounding agents in platform documentation and code. Developed Claude agent personas and reusable skill sets for the development team. Laravel, PHP, AI/LLM Orchestration, Claude, Autonomous Agents, LangGraph, RAG, MCP."
     },
     "Duke Energy": {
       "position": "Agentic Engineer",
-      "summary": "Led internal AI adoption: built an internal GPT/LLM platform for company-wide use with RAG (Retrieval-Augmented Generation) over internal documentation, prompt libraries, and Azure OpenAI integration. Built agentic workflows for internal tooling.",
-      "tech": [
-        "Python",
-        "React",
-        "LangChain",
-        "LlamaIndex",
-        "RAG",
-        "LLMs",
-        "Azure",
-        "AWS"
-      ]
+      "summary": "Led internal AI adoption: built an internal GPT/LLM platform for company-wide use with RAG (Retrieval-Augmented Generation) over internal documentation, prompt libraries, and Azure OpenAI integration. Built agentic workflows for internal tooling. Python, React, LangChain, LlamaIndex, RAG, LLMs, Azure, AWS."
     },
     "Credit Karma": {
-      "summary": "Built automated User Testing dashboard with features for creating test/production users programmatically across web and mobile. Coordinated search and metrics across multiple system APIs.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React",
-        "React Native"
-      ]
+      "summary": "Built automated User Testing dashboard with features for creating test/production users programmatically across web and mobile. Coordinated search and metrics across multiple system APIs. TypeScript, NextJS, React, React Native."
     },
     "Novant Health / Red Ventures": {
       "visible": false
@@ -60,28 +34,13 @@
       "visible": false
     },
     "Twilio Inc.": {
-      "summary": "In charge of twilio.com and all sub-sites. Built the SIGNAL HackPack v4 badge (open-source hardware). Created a React design system. Managed multiple engineering projects.",
-      "tech": [
-        "TypeScript",
-        "React",
-        "Docker",
-        "Python",
-        "Django"
-      ]
+      "summary": "In charge of twilio.com and all sub-sites. Built the SIGNAL HackPack v4 badge (open-source hardware). Created a React design system. Managed multiple engineering projects. TypeScript, React, Docker, Python, Django."
     },
     "Yahoo": {
       "visible": false
     },
     "Invitae": {
-      "summary": "Created data science tools and analytics software for HIPAA-compliant healthcare platform. Built automated Selenium testing workflows.",
-      "tech": [
-        "Python",
-        "Django",
-        "Flask",
-        "React",
-        "ElasticSearch",
-        "Docker"
-      ]
+      "summary": "Created data science tools and analytics software for HIPAA-compliant healthcare platform. Built automated Selenium testing workflows. Python, Django, Flask, React, ElasticSearch, Docker."
     },
     "10up": {
       "visible": false
@@ -90,12 +49,7 @@
       "visible": false
     },
     "Lumenai (Startup)": {
-      "summary": "Built RPA automation browser extension. Created foundational internal apps with automated deployments and self-built CI/CD. The company saw a 15% rise in productivity and experienced 35% growth in 6 months.",
-      "tech": [
-        "React",
-        "Docker",
-        "Jest"
-      ]
+      "summary": "Built RPA automation browser extension. Created foundational internal apps with automated deployments and self-built CI/CD. The company saw a 15% rise in productivity and experienced 35% growth in 6 months. React, Docker, Jest."
     },
     "TekSystems": {
       "visible": false

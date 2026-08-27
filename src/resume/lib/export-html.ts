@@ -5,7 +5,6 @@ import {
   contactRows,
   displayUrl,
   type ExportData,
-  entryTech,
   esc,
   footerHref,
   footerParts,
@@ -13,10 +12,12 @@ import {
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
+  isTechLine,
   PRINT,
   PRINT_FONT_STACK,
   parseSummary,
   splitProjectSummary,
+  splitTrailingTechList,
   summaryBlockLabel,
 } from "./export-shared";
 
@@ -43,15 +44,20 @@ export function buildHtmlContent(data: ExportData): string {
 
   const workEntries = work
     .map((entry) => {
-      const summaryBody = entry.summary ?? "";
-      const summaryTech = entryTech(entry);
+      const { body: summaryBody, tech: summaryTech } = splitTrailingTechList(entry.summary ?? "");
       const summaryHtml =
         (summaryBody ? `<p class="entry-summary">${bold(summaryBody)}</p>` : "") +
         (summaryTech
           ? `<p class="entry-summary tech-line"><strong>${esc(summaryTech)}</strong></p>`
           : "");
       const highlights = (entry.highlights ?? []).filter(Boolean);
-      const bullets = highlights.map((h) => `<li>${bold(h)}</li>`).join("");
+      const bullets = highlights
+        .map((h, i) => {
+          const isLast = i === highlights.length - 1;
+          if (isLast && isTechLine(h)) return `<li class="tech-line">${bold(h)}</li>`;
+          return `<li>${bold(h)}</li>`;
+        })
+        .join("");
       return `<article class="entry">
 	<div class="meta">
 		<div class="dates">${esc(formatYearRange(entry.startDate, entry.endDate))}</div>

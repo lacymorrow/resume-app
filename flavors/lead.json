@@ -12,74 +12,29 @@
   "work": {
     "American City Business Journals": {
       "position": "Technical Lead + Agentic Engineer",
-      "summary": "Contract - Led development and migration of a backend Laravel platform serving 48 U.S. markets. Architected and managed an AI orchestration layer with 12 autonomous engineering agents. Agent-based workflows with task routing, guardrails, and human-in-the-loop review, grounded by RAG pipelines. Developed Claude agent personas and skill sets adopted across the development team.",
-      "tech": [
-        "Laravel",
-        "PHP",
-        "AI/LLM Orchestration",
-        "Claude",
-        "LangGraph",
-        "RAG"
-      ]
+      "summary": "Contract - Led development and migration of a backend Laravel platform serving 48 U.S. markets. Architected and managed an AI orchestration layer with 12 autonomous engineering agents. Agent-based workflows with task routing, guardrails, and human-in-the-loop review, grounded by RAG pipelines. Developed Claude agent personas and skill sets adopted across the development team. Laravel, PHP, AI/LLM Orchestration, Claude, LangGraph, RAG."
     },
     "Duke Energy": {
       "position": "Senior Developer & Technical Lead",
-      "summary": "Led AI initiative creating an internal GPT/LLM platform for company-wide adoption, with RAG over internal documentation and Azure OpenAI integration. Directed refactoring of weather-forecasting dashboard for AWS migration. Managed authentication migration to Azure AD.",
-      "tech": [
-        "Python",
-        "React",
-        "LangChain",
-        "RAG",
-        "Docker",
-        "AWS",
-        "Azure"
-      ]
+      "summary": "Led AI initiative creating an internal GPT/LLM platform for company-wide adoption, with RAG over internal documentation and Azure OpenAI integration. Directed refactoring of weather-forecasting dashboard for AWS migration. Managed authentication migration to Azure AD. Python, React, LangChain, RAG, Docker, AWS, Azure."
     },
     "Credit Karma": {
       "position": "Technical Lead - User Management",
-      "summary": "Led development of the entire User Testing dashboard for the User Management team. Drove architecture decisions for pages router to App router migration. Coordinated features across multiple system APIs.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React"
-      ]
+      "summary": "Led development of the entire User Testing dashboard for the User Management team. Drove architecture decisions for pages router to App router migration. Coordinated features across multiple system APIs. TypeScript, NextJS, React."
     },
     "OptumRX Health / Red Ventures": {
       "position": "Senior Developer & DevOps Lead",
-      "summary": "Led development of E-commerce platform for RVO Health. Architected market, inventory, authentication, and ordering systems. Managed automation pipeline strategy.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React",
-        "Contentful",
-        "Stripe",
-        "Algolia"
-      ]
+      "summary": "Led development of E-commerce platform for RVO Health. Architected market, inventory, authentication, and ordering systems. Managed automation pipeline strategy. TypeScript, NextJS, React, Contentful, Stripe, Algolia."
     },
     "Swell Energy": {
       "position": "Lead Web Developer - Grid Services"
     },
     "Viasat": {
-      "summary": "In charge of workflow management and client-stakeholder relations for in-flight entertainment portals serving dozens of airlines. Demoed product updates to stakeholders. Managed on-call rotation. Transformed designs into reusable component architecture.",
-      "tech": [
-        "React",
-        "TypeScript",
-        "NextJS",
-        "Jenkins",
-        "AWS",
-        "MySQL"
-      ]
+      "summary": "In charge of workflow management and client-stakeholder relations for in-flight entertainment portals serving dozens of airlines. Demoed product updates to stakeholders. Managed on-call rotation. Transformed designs into reusable component architecture. React, TypeScript, NextJS, Jenkins, AWS, MySQL."
     },
     "Twilio Inc.": {
       "position": "Senior Web Engineer & Tech Lead - Brand Team",
-      "summary": "Led twilio.com and all sub-sites. Managed and led multiple cross-functional projects. Created a React design system adopted org-wide. Built the SIGNAL HackPack v4 badge. Launched WhatsApp, Studio, Flex product pages. Led localization/regionalization initiative. Worked emergency on-call.",
-      "tech": [
-        "TypeScript",
-        "React",
-        "Docker",
-        "Python",
-        "Django"
-      ]
+      "summary": "Led twilio.com and all sub-sites. Managed and led multiple cross-functional projects. Created a React design system adopted org-wide. Built the SIGNAL HackPack v4 badge. Launched WhatsApp, Studio, Flex product pages. Led localization/regionalization initiative. Worked emergency on-call. TypeScript, React, Docker, Python, Django."
     },
     "Yahoo": {
       "visible": false

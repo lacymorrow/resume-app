@@ -44,12 +44,6 @@ export interface ResumeWork {
   location?: string;
   highlights?: string[];
   sector?: string;
-  /**
-   * The tech stack, rendered as a bold trailing line. Explicit rather than
-   * detected: the renderers used to guess which sentence was a tech list, and
-   * the guess disagreed with itself over trailing periods and semicolons.
-   */
-  tech?: string[];
 }
 
 export interface ResumeProject {
@@ -61,8 +55,6 @@ export interface ResumeProject {
   highlights?: string[];
   /** Flagship projects get a ★ in exports, like the handmade resume */
   featured?: boolean;
-  /** See ResumeWork.tech. */
-  tech?: string[];
 }
 
 export interface ResumeEducation {

@@ -3,7 +3,6 @@ import {
   displayUrl,
   downloadBlob,
   type ExportData,
-  entryTech,
   escXml,
   footerHref,
   footerParts,
@@ -11,9 +10,11 @@ import {
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
+  isTechLine,
   PRINT,
   parseSummary,
   splitProjectSummary,
+  splitTrailingTechList,
   summaryBlockLabel,
 } from "./export-shared";
 
@@ -116,12 +117,16 @@ export function exportDocx(data: ExportData, filename: string) {
           (entry.sector ? run(`  (${entry.sector})`, { size: 8.5, color: MUTED }) : ""),
         40
       );
-      if (entry.summary) body += p(entry.summary, { size: 9.5, color: BODY }, 40);
-      const summaryTech = entryTech(entry);
-      if (summaryTech) body += p(summaryTech, { bold: true, size: 9.5, color: INK }, 40);
+      if (entry.summary) {
+        const { body: summaryBody, tech: summaryTech } = splitTrailingTechList(entry.summary);
+        if (summaryBody) body += p(summaryBody, { size: 9.5, color: BODY }, 40);
+        if (summaryTech) body += p(summaryTech, { bold: true, size: 9.5, color: INK }, 40);
+      }
       const highlights = (entry.highlights ?? []).filter(Boolean);
-      for (const h of highlights) {
-        body += p(`• ${h}`, { size: 9.5, color: BODY }, 20);
+      for (let i = 0; i < highlights.length; i++) {
+        const h = highlights[i]!;
+        const tech = i === highlights.length - 1 && isTechLine(h);
+        body += p(`• ${h}`, { size: 9.5, color: tech ? INK : BODY, bold: tech }, 20);
       }
       body += p("", { size: 6 }, 60);
     }

@@ -15,36 +15,14 @@
   "work": {
     "American City Business Journals": {
       "position": "Senior Full-Stack Developer",
-      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer for autonomous engineering task completion.",
-      "tech": [
-        "Laravel",
-        "PHP",
-        "AI/LLM Orchestration",
-        "Claude"
-      ]
+      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer for autonomous engineering task completion. Laravel, PHP, AI/LLM Orchestration, Claude."
     },
     "Duke Energy": {
       "position": "Senior Full-Stack Developer",
-      "summary": "Refactored a weather-forecasting dashboard end-to-end: React frontend, Python backend, deployed to AWS. Migrated authentication to Azure AD.",
-      "tech": [
-        "Python",
-        "React",
-        "Docker",
-        "AWS",
-        "Azure"
-      ]
+      "summary": "Refactored a weather-forecasting dashboard end-to-end: React frontend, Python backend, deployed to AWS. Migrated authentication to Azure AD. Python, React, Docker, AWS, Azure."
     },
     "OptumRX Health / Red Ventures": {
-      "summary": "Created full-stack E-commerce platform for RVO Health. Built the market, inventory, authentication, and ordering systems with automation pipelines.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React",
-        "Contentful",
-        "Plytix",
-        "Stripe",
-        "Algolia"
-      ]
+      "summary": "Created full-stack E-commerce platform for RVO Health. Built the market, inventory, authentication, and ordering systems with automation pipelines. TypeScript, NextJS, React, Contentful, Plytix, Stripe, Algolia"
     },
     "LacyMorrow.com": {
       "visible": false

@@ -15,46 +15,21 @@
   "work": {
     "American City Business Journals": {
       "position": "Automation & Platform Engineer",
-      "summary": "Contract - Built and migrated the Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer of 12 autonomous agents that independently completed engineering tasks. The agent-based automation (task routing, guardrails, human-in-the-loop review) is now central to modern GTM workflows.",
-      "tech": [
-        "Laravel",
-        "PHP",
-        "Claude",
-        "AI Agents",
-        "Automation"
-      ]
+      "summary": "Contract - Built and migrated the Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer of 12 autonomous agents that independently completed engineering tasks. The agent-based automation (task routing, guardrails, human-in-the-loop review) is now central to modern GTM workflows. Laravel, PHP, Claude, AI Agents, Automation."
     },
     "Duke Energy": {
       "position": "AI Platform Engineer - Internal Adoption",
-      "summary": "Drove company-wide adoption of an internal GPT/LLM platform: built the product, onboarding, and prompt libraries that turned an internal tool into an org-wide rollout. RAG over internal documentation, Azure OpenAI integration.",
-      "tech": [
-        "Python",
-        "React",
-        "LangChain",
-        "RAG",
-        "Azure"
-      ]
+      "summary": "Drove company-wide adoption of an internal GPT/LLM platform: built the product, onboarding, and prompt libraries that turned an internal tool into an org-wide rollout. RAG over internal documentation, Azure OpenAI integration. Python, React, LangChain, RAG, Azure."
     },
     "Credit Karma": {
-      "summary": "Built the User Testing dashboard powering user research at Credit Karma. Programmatic creation of test/production users across web and mobile, with search and metrics coordinated across multiple system APIs.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React"
-      ]
+      "summary": "Built the User Testing dashboard powering user research at Credit Karma. Programmatic creation of test/production users across web and mobile, with search and metrics coordinated across multiple system APIs. TypeScript, NextJS, React."
     },
     "Novant Health / Red Ventures": {
       "summary": "Contract - Built and maintained Physician Finder, Matcher, and landing pages for Novant Health patient acquisition. Sunsetted legacy code and rebuilt modern sites with TypeScript, NextJS, and Vue, instrumented with Datadog and deployed on Netlify."
     },
     "OptumRX Health / Red Ventures": {
       "position": "E-commerce Engineer",
-      "summary": "Contract - Created the E-commerce storefront for RVO Health: market pages, inventory, authentication, and ordering funnels with Stripe payments, Algolia search, and Contentful content ops, complete with automation pipelines.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React",
-        "Plytix"
-      ]
+      "summary": "Contract - Created the E-commerce storefront for RVO Health: market pages, inventory, authentication, and ordering funnels with Stripe payments, Algolia search, and Contentful content ops, complete with automation pipelines. TypeScript, NextJS, React, Plytix."
     },
     "Swell Energy": {
       "visible": false
@@ -64,61 +39,28 @@
     },
     "Twilio Inc.": {
       "position": "Senior Web Engineer - Brand & Web Team",
-      "summary": "Owned twilio.com and all sub-sites, the company's primary marketing and acquisition surface. Launched product pages for the WhatsApp, Studio, and Flex releases. Created a React design system adopted org-wide. Led the localization/regionalization effort for international markets. Migrated blog and legal sites to a CMS for content velocity.",
-      "tech": [
-        "TypeScript",
-        "React",
-        "i18n",
-        "WordPress",
-        "Wagtail"
-      ]
+      "summary": "Owned twilio.com and all sub-sites, the company's primary marketing and acquisition surface. Launched product pages for the WhatsApp, Studio, and Flex releases. Created a React design system adopted org-wide. Led the localization/regionalization effort for international markets. Migrated blog and legal sites to a CMS for content velocity. TypeScript, React, i18n, WordPress, Wagtail."
     },
     "Yahoo": {
-      "summary": "Contract - Built React components for the Search and Branded Marketing teams on a Yahoo stack, using Tumblr as a data-serve API.",
-      "tech": [
-        "NodeJS",
-        "ReactJS",
-        "Electron"
-      ]
+      "summary": "Contract - Built React components for the Search and Branded Marketing teams on a Yahoo stack, using Tumblr as a data-serve API. NodeJS, ReactJS, Electron."
     },
     "Invitae": {
-      "summary": "Built the public-facing invitae.com and a custom WordPress theme; led UX/UI development for a HIPAA-compliant healthcare platform.",
-      "tech": [
-        "React",
-        "WordPress",
-        "SASS"
-      ]
+      "summary": "Built the public-facing invitae.com and a custom WordPress theme; led UX/UI development for a HIPAA-compliant healthcare platform. React, WordPress, SASS."
     },
     "LacyMorrow.com": {
       "visible": false
     },
     "Lumenai (Startup)": {
-      "summary": "Built RPA and LLM-assisted automation via a browser extension, plus foundational internal apps with automated deployments. The company saw a 15% rise in productivity and 35% growth in 6 months.",
-      "tech": [
-        "React",
-        "TypeScript",
-        "Docker",
-        "Jest"
-      ]
+      "summary": "Built RPA and LLM-assisted automation via a browser extension, plus foundational internal apps with automated deployments. The company saw a 15% rise in productivity and 35% growth in 6 months. React, TypeScript, Docker, Jest."
     },
     "TekSystems": {
       "visible": false
     },
     "Flymore (Startup)": {
-      "summary": "Co-founded a drone-education startup: created the Flymore LLC web identity and Academy website, hosted Charlotte's first drone race (a Drone Nationals qualifier), and ran camps teaching kids software & electronics.",
-      "tech": [
-        "ReactJS",
-        "GraphQL",
-        "WordPress"
-      ]
+      "summary": "Co-founded a drone-education startup: created the Flymore LLC web identity and Academy website, hosted Charlotte's first drone race (a Drone Nationals qualifier), and ran camps teaching kids software & electronics. ReactJS, GraphQL, WordPress."
     },
     "Long Game": {
-      "summary": "Contract - Helped take a startup from zero to first launch: built the initial React web app and second-iteration React Native app for iOS and Android, launched to 100+ beta users.",
-      "tech": [
-        "AWS",
-        "NodeJS",
-        "React Native"
-      ]
+      "summary": "Contract - Helped take a startup from zero to first launch: built the initial React web app and second-iteration React Native app for iOS and Android, launched to 100+ beta users. AWS, NodeJS, React Native."
     },
     "Appalachian State University": {
       "visible": false

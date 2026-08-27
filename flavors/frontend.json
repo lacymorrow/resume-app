@@ -20,63 +20,24 @@
     },
     "Duke Energy": {
       "position": "Senior Frontend Developer",
-      "summary": "Built React dashboards for weather forecasting. Migrated authentication UI to Azure AD.",
-      "tech": [
-        "Python",
-        "React",
-        "Docker",
-        "AWS",
-        "Azure"
-      ]
+      "summary": "Built React dashboards for weather forecasting. Migrated authentication UI to Azure AD. Python, React, Docker, AWS, Azure."
     },
     "Credit Karma": {
-      "summary": "Created the entire User Testing dashboard for Credit Karma. Converted pages router to App router. Built features for creating test/production users across web and mobile. Included search and metrics UI coordinated across multiple system APIs.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React",
-        "Tachyons",
-        "React Native"
-      ]
+      "summary": "Created the entire User Testing dashboard for Credit Karma. Converted pages router to App router. Built features for creating test/production users across web and mobile. Included search and metrics UI coordinated across multiple system APIs. TypeScript, NextJS, React, Tachyons, React Native"
     },
     "OptumRX Health / Red Ventures": {
       "position": "Senior Frontend Developer",
-      "summary": "Built E-commerce frontend for RVO Health. Created the market UI, inventory displays, and ordering flows with polished component architecture.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React",
-        "Contentful",
-        "Stripe",
-        "Algolia"
-      ]
+      "summary": "Built E-commerce frontend for RVO Health. Created the market UI, inventory displays, and ordering flows with polished component architecture. TypeScript, NextJS, React, Contentful, Stripe, Algolia"
     },
     "Swell Energy": {
       "position": "Senior Frontend Developer - Grid Services",
-      "summary": "Developed interactive charts, dashboards, and control panel UIs to manage solar and power utilities. Authentication flows, data visualization, responsive CRUD interfaces.",
-      "tech": [
-        "TypeScript",
-        "NextJS",
-        "React"
-      ]
+      "summary": "Developed interactive charts, dashboards, and control panel UIs to manage solar and power utilities. Authentication flows, data visualization, responsive CRUD interfaces. TypeScript, NextJS, React."
     },
     "Twilio Inc.": {
-      "summary": "In charge of twilio.com and all sub-sites. Created a React design system used across the organization. Managed and lead multiple frontend projects. Built the SIGNAL HackPack v4 badge. Launched WhatsApp, Studio, Flex product pages. Led localization/regionalization frontend effort.",
-      "tech": [
-        "TypeScript",
-        "React",
-        "i18n"
-      ]
+      "summary": "In charge of twilio.com and all sub-sites. Created a React design system used across the organization. Managed and lead multiple frontend projects. Built the SIGNAL HackPack v4 badge. Launched WhatsApp, Studio, Flex product pages. Led localization/regionalization frontend effort. TypeScript, React, i18n."
     },
     "Invitae": {
-      "summary": "UX/UI Developer - Developed navigation, modals, and interactions for HIPAA-compliant healthcare platform. Made custom WordPress theme. Built data science visualization tools.",
-      "tech": [
-        "React",
-        "Angular",
-        "Backbone",
-        "WordPress",
-        "SASS"
-      ]
+      "summary": "UX/UI Developer - Developed navigation, modals, and interactions for HIPAA-compliant healthcare platform. Made custom WordPress theme. Built data science visualization tools. React, Angular, Backbone, WordPress, SASS."
     },
     "LacyMorrow.com": {
       "visible": false
