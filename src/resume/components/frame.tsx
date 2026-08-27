@@ -41,13 +41,6 @@ export interface ResumeFrameProps {
    * fallback passes plain links, so flavors stay reachable without JavaScript.
    */
   desk: React.ReactNode;
-  /**
-   * Which render this is. Next streams the Suspense fallback and the hydrated
-   * viewer into the same document, so both are briefly present (and stay
-   * present with JavaScript disabled). This marks them apart for tests and for
-   * anyone debugging the DOM.
-   */
-  variant: "static" | "interactive";
   footerNote: string;
   footerLinkLabel: string;
   footerLinkHref: string;
@@ -67,7 +60,6 @@ export function ResumeFrame({
   statement,
   sections,
   desk,
-  variant,
   footerNote,
   footerLinkLabel,
   footerLinkHref,
@@ -79,7 +71,6 @@ export function ResumeFrame({
 
       <div
         className="resume-frame"
-        data-resume-render={variant}
         style={
           {
             "--accent": accent,

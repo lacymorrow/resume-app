@@ -7,9 +7,6 @@ import { expect, type Page, test } from "@playwright/test";
  * cold. The last part is the regression guard — hidden companies and projects
  * used to be honoured by the server render and then dropped on hydration.
  *
- * Selectors scope to [data-resume-render="interactive"] because Next streams
- * the Suspense fallback and the hydrated viewer into the same document; see the
- * duplicate-render test at the bottom.
  */
 
 /** The Customize button exists only in the client render, so it marks hydration. */
@@ -18,7 +15,7 @@ async function waitForHydration(page: Page) {
 }
 
 function view(page: Page) {
-  return page.locator('[data-resume-render="interactive"]');
+  return page.locator(".resume-frame");
 }
 
 test.describe("resume builder", () => {
@@ -100,39 +97,49 @@ test.describe("resume builder", () => {
     const html = await page.content();
     const linked = new Set(Array.from(html.matchAll(/href="\/\?flavor=([a-z]+)"/g), (m) => m[1]));
     expect(linked.size).toBeGreaterThanOrEqual(6);
-    expect(html).toContain('data-resume-render="static"');
+    expect(html).toContain('id="sh-work"');
   });
 
   /**
-   * Known issue, pre-dating this work: the resume does not render without
-   * JavaScript at all.
+   * Regression guard for the defect this branch fixed: the resume used to not
+   * render without JavaScript at all.
    *
-   * page.tsx renders the interactive viewer inside a Suspense boundary whose
-   * fallback is the static view. The viewer is a client component that suspends
-   * during SSR (nuqs reads useSearchParams), so React streams *both* boundaries
-   * out of order, each wrapped in `<div hidden id="S:n">`, and relies on an
-   * inline script to reveal the right one. With scripting disabled nothing is
-   * revealed: the document contains two complete resumes and shows "Loader...".
-   *
-   * Confirmed identical on production — resume.lacy.sh wraps both its
-   * `resume-grain` and `spectrum-frame` renders in hidden streaming payloads —
-   * so this is not a regression from the section registry or builder work. It
-   * does mean the static view is not yet doing the job it was added for.
-   *
-   * The fix is to stop the viewer suspending: page.tsx already receives
-   * searchParams on the server, so feeding those in as initial values lets the
-   * viewer server-render directly, which removes the Suspense boundary, the
-   * duplicate document, and static-view.tsx along with it.
-   *
-   * Marked test.fail() so it flips green when that lands.
+   * src/app/(app)/loading.tsx put a Suspense boundary above the page, and
+   * useSearchParams in a client component defers to the nearest boundary — so
+   * React streamed the whole resume into a `<div hidden>` that only an inline
+   * script could reveal. With scripting off the page showed "Loader..." and
+   * nothing else, on production too.
    */
-  test.fail("the resume renders without JavaScript", async ({ browser }) => {
+  test("the resume renders fully without JavaScript", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
-    await page.goto("/");
+    await page.goto("/?flavor=ai");
 
-    await expect(page.locator(".resume-frame")).toHaveCount(1);
-    await expect(page.locator(".resume-frame")).toBeVisible();
+    const frame = page.locator(".resume-frame");
+    await expect(frame).toHaveCount(1);
+    await expect(frame).toBeVisible();
+    await expect(frame.locator('[id="sh-work"]')).toBeVisible();
+
+    // Flavor controls are anchors, so switching works without scripting.
+    const links = page.locator('a[href^="/?flavor="]');
+    expect(await links.count()).toBeGreaterThanOrEqual(6);
+    await expect(page.locator('a[aria-current="page"]')).toHaveCount(1);
+
     await context.close();
+  });
+
+  test("server and client render the same resume", async ({ browser }) => {
+    const read = async (js: boolean) => {
+      const context = await browser.newContext({ javaScriptEnabled: js });
+      const page = await context.newPage();
+      await page.goto("/?flavor=ai&hc=Yahoo");
+      await page.waitForTimeout(1500);
+      const text = await page.locator(".resume-frame").innerText();
+      await context.close();
+      return text;
+    };
+    // Hidden roles are applied identically either way — `hc` used to be read by
+    // the server and then discarded on hydration.
+    expect(await read(false)).toBe(await read(true));
   });
 });

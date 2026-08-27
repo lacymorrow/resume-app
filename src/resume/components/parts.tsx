@@ -200,6 +200,14 @@ export function ProjectRow({
   );
 }
 
+/**
+ * A flavor control that is a real link.
+ *
+ * Rendering it as an anchor means every variant is crawlable and works with
+ * scripting disabled — each flavor has its own title and description via
+ * generateMetadata. With JavaScript the click is intercepted so switching stays
+ * client-side and instant.
+ */
 export function FlavorButton({
   id,
   label,
@@ -214,15 +222,22 @@ export function FlavorButton({
   swatch: string;
   selected: boolean;
   onClick: () => void;
-  onKeyDown: (e: React.KeyboardEvent) => void;
-  btnRef?: React.Ref<HTMLButtonElement>;
+  onKeyDown?: (e: React.KeyboardEvent) => void;
+  btnRef?: React.Ref<HTMLAnchorElement>;
 }) {
   return (
-    <button
+    <a
       ref={btnRef}
+      href={id === "complete" ? "/" : `/?flavor=${encodeURIComponent(id)}`}
       role="radio"
       aria-checked={selected}
-      onClick={onClick}
+      aria-current={selected ? "page" : undefined}
+      onClick={(e) => {
+        // Let modified clicks open a new tab the way any link would.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        onClick();
+      }}
       onKeyDown={onKeyDown}
       tabIndex={selected ? 0 : -1}
       style={{
@@ -239,6 +254,7 @@ export function FlavorButton({
         marginLeft: "-0.6rem",
         cursor: "pointer",
         textAlign: "left",
+        textDecoration: "none",
         borderRadius: 4,
         transition: "color 300ms ease, background 200ms ease",
       }}
@@ -257,7 +273,7 @@ export function FlavorButton({
         }}
       />
       {label}
-    </button>
+    </a>
   );
 }
 

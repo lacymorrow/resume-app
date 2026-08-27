@@ -1,26 +1,19 @@
-import type React from "react";
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { constructMetadata } from "@/config/metadata";
-import { resumeData } from "@/resume/lib/data";
 import { ResumeViewer } from "@/resume/components/viewer";
-import { ResumeStatic } from "@/resume/components/static-view";
-import { FLAVORS } from "@/resume/lib/flavors";
+import { resumeData } from "@/resume/lib/data";
+import { findFlavor } from "@/resume/lib/flavors";
 
-type SearchParams = Promise<{
-  flavor?: string;
-  hc?: string | string[];
-  hp?: string | string[];
-}>;
+type SearchParams = Promise<{ flavor?: string }>;
 
-function resolveFlavor(flavorId: string | undefined) {
-  return FLAVORS.find((f) => f.id === flavorId) ?? FLAVORS[0]!;
-}
-
-function toArray(v: string | string[] | undefined): string[] {
-  if (!v) return [];
-  return Array.isArray(v) ? v : [v];
-}
+/**
+ * The resume reads the query string on every request, so it cannot be
+ * statically prerendered — without this Next tries to, and the build fails on
+ * useSearchParams having no Suspense boundary above it.
+ *
+ * That boundary is deliberately absent: see the note on HomePage.
+ */
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   searchParams,
@@ -28,13 +21,11 @@ export async function generateMetadata({
   searchParams: SearchParams;
 }): Promise<Metadata> {
   const { flavor: flavorParam } = await searchParams;
-  const flavor = resolveFlavor(flavorParam);
+  const flavor = findFlavor(flavorParam);
   const name = resumeData.basics.name;
 
   const isComplete = flavor.id === "complete";
-  const title = isComplete
-    ? `Resume - ${name}`
-    : `${flavor.label} Resume - ${name}`;
+  const title = isComplete ? `Resume - ${name}` : `${flavor.label} Resume - ${name}`;
   const description = isComplete
     ? `${name} — ${flavor.tagline}. ${flavor.expertise}`
     : `${name} — ${flavor.tagline}. ${flavor.description}. ${flavor.expertise}`;
@@ -42,28 +33,20 @@ export async function generateMetadata({
   return constructMetadata({ title, description });
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
-  const params = await searchParams;
-  const flavor = resolveFlavor(params.flavor);
-  const hiddenCompanies = toArray(params.hc);
-  const hiddenProjects = toArray(params.hp);
-
-  return (
-    <Suspense
-      fallback={
-        <ResumeStatic
-          data={resumeData}
-          flavor={flavor}
-          hiddenCompanies={hiddenCompanies}
-          hiddenProjects={hiddenProjects}
-        />
-      }
-    >
-      <ResumeViewer data={resumeData} />
-    </Suspense>
-  );
+/**
+ * Deliberately not an async component.
+ *
+ * This segment has a loading.tsx, so Next wraps the page in a Suspense
+ * boundary. An async page suspends on its first await — including
+ * `await searchParams` — which puts the spinner in the shell and streams the
+ * real page into a `<div hidden>` that only JavaScript can reveal. The resume
+ * then did not render at all without scripting.
+ *
+ * The viewer reads the query string itself, so the page has nothing to await
+ * and renders straight into the shell. generateMetadata still awaits
+ * searchParams, which is what marks the route dynamic, but metadata does not
+ * gate the body.
+ */
+export default function HomePage() {
+  return <ResumeViewer data={resumeData} />;
 }

@@ -220,7 +220,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
 
   // Roving tabindex: the flavor list is a radiogroup, so arrows move between
   // options and only the selected one is in the tab order.
-  const btnRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const btnRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const handleFlavorKey = useCallback(
     (e: React.KeyboardEvent, idx: number) => {
       const count = allFlavors.length;
@@ -327,7 +327,6 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
       statement={flavor.statement}
       sections={sections}
       desk={desk}
-      variant="interactive"
       footerNote={`${basics.name} · ${resumeConfig.site.host}`}
       footerLinkLabel={basics.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
       footerLinkHref={basics.url}
