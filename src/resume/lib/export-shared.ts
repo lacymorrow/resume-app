@@ -129,33 +129,48 @@ export function summaryBlockLabel(key: string): string {
  * The handmade resume ends most entries with a bold tech line
  * ("TypeScript, NextJS, React, Tachyons, React Native"). Detect those.
  */
+/**
+ * A tech list needs at least this many items, each short enough to be a
+ * technology name rather than prose.
+ */
+const MIN_TECH_ITEMS = 3;
+const MAX_TECH_ITEM_WORDS = 5;
+
 export function isTechLine(highlight: string): boolean {
   const parts = highlight
+    // A trailing period closes the sentence; it is not part of the last item.
+    .replace(/[.;]$/, "")
     .split(/[,;]/)
     .map((p) => p.trim())
     .filter(Boolean);
-  if (parts.length < 3) return false;
-  return parts.every((p) => p.split(/\s+/).length <= 4 && !/[.!?]$/.test(p));
+  if (parts.length < MIN_TECH_ITEMS) return false;
+  return parts.every((p) => p.split(/\s+/).length <= MAX_TECH_ITEM_WORDS && !/[.!?]$/.test(p));
 }
 
 /**
- * The handmade resume ends entries with the tech stack in bold. When a
- * summary's final paragraph or sentence is a comma-separated tech list,
- * split it off so renderers can bold it.
+ * Splits a trailing tech list off the end of a summary.
+ *
+ * Checks the last paragraph first, then the last sentence. Separators may be
+ * commas or semicolons, and a closing period is tolerated — earlier versions
+ * rejected both, so lists that ended in a period (Twilio, Yahoo) or used
+ * semicolons (10up, Long Game) silently rendered unbolded while their
+ * neighbours bolded, with nothing in the data to explain the difference.
  */
 export function splitTrailingTechList(text: string): { body: string; tech: string | null } {
-  const paraIdx = text.lastIndexOf("\n\n");
+  const trimmed = text.trimEnd();
+
+  const paraIdx = trimmed.lastIndexOf("\n\n");
   if (paraIdx !== -1) {
-    const last = text.slice(paraIdx + 2).trim();
-    if (isTechLine(last)) return { body: text.slice(0, paraIdx).trimEnd(), tech: last };
+    const last = trimmed.slice(paraIdx + 2).trim();
+    if (isTechLine(last)) return { body: trimmed.slice(0, paraIdx).trimEnd(), tech: last };
   }
-  const sentIdx = text.lastIndexOf(". ");
+
+  const sentIdx = trimmed.lastIndexOf(". ");
   if (sentIdx !== -1) {
-    const last = text.slice(sentIdx + 2).trim();
-    if (last.split(",").length >= 4 && isTechLine(last)) {
-      return { body: text.slice(0, sentIdx + 1), tech: last };
-    }
+    const last = trimmed.slice(sentIdx + 2).trim();
+    if (isTechLine(last)) return { body: trimmed.slice(0, sentIdx + 1), tech: last };
   }
+
   return { body: text, tech: null };
 }
 
