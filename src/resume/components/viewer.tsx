@@ -48,12 +48,22 @@ const deskActionStyle: React.CSSProperties = {
   transition: "color 200ms ease",
 };
 
-export function ResumeViewer({ data }: { data: ResumeSchema }) {
+export function ResumeViewer({
+  data,
+  initialFlavorId = "complete",
+}: {
+  data: ResumeSchema;
+  /** Resolved on the server so the first render is already the right flavor. */
+  initialFlavorId?: string;
+}) {
   // Every piece of builder state lives in the URL, so a tuned resume is a
   // shareable link and the server fallback reads the same parameters the client
   // writes. `hc` and `hp` were previously read by the server and then discarded
   // on hydration.
-  const [flavorId, setFlavorId] = useQueryState("flavor", parseAsString.withDefault("complete"));
+  const [flavorId, setFlavorId] = useQueryState(
+    "flavor",
+    parseAsString.withDefault(initialFlavorId)
+  );
   const [hiddenCompanies, setHiddenCompanies] = useQueryState("hc", arrayParam);
   const [hiddenProjects, setHiddenProjects] = useQueryState("hp", arrayParam);
   const [selectedTags, setSelectedTags] = useQueryState("tags", arrayParam);
