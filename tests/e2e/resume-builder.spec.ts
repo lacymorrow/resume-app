@@ -57,6 +57,53 @@ test.describe("resume builder", () => {
     await expect(view(page).locator('[id="sh-education"]')).toBeVisible();
   });
 
+  test("a hidden role stays in the builder so it can be switched back on", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: /Customize/ }).click();
+    await page.getByRole("button", { name: /^Roles/ }).click();
+
+    const panel = page.getByRole("complementary", { name: "Resume builder" });
+    const toggles = panel.locator('button[role="switch"][id^="company-"]');
+    const total = await toggles.count();
+    const id = (await toggles.first().getAttribute("id"))!;
+
+    // The list is the flavor's roles, not the ones surviving the filters. Drive
+    // it from the filtered set and the row vanishes the moment it is switched
+    // off, stranding the reader with no way back short of Reset.
+    await toggles.first().click();
+    await expect.poll(() => new URL(page.url()).searchParams.get("hc")).not.toBeNull();
+    await expect(toggles).toHaveCount(total);
+    const row = panel.locator(`label[for="${id}"]`);
+    await expect(row).toHaveCSS("text-decoration-line", "line-through");
+
+    await panel.locator(`button[role="switch"][id="${id}"]`).click();
+    await expect.poll(() => new URL(page.url()).searchParams.get("hc")).toBeNull();
+    await expect(toggles).toHaveCount(total);
+  });
+
+  test("printing keeps the masthead and turns the page light", async ({ page }) => {
+    await page.goto("/");
+    await page.emulateMedia({ media: "print" });
+
+    // The rail is a <header>, the contacts a <nav>, the colophon a <footer>.
+    // A blanket "hide the chrome" print rule takes the name and every way to
+    // reach the candidate with it.
+    await expect(view(page).locator(".resume-rail")).toBeVisible();
+    await expect(view(page).locator('nav[aria-label="Contact"]')).toBeVisible();
+    await expect(view(page).getByRole("heading", { level: 1 })).toBeVisible();
+
+    // Near-white on near-black is unreadable on paper, and prints as a black page.
+    await expect(view(page)).toHaveCSS("background-color", "rgb(255, 255, 255)");
+    const ink = await view(page)
+      .getByRole("heading", { level: 1 })
+      .evaluate((el) => getComputedStyle(el).color);
+    expect(ink).toBe("rgb(63, 64, 65)");
+
+    // Controls that do nothing on paper stay off it.
+    await expect(page.locator(".resume-desk")).toBeHidden();
+  });
+
   test("a tuned variant downloads as a committable flavor file", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);

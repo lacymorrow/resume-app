@@ -1,5 +1,5 @@
 import type React from "react";
-import type { ContactRow } from "../lib/export-shared";
+import { type ContactRow, PRINT } from "../lib/export-shared";
 import type { NormalizedSection } from "../lib/sections";
 import { type FlavorStatement, SCREEN } from "../lib/theme";
 import { SectionBlock, SF, StatementBlock, TopRule } from "./parts";
@@ -7,8 +7,8 @@ import { SectionBlock, SF, StatementBlock, TopRule } from "./parts";
 const S = SCREEN;
 
 /**
- * Hover and responsive rules that inline styles cannot express. Rendered once
- * by the frame so the server fallback and the interactive viewer share them.
+ * Hover, responsive, and print rules that inline styles cannot express.
+ * Rendered once by the frame, so every page that shows a resume gets them.
  */
 export const RESUME_CSS = `
   .resume-frame a.ha:hover { color: var(--accent) !important; text-decoration: underline; text-underline-offset: 3px; }
@@ -26,6 +26,57 @@ export const RESUME_CSS = `
     .resume-main { padding-top: 3rem !important; }
     .resume-entry { grid-template-columns: 1fr !important; gap: 0.25rem !important; }
   }
+
+  /*
+   * Printing the page from the browser, as opposed to exporting a PDF.
+   *
+   * The screen design is near-white on near-black, which prints as an unreadable
+   * black page, so print re-colours the frame with the print palette from
+   * resume.config.ts — the same values the PDF and DOCX exporters use.
+   *
+   * Colours are set on the frame's own elements rather than on body, because the
+   * screen theme is applied as inline styles: only an !important author rule
+   * outranks those. The universal selector sets the floor and the rules under
+   * it are more specific, so headings, dates, and section labels keep theirs.
+   */
+  @media print {
+    @page { size: letter; margin: 0.5in; }
+
+    body { background: #fff !important; }
+
+    /* Chrome, not content: a fixed rule repeats on every sheet, and the
+       flavor switcher and export buttons do nothing on paper. */
+    .resume-topbar, .resume-desk { display: none !important; }
+
+    .resume-frame {
+      --accent: ${PRINT.accent};
+      background: #fff !important;
+      font-family: ${PRINT.fontStack} !important;
+      font-size: 10pt !important;
+      min-height: 0 !important;
+    }
+
+    /* Colour transitions are mid-flight when the print snapshot is taken, so a
+       date can land halfway between its screen and print colour. */
+    .resume-frame *, .resume-frame *::before, .resume-frame *::after { transition: none !important; }
+
+    .resume-frame *, .resume-frame { color: ${PRINT.body} !important; border-color: ${PRINT.rail} !important; }
+    .resume-frame h1, .resume-frame h2, .resume-frame h3, .resume-frame dt { color: ${PRINT.ink} !important; }
+    .resume-frame h2 { font-size: 17pt !important; }
+    .resume-frame h2 em, .resume-entry > span:first-child { color: ${PRINT.accent} !important; }
+    .resume-frame section > div[id^="sh-"] { color: ${PRINT.heading} !important; }
+    .resume-frame footer { color: ${PRINT.footer} !important; }
+    .resume-frame a { text-decoration: none !important; }
+
+    /* The rail is a sticky, scrolling, fixed-height column on screen; on paper
+       it is just the masthead above the resume. */
+    .resume-grid { display: block !important; max-width: none !important; padding: 0 !important; gap: 0 !important; }
+    .resume-rail { position: static !important; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+    .resume-main { padding: 0.75rem 0 0 !important; max-width: none !important; }
+
+    .resume-frame section { margin-top: 1.5rem !important; }
+    .resume-entry { break-inside: avoid; page-break-inside: avoid; padding: 0.6rem 0 !important; }
+  }
 `;
 
 export interface ResumeFrameProps {
@@ -37,8 +88,8 @@ export interface ResumeFrameProps {
   statement: FlavorStatement;
   sections: NormalizedSection[];
   /**
-   * Rail controls. The interactive viewer passes buttons; the server-rendered
-   * fallback passes plain links, so flavors stay reachable without JavaScript.
+   * Rail controls. Flavors render as real links so they stay reachable and
+   * crawlable before any JavaScript runs; the viewer intercepts the clicks.
    */
   desk: React.ReactNode;
   footerNote: string;
@@ -47,9 +98,9 @@ export interface ResumeFrameProps {
 }
 
 /**
- * The single on-screen resume layout. Both the streamed server fallback and the
- * hydrated client viewer render through here, so there is nothing to drift and
- * no design swap at hydration.
+ * The single on-screen resume layout. The prerendered HTML and the hydrated
+ * viewer render through here, so there is nothing to drift and no design swap
+ * at hydration.
  */
 export function ResumeFrame({
   accent,

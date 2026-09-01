@@ -17,7 +17,12 @@ export function loadCustomFlavors(): CustomFlavor[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CustomFlavor[]) : [];
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    // Anything but a list is someone else's data or a half-written value. The
+    // viewer spreads this straight into its flavor list, so a bad shape here
+    // would take the whole resume down rather than lose a saved variant.
+    return Array.isArray(parsed) ? (parsed as CustomFlavor[]) : [];
   } catch {
     // Private windows and blocked site data both throw here; a missing list is
     // the correct answer either way.

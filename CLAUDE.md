@@ -186,6 +186,20 @@ Shipkit uses environment variables for feature toggles:
 3. Run `bun run db:migrate` to apply changes
 4. Update TypeScript types if needed
 
+### Styling the Resume
+The resume is styled with inline styles plus one stylesheet, `RESUME_CSS` in
+`src/resume/components/frame.tsx`, for the rules inline styles cannot express:
+hover, responsive, and print.
+
+Print rules live there rather than in `globals.css` so they can read the print
+palette out of `resume.config.ts` instead of restating its hex values. They also
+have to be `!important`: the screen theme is applied as inline styles, and only
+an important author rule outranks those.
+
+`globals.css` is shared ShipKit styling. Be careful adding resume rules to it —
+`.resume-entry` is a class the frame uses, and a leftover rule there matching it
+is invisible until you look at the rendered page.
+
 ### Adding New Routes
 Prefer not to. Every single-segment path is a resume flavor, so a new top-level
 route collides with the flavor namespace — see the URLs section of README.md and

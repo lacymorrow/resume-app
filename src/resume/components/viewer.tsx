@@ -14,10 +14,12 @@ import {
   slugify,
 } from "../lib/custom-flavors";
 import { buildExportData, type ExportFormat, exportResume } from "../lib/export";
-import { contactRows, downloadBlob } from "../lib/export-shared";
+import { contactRows, displayUrl, downloadBlob, footerHref } from "../lib/export-shared";
 import {
   DEFAULT_FILTER_STATE,
   type FilterState,
+  getFlavorVisibleCompanies,
+  getFlavorVisibleProjects,
   resolveProjects,
   resolveWork,
 } from "../lib/filters";
@@ -74,7 +76,7 @@ export function ResumeViewer({
   const [applied, setApplied] = useState(false);
   useEffect(() => setApplied(true), []);
 
-  // Legacy /?flavor=x links redirect to /r/x, but Next forwards the original
+  // Legacy /?flavor=x links redirect to /x, but Next forwards the original
   // query string, so a stale `flavor` parameter rides along. Drop it so a
   // shared old link still ends up on the clean canonical URL.
   useEffect(() => {
@@ -146,6 +148,15 @@ export function ResumeViewer({
     () => buildSections(data, { work: visibleWork, projects: visibleProjects }, filters.sections),
     [data, visibleWork, visibleProjects, filters.sections]
   );
+
+  /**
+   * The builder lists every role and project the *flavor* shows, not the ones
+   * that survive the current filters. Sourcing it from the filtered set instead
+   * would drop a row the moment its toggle was switched off, leaving no way to
+   * switch it back on again.
+   */
+  const flavorCompanies = useMemo(() => getFlavorVisibleCompanies(data, flavor), [data, flavor]);
+  const flavorProjects = useMemo(() => getFlavorVisibleProjects(data, flavor), [data, flavor]);
 
   const allTags = useMemo(() => {
     const set = new Set<string>();
@@ -334,8 +345,8 @@ export function ResumeViewer({
             totalWork={work.entries.length}
             matchedProjects={visibleProjects.length}
             totalProjects={projects.entries.length}
-            companies={work.entries.map((e) => e.name)}
-            projects={projects.entries.map((e) => e.name)}
+            companies={flavorCompanies}
+            projects={flavorProjects}
             onExport={handleExport}
             onSaveFlavor={handleSaveFlavor}
             onDeleteFlavor={handleDeleteFlavor}
@@ -389,8 +400,8 @@ export function ResumeViewer({
       sections={sections}
       desk={desk}
       footerNote={`${basics.name} · ${resumeConfig.site.host}`}
-      footerLinkLabel={basics.url.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-      footerLinkHref={basics.url}
+      footerLinkLabel={displayUrl(footerHref(basics.url))}
+      footerLinkHref={footerHref(basics.url)}
     />
   );
 }

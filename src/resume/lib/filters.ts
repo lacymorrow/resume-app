@@ -1,5 +1,6 @@
 import { resumeConfig } from "../inputs";
 import type { ResumeFlavor } from "./flavors";
+import { DEFAULT_FLAVOR_ID } from "./routes";
 import { defaultSectionVisibility } from "./sections";
 import { extractProjectTags, extractWorkTags } from "./tags";
 import type { ResumeProject, ResumeSchema, ResumeWork, SectionVisibility } from "./types";
@@ -14,7 +15,7 @@ export interface FilterState {
 }
 
 export const DEFAULT_FILTER_STATE: FilterState = {
-  flavorId: "complete",
+  flavorId: DEFAULT_FLAVOR_ID,
   sections: defaultSectionVisibility(),
   selectedTags: [],
   tagMatchMode: "any",

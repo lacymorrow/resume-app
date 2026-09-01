@@ -10,6 +10,7 @@ export function TopRule({ accent }: { accent: string }) {
   return (
     <div
       aria-hidden="true"
+      className="resume-topbar"
       style={{
         position: "fixed",
         top: 0,

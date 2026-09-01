@@ -199,7 +199,11 @@ for (const [term, canonical] of [
   });
 }
 
-function extractTagsFromText(text: string): string[] {
+function extractTagsFromText(text: string | undefined): string[] {
+  // Summaries are optional on some collections, and a hand-edited resume.json
+  // can omit one anywhere. Tag extraction runs on every render, so a missing
+  // string here would be a blank page rather than a missing tag.
+  if (!text) return [];
   const lower = text.toLowerCase();
   const tags = new Set<string>();
   for (const { canonical, regex } of TAG_REGEXES.values()) {
