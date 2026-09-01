@@ -56,7 +56,7 @@ export const RESUME_CSS = `
 
   @media (max-width: 860px) {
     .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
-    .resume-rail { position: static !important; height: auto !important; }
+    .resume-rail { position: static !important; height: auto !important; margin-right: 0 !important; padding-right: 0 !important; }
     .resume-desk { margin-top: 1.75rem !important; padding-top: 0 !important; }
     .resume-desk [role="radiogroup"] { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
     .resume-desk button, .resume-desk a { margin-left: 0 !important; }
@@ -108,7 +108,7 @@ export const RESUME_CSS = `
     /* The rail is a sticky, scrolling, fixed-height column on screen; on paper
        it is just the masthead above the resume. */
     .resume-grid { display: block !important; max-width: none !important; padding: 0 !important; gap: 0 !important; }
-    .resume-rail { position: static !important; max-height: none !important; overflow: visible !important; padding: 0 !important; }
+    .resume-rail { position: static !important; max-height: none !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
     .resume-main { padding: 0.75rem 0 0 !important; max-width: none !important; }
 
     .resume-frame section { margin-top: 1.5rem !important; }
@@ -197,9 +197,15 @@ export function ResumeFrame({
               // easier to hit.
               overflowY: "auto",
               scrollbarWidth: "thin",
+              // The scrollbar is drawn over the rail rather than beside it on
+              // any platform with overlay scrollbars, and it lands on the
+              // panel's right-hand controls. Hanging the scroll edge out into
+              // the column gap gives the bar a strip of its own without
+              // narrowing anything.
+              marginRight: "-14px",
               display: "flex",
               flexDirection: "column",
-              padding: "3.5rem 0 2.5rem",
+              padding: "3.5rem 14px 2.5rem 0",
             }}
           >
             <h1 style={{ fontSize: "1.35rem", fontWeight: 600, letterSpacing: "-0.01em" }}>

@@ -82,6 +82,35 @@ test.describe("resume builder", () => {
     await expect(toggles).toHaveCount(total);
   });
 
+  /**
+   * The rail scrolls, and an overlay scrollbar is painted over its content
+   * rather than beside it — landing on the panel's Close button and the column
+   * of switches under it. The rail hangs its scroll edge out into the gap
+   * between the columns so the bar has a strip to itself.
+   */
+  test("the rail's scrollbar keeps clear of the rail's content", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 620 });
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("button", { name: /Customize/ }).click();
+    await expect(page.getByRole("complementary", { name: "Resume builder" })).toBeVisible();
+
+    const rail = await page.locator(".resume-rail").evaluate((el) => ({
+      scrolls: el.scrollHeight > el.clientHeight,
+      // Whatever reaches furthest right today, not one nominated control.
+      clearance: [...el.querySelectorAll("*")].reduce(
+        (gap, child) =>
+          Math.min(gap, el.getBoundingClientRect().right - child.getBoundingClientRect().right),
+        Number.POSITIVE_INFINITY
+      ),
+    }));
+
+    // A rail short enough not to scroll has no bar to collide with, and would
+    // pass this for the wrong reason.
+    expect(rail.scrolls).toBe(true);
+    expect(rail.clearance).toBeGreaterThanOrEqual(12);
+  });
+
   test("printing keeps the masthead and turns the page light", async ({ page }) => {
     await page.goto("/");
     await page.emulateMedia({ media: "print" });
@@ -235,9 +264,9 @@ test.describe("resume builder", () => {
     await page.goto("/");
     // Scoped to the flavor control anchors: at the root namespace a bare href
     // regex would also sweep up every other link on the page.
-    const hrefs = await page.locator('a[role="radio"]').evaluateAll((els) =>
-      els.map((el) => el.getAttribute("href"))
-    );
+    const hrefs = await page
+      .locator('a[role="radio"]')
+      .evaluateAll((els) => els.map((el) => el.getAttribute("href")));
     expect(new Set(hrefs).size).toBe(hrefs.length);
     expect(hrefs.length).toBeGreaterThanOrEqual(7);
     // The default flavor is "/", the rest are single root segments.
