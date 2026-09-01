@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { parseAsArrayOf, parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resumeConfig } from "../inputs";
@@ -21,6 +22,7 @@ import {
   resolveWork,
 } from "../lib/filters";
 import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
+import { DEFAULT_FLAVOR_ID, flavorHref } from "../lib/routes";
 import { buildSections, DEFAULT_SECTIONS } from "../lib/sections";
 import { SCREEN } from "../lib/theme";
 import type { ResumeSchema } from "../lib/types";
@@ -34,6 +36,9 @@ const arrayParam = parseAsArrayOf(parseAsString).withDefault([]);
 const matchParam = parseAsStringLiteral(["any", "all"] as const).withDefault("any");
 
 const EXPORT_FORMATS: ExportFormat[] = ["pdf", "docx", "html"];
+
+/** Stable empty array so the pre-mount memo doesn't churn. */
+const NONE: string[] = [];
 
 const deskActionStyle: React.CSSProperties = {
   background: "none",
@@ -50,20 +55,38 @@ const deskActionStyle: React.CSSProperties = {
 
 export function ResumeViewer({
   data,
-  initialFlavorId = "complete",
+  flavorId,
 }: {
   data: ResumeSchema;
-  /** Resolved on the server so the first render is already the right flavor. */
-  initialFlavorId?: string;
+  /** Comes from the route, so the prerendered HTML is already the right flavor. */
+  flavorId: string;
 }) {
-  // Every piece of builder state lives in the URL, so a tuned resume is a
-  // shareable link and the server fallback reads the same parameters the client
-  // writes. `hc` and `hp` were previously read by the server and then discarded
-  // on hydration.
-  const [flavorId, setFlavorId] = useQueryState(
-    "flavor",
-    parseAsString.withDefault(initialFlavorId)
-  );
+  const router = useRouter();
+
+  // Builder state lives in the query string so a tuned resume is a shareable
+  // link. It is read from window.location rather than useSearchParams, which is
+  // what keeps these pages statically prerenderable.
+  //
+  // The prerendered HTML cannot know the query string, so the first client
+  // render has to match it exactly or hydration mismatches. `applied` stays
+  // false until after mount; the untuned resume is what the server produced,
+  // and the tuning lands on the next render.
+  const [applied, setApplied] = useState(false);
+  useEffect(() => setApplied(true), []);
+
+  // Legacy /?flavor=x links redirect to /r/x, but Next forwards the original
+  // query string, so a stale `flavor` parameter rides along. Drop it so a
+  // shared old link still ends up on the clean canonical URL.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("flavor")) return;
+    url.searchParams.delete("flavor");
+    window.history.replaceState(window.history.state, "", url);
+  }, []);
+
+  // Saved flavors live only in this browser's localStorage, so they are a query
+  // parameter rather than a path — no server could prerender them.
+  const [savedFlavorId, setSavedFlavorId] = useQueryState("saved", parseAsString);
   const [hiddenCompanies, setHiddenCompanies] = useQueryState("hc", arrayParam);
   const [hiddenProjects, setHiddenProjects] = useQueryState("hp", arrayParam);
   const [selectedTags, setSelectedTags] = useQueryState("tags", arrayParam);
@@ -79,26 +102,33 @@ export function ResumeViewer({
   }, []);
 
   const allFlavors = useMemo<ResumeFlavor[]>(() => [...FLAVORS, ...customFlavors], [customFlavors]);
+
+  // A saved flavor overrides the route's flavor once localStorage has loaded.
+  const activeFlavorId = applied && savedFlavorId ? savedFlavorId : flavorId;
   const flavor = useMemo(
-    () => allFlavors.find((f) => f.id === flavorId) ?? allFlavors[0]!,
-    [allFlavors, flavorId]
+    () =>
+      allFlavors.find((f) => f.id === activeFlavorId) ??
+      allFlavors.find((f) => f.id === flavorId) ??
+      allFlavors[0]!,
+    [allFlavors, activeFlavorId, flavorId]
   );
 
   const filters = useMemo<FilterState>(() => {
     // The flavor supplies section defaults; `off` records what the reader
-    // switched off on top of that.
+    // switched off on top of that. Nothing from the query string counts until
+    // after mount, so this matches the prerendered HTML on the first render.
     const sections = { ...flavor.sections };
-    for (const key of sectionsOff) sections[key] = false;
+    if (applied) for (const key of sectionsOff) sections[key] = false;
     return {
       ...DEFAULT_FILTER_STATE,
       flavorId: flavor.id,
       sections,
-      selectedTags,
-      tagMatchMode,
-      hiddenCompanies,
-      hiddenProjects,
+      selectedTags: applied ? selectedTags : NONE,
+      tagMatchMode: applied ? tagMatchMode : DEFAULT_FILTER_STATE.tagMatchMode,
+      hiddenCompanies: applied ? hiddenCompanies : NONE,
+      hiddenProjects: applied ? hiddenProjects : NONE,
     };
-  }, [flavor, sectionsOff, selectedTags, tagMatchMode, hiddenCompanies, hiddenProjects]);
+  }, [applied, flavor, sectionsOff, selectedTags, tagMatchMode, hiddenCompanies, hiddenProjects]);
 
   const work = useMemo(() => resolveWork(data, flavor, filters), [data, flavor, filters]);
   const projects = useMemo(() => resolveProjects(data, flavor, filters), [data, flavor, filters]);
@@ -153,18 +183,33 @@ export function ResumeViewer({
     ]
   );
 
+  /**
+   * Built-in flavors are pages, so switching one is a navigation. Saved flavors
+   * exist only in this browser, so they stay a query parameter.
+   *
+   * The query state is cleared explicitly rather than left to the new URL:
+   * router.push does not emit popstate, so nuqs would otherwise keep serving
+   * the previous page's builder state.
+   */
   const selectFlavor = useCallback(
     (id: string) => {
-      void setFlavorId(id === "complete" ? null : id);
       const custom = customFlavors.find((f) => f.id === id);
       void setHiddenCompanies(custom?.hiddenCompanies.length ? custom.hiddenCompanies : null);
       void setHiddenProjects(custom?.hiddenProjects.length ? custom.hiddenProjects : null);
       void setSectionsOff(null);
       void setSelectedTags(null);
+
+      if (custom) {
+        void setSavedFlavorId(id);
+        return;
+      }
+      void setSavedFlavorId(null);
+      router.push(flavorHref(id));
     },
     [
       customFlavors,
-      setFlavorId,
+      router,
+      setSavedFlavorId,
       setHiddenCompanies,
       setHiddenProjects,
       setSectionsOff,
@@ -173,14 +218,16 @@ export function ResumeViewer({
   );
 
   const reset = useCallback(() => {
-    void setFlavorId(null);
+    void setSavedFlavorId(null);
     void setHiddenCompanies(null);
     void setHiddenProjects(null);
     void setSelectedTags(null);
     void setTagMatchMode(null);
     void setSectionsOff(null);
+    router.push(flavorHref(DEFAULT_FLAVOR_ID));
   }, [
-    setFlavorId,
+    router,
+    setSavedFlavorId,
     setHiddenCompanies,
     setHiddenProjects,
     setSelectedTags,
@@ -200,18 +247,18 @@ export function ResumeViewer({
       const custom = filterStateToCustomFlavor(filters, name, flavor);
       saveCustomFlavor(custom);
       setCustomFlavors(loadCustomFlavors());
-      void setFlavorId(custom.id);
+      void setSavedFlavorId(custom.id);
     },
-    [filters, flavor, setFlavorId]
+    [filters, flavor, setSavedFlavorId]
   );
 
   const handleDeleteFlavor = useCallback(
     (id: string) => {
       deleteCustomFlavor(id);
       setCustomFlavors(loadCustomFlavors());
-      if (flavorId === id) void setFlavorId(null);
+      if (savedFlavorId === id) void setSavedFlavorId(null);
     },
-    [flavorId, setFlavorId]
+    [savedFlavorId, setSavedFlavorId]
   );
 
   /**
@@ -256,7 +303,11 @@ export function ResumeViewer({
         {allFlavors.map((f, i) => (
           <FlavorButton
             key={f.id}
-            id={f.id}
+            href={
+              customFlavors.some((c) => c.id === f.id)
+                ? `?saved=${encodeURIComponent(f.id)}`
+                : flavorHref(f.id)
+            }
             label={f.label}
             swatch={f.accent}
             selected={flavor.id === f.id}

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { NuqsAdapter } from "nuqs/adapters/react";
 import type React from "react";
 import { instrumentSans, instrumentSerif } from "@/config/fonts";
 import { metadata as defaultMetadata, viewport as sharedViewport } from "@/config/metadata";
@@ -19,6 +19,13 @@ import "@/styles/globals.css";
  *
  * Two root layouts in one app is supported as long as neither group nests
  * inside the other; (app) keeps its own.
+ *
+ * The nuqs *react* adapter is deliberate. The next/app adapter reads the query
+ * string through useSearchParams, which opts every route under it out of static
+ * prerendering unless a Suspense boundary catches it — and that boundary is
+ * exactly what used to hide the resume from readers without JavaScript. The
+ * react adapter reads window.location instead, so the flavor pages prerender to
+ * static HTML and builder state is applied on the client after mount.
  */
 export const metadata: Metadata = defaultMetadata;
 export const viewport: Viewport = sharedViewport;
@@ -30,7 +37,7 @@ export default function ResumeRootLayout({ children }: { children: React.ReactNo
         className={`${instrumentSans.variable} ${instrumentSerif.variable}`}
         style={{ margin: 0, background: resumeConfig.theme.screen.bg }}
       >
-        {/* The viewer keeps its builder state in the query string. */}
+        {/* Builder state lives in the query string; flavors live in the path. */}
         <NuqsAdapter>{children}</NuqsAdapter>
       </body>
     </html>

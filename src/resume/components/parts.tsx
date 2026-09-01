@@ -209,7 +209,7 @@ export function ProjectRow({
  * client-side and instant.
  */
 export function FlavorButton({
-  id,
+  href,
   label,
   swatch,
   selected,
@@ -217,7 +217,8 @@ export function FlavorButton({
   onKeyDown,
   btnRef,
 }: {
-  id: string;
+  /** Real destination, so the list works as links before any JS runs. */
+  href: string;
   label: string;
   swatch: string;
   selected: boolean;
@@ -228,7 +229,7 @@ export function FlavorButton({
   return (
     <a
       ref={btnRef}
-      href={id === "complete" ? "/" : `/?flavor=${encodeURIComponent(id)}`}
+      href={href}
       role="radio"
       aria-checked={selected}
       aria-current={selected ? "page" : undefined}

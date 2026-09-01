@@ -3,10 +3,12 @@ import { expect, type Page, test } from "@playwright/test";
 
 /**
  * Covers the builder panel end to end: every control changes the rendered
- * resume, writes itself into the URL, and comes back when that URL is opened
- * cold. The last part is the regression guard — hidden companies and projects
- * used to be honoured by the server render and then dropped on hydration.
+ * resume and writes itself into the URL.
  *
+ * Flavors are path segments (/r/<id>) and are prerendered, so they render
+ * without JavaScript. Builder state stays in the query string and is applied
+ * on the client after mount — a static page cannot vary by query string, and
+ * being static is what makes the flavor pages cacheable and crawlable.
  */
 
 /** The Customize button exists only in the client render, so it marks hydration. */
@@ -79,7 +81,7 @@ test.describe("resume builder", () => {
   });
 
   test("a shared URL reproduces the tuned view for a cold visitor", async ({ page }) => {
-    await page.goto("/?flavor=ai&off=awards&hc=Yahoo");
+    await page.goto("/r/ai?off=awards&hc=Yahoo");
     await waitForHydration(page);
 
     await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
@@ -89,14 +91,27 @@ test.describe("resume builder", () => {
     ).toHaveCount(0);
   });
 
+  test("legacy ?flavor= links still land on the flavor page", async ({ page }) => {
+    await page.goto("/?flavor=ai");
+    await expect(page).toHaveURL(/\/r\/ai/);
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
+  });
+
+  test("an unknown flavor is a 404 rather than a silent fallback", async ({ page }) => {
+    const response = await page.goto("/r/not-a-real-flavor");
+    expect(response?.status()).toBe(404);
+  });
+
   test("every flavor is present in the server markup", async ({ page }) => {
     // Crawlers that parse HTML without running it still need to find each
     // variant; every flavor has its own title and description via
     // generateMetadata, and these anchors are what point at them.
     await page.goto("/");
     const html = await page.content();
-    const linked = new Set(Array.from(html.matchAll(/href="\/\?flavor=([a-z]+)"/g), (m) => m[1]));
+    const linked = new Set(Array.from(html.matchAll(/href="\/r\/([a-z]+)"/g), (m) => m[1]));
+    // Six flavors plus the default, which lives at "/" rather than under /r.
     expect(linked.size).toBeGreaterThanOrEqual(6);
+    expect(html).toContain('href="/"');
     expect(html).toContain('id="sh-work"');
   });
 
@@ -113,33 +128,47 @@ test.describe("resume builder", () => {
   test("the resume renders fully without JavaScript", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
-    await page.goto("/?flavor=ai");
+    await page.goto("/r/ai");
 
     const frame = page.locator(".resume-frame");
     await expect(frame).toHaveCount(1);
     await expect(frame).toBeVisible();
     await expect(frame.locator('[id="sh-work"]')).toBeVisible();
 
-    // Flavor controls are anchors, so switching works without scripting.
-    const links = page.locator('a[href^="/?flavor="]');
+    // Flavor controls are anchors to real pages, so switching works unscripted.
+    const links = page.locator('a[href^="/r/"]');
     expect(await links.count()).toBeGreaterThanOrEqual(6);
     await expect(page.locator('a[aria-current="page"]')).toHaveCount(1);
 
     await context.close();
   });
 
-  test("server and client render the same resume", async ({ browser }) => {
+  test("a flavor page reads the same with and without JavaScript", async ({ browser }) => {
     const read = async (js: boolean) => {
       const context = await browser.newContext({ javaScriptEnabled: js });
       const page = await context.newPage();
-      await page.goto("/?flavor=ai&hc=Yahoo");
+      await page.goto("/r/ai");
       await page.waitForTimeout(1500);
       const text = await page.locator(".resume-frame").innerText();
       await context.close();
       return text;
     };
-    // Hidden roles are applied identically either way — `hc` used to be read by
-    // the server and then discarded on hydration.
+    // The prerendered HTML is the whole resume, so hydration changes nothing.
+    // This is also the hydration guard: builder state is withheld until after
+    // mount precisely so these two renders agree.
     expect(await read(false)).toBe(await read(true));
+  });
+
+  test("hydration is clean on a tuned URL", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("console", (m) => {
+      if (m.type() === "error") errors.push(m.text());
+    });
+    await page.goto("/r/ai?hc=Yahoo&off=awards");
+    await waitForHydration(page);
+    // Tuning is applied after mount, so the first render still matches the
+    // static HTML and React has no mismatch to recover from.
+    await expect(view(page).locator('[id="sh-awards"]')).toHaveCount(0);
+    expect(errors.filter((e) => /hydrat|did not match/i.test(e))).toEqual([]);
   });
 });
