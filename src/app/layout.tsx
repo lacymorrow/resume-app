@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ViewTransitions } from "next-view-transitions";
 import { NuqsAdapter } from "nuqs/adapters/react";
 import type React from "react";
 import { instrumentSans, instrumentSerif } from "@/config/fonts";
@@ -21,6 +22,11 @@ import "@/styles/globals.css";
  * it. The react adapter reads window.location instead, so the flavor pages
  * prerender to static HTML and builder state is applied on the client after
  * mount.
+ *
+ * ViewTransitions is ShipKit's own provider, mounted here rather than through
+ * components/layouts/app-router-layout.tsx: that layout brings the next/app
+ * nuqs adapter with it, which is the one thing this layout cannot have. It
+ * reads usePathname, not useSearchParams, so it costs nothing statically.
  */
 export const metadata: Metadata = defaultMetadata;
 export const viewport: Viewport = sharedViewport;
@@ -33,7 +39,9 @@ export default function ResumeRootLayout({ children }: { children: React.ReactNo
         style={{ margin: 0, background: resumeConfig.theme.screen.bg }}
       >
         {/* Builder state lives in the query string; flavors live in the path. */}
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <ViewTransitions>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </ViewTransitions>
       </body>
     </html>
   );

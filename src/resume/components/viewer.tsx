@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTransitionRouter } from "next-view-transitions";
 import { parseAsArrayOf, parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { resumeConfig } from "../inputs";
@@ -27,6 +28,11 @@ import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
 import { DEFAULT_FLAVOR_ID, flavorHref } from "../lib/routes";
 import { buildSections, DEFAULT_SECTIONS } from "../lib/sections";
 import { SCREEN } from "../lib/theme";
+import {
+  restoreColorTransitions,
+  shouldTransition,
+  suppressColorTransitions,
+} from "../lib/transitions";
 import type { ResumeSchema } from "../lib/types";
 import { DeskLabel, ResumeFrame } from "./frame";
 import { ResumePanel } from "./panel";
@@ -64,6 +70,9 @@ export function ResumeViewer({
   flavorId: string;
 }) {
   const router = useRouter();
+  // Wraps push in a view transition and holds it open until the new route
+  // commits. ShipKit already depends on this; see the root layout.
+  const transitionRouter = useTransitionRouter();
 
   // Builder state lives in the query string so a tuned resume is a shareable
   // link. It is read from window.location rather than useSearchParams, which is
@@ -114,6 +123,35 @@ export function ResumeViewer({
       allFlavors[0]!,
     [allFlavors, activeFlavorId, flavorId]
   );
+
+  /**
+   * The provider runs a transition for the browser's own back and forward
+   * buttons too, and that path never goes through selectFlavor. The colour
+   * suppression still has to be switched on, or the snapshot of the page being
+   * returned to catches its accent mid-fade.
+   */
+  useEffect(() => {
+    window.addEventListener("popstate", suppressColorTransitions);
+    return () => window.removeEventListener("popstate", suppressColorTransitions);
+  }, []);
+
+  /**
+   * A view transition freezes the page until the new flavor renders, so an
+   * unprefetched push would stall it for as long as the request takes. The
+   * flavor pages are static and there are a handful of them; fetching them
+   * while the browser is idle makes every switch a local render.
+   */
+  useEffect(() => {
+    const warm = () => {
+      for (const f of FLAVORS) router.prefetch(flavorHref(f.id));
+    };
+    if (typeof window.requestIdleCallback !== "function") {
+      const t = setTimeout(warm, 1200);
+      return () => clearTimeout(t);
+    }
+    const id = window.requestIdleCallback(warm, { timeout: 3000 });
+    return () => window.cancelIdleCallback(id);
+  }, [router]);
 
   const filters = useMemo<FilterState>(() => {
     // The flavor supplies section defaults; `off` records what the reader
@@ -195,6 +233,23 @@ export function ResumeViewer({
   );
 
   /**
+   * Every push to a flavor page, from the rail, the panel, or Reset. The
+   * transition router holds the view transition open until the new route
+   * commits; a plain push is the reduced-motion path.
+   */
+  const navigate = useCallback(
+    (href: string) => {
+      if (!shouldTransition()) {
+        router.push(href);
+        return;
+      }
+      suppressColorTransitions();
+      transitionRouter.push(href, { onTransitionReady: restoreColorTransitions });
+    },
+    [router, transitionRouter]
+  );
+
+  /**
    * Built-in flavors are pages, so switching one is a navigation. Saved flavors
    * exist only in this browser, so they stay a query parameter.
    *
@@ -210,16 +265,19 @@ export function ResumeViewer({
       void setSectionsOff(null);
       void setSelectedTags(null);
 
+      // A saved flavor is not a page — it lives in this browser's localStorage
+      // — so it rewrites the query string in place. There is no push to hang a
+      // transition on, and it swaps the way it always has.
       if (custom) {
         void setSavedFlavorId(id);
         return;
       }
       void setSavedFlavorId(null);
-      router.push(flavorHref(id));
+      navigate(flavorHref(id));
     },
     [
       customFlavors,
-      router,
+      navigate,
       setSavedFlavorId,
       setHiddenCompanies,
       setHiddenProjects,
@@ -235,9 +293,9 @@ export function ResumeViewer({
     void setSelectedTags(null);
     void setTagMatchMode(null);
     void setSectionsOff(null);
-    router.push(flavorHref(DEFAULT_FLAVOR_ID));
+    navigate(flavorHref(DEFAULT_FLAVOR_ID));
   }, [
-    router,
+    navigate,
     setSavedFlavorId,
     setHiddenCompanies,
     setHiddenProjects,

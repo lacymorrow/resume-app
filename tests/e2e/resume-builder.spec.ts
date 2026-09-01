@@ -104,6 +104,85 @@ test.describe("resume builder", () => {
     await expect(page.locator(".resume-desk")).toBeHidden();
   });
 
+  interface TransitionReport {
+    /** How many view transitions the page started. */
+    started: number;
+    /** Whether the flag that switches off the frame's colour fades was raised. */
+    suppressed: boolean;
+  }
+
+  /** Instruments the page, and returns a reader for what it saw. */
+  async function watchTransitions(page: Page) {
+    await page.evaluate(() => {
+      const w = window as unknown as { report: TransitionReport };
+      w.report = { started: 0, suppressed: false };
+      const original = document.startViewTransition.bind(document);
+      document.startViewTransition = (cb) => {
+        w.report.started += 1;
+        return original(cb);
+      };
+      new MutationObserver(() => {
+        if (document.documentElement.hasAttribute("data-flavor-changing")) {
+          w.report.suppressed = true;
+        }
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-flavor-changing"],
+      });
+    });
+    return () => page.evaluate(() => (window as unknown as { report: TransitionReport }).report);
+  }
+
+  function stillSuppressed(page: Page) {
+    return page.evaluate(() => document.documentElement.hasAttribute("data-flavor-changing"));
+  }
+
+  test("switching flavor cross-fades instead of snapping", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    const report = await watchTransitions(page);
+
+    await page.getByRole("radio", { name: "AI / Agentic Engineer" }).click();
+    await page.waitForURL(/\/ai$/);
+    expect(await report()).toEqual({ started: 1, suppressed: true });
+
+    // Leaving the flag up would strip the colour fades from the page for the
+    // rest of the session, long after the transition it was raised for.
+    await expect.poll(() => stillSuppressed(page)).toBe(false);
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
+  });
+
+  test("going back cross-fades too", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.getByRole("radio", { name: "DevOps Engineer" }).click();
+    await page.waitForURL(/\/devops$/);
+    await waitForHydration(page);
+
+    // The provider transitions the browser's own buttons as well, a path that
+    // never touches the flavor controls and so has to raise the flag itself.
+    const report = await watchTransitions(page);
+    await page.goBack();
+    await page.waitForURL(/\/$/);
+    expect(await report()).toEqual({ started: 1, suppressed: true });
+    await expect.poll(() => stillSuppressed(page)).toBe(false);
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
+  });
+
+  test("reduced motion switches flavor with no animation at all", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await waitForHydration(page);
+    const report = await watchTransitions(page);
+
+    // Not merely a stylesheet override: a view transition freezes the page
+    // while it runs, which is itself motion the reader asked not to have.
+    await page.getByRole("radio", { name: "DevOps Engineer" }).click();
+    await page.waitForURL(/\/devops$/);
+    expect(await report()).toEqual({ started: 0, suppressed: false });
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
+  });
+
   test("a tuned variant downloads as a committable flavor file", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);
