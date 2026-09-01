@@ -45,5 +45,15 @@ export const redirects = async (): Promise<Redirect[]> => {
       destination: `${resumeConfig.site.flavorPrefix ? `/${resumeConfig.site.flavorPrefix}` : ""}/:flavor`,
       permanent: true,
     },
+
+    /**
+     * /resume used to be a page that redirected here; it is a plausible enough
+     * thing to type or to have linked that losing it is not worth the tidiness.
+     *
+     * This runs before routing, so a flavor with the id "resume" would be
+     * unreachable. There isn't one, and there shouldn't be — the resume is
+     * what the whole site is.
+     */
+    { source: "/resume", destination: "/", permanent: true },
   ];
 };
