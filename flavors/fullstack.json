@@ -1,0 +1,37 @@
+{
+  "id": "fullstack",
+  "label": "Full Stack Engineer",
+  "description": "Frontend + Backend + APIs + Database",
+  "tagline": "Full-stack web engineer + open-source developer",
+  "expertise": "Full-stack developer; React/Next.js + Node/Python/PHP; API design; Database architecture; DevOps; Software architect; Tech lead",
+  "accent": "#E8A0BF",
+  "statement": {
+    "headline": "I build the <em>frontend</em>, the <em>backend</em>, and everything in between.",
+    "sub": "React plus Node, Python, and PHP end-to-end. API design, database architecture, and deployment for products that scale."
+  },
+  "sections": {
+    "interests": false
+  },
+  "work": {
+    "American City Business Journals": {
+      "position": "Senior Full-Stack Developer",
+      "summary": "Contract - Built and migrated a backend Laravel platform powering business publications across 48 U.S. markets. Architected an AI orchestration layer for autonomous engineering task completion. Laravel, PHP, AI/LLM Orchestration, Claude."
+    },
+    "Duke Energy": {
+      "position": "Senior Full-Stack Developer",
+      "summary": "Refactored a weather-forecasting dashboard end-to-end: React frontend, Python backend, deployed to AWS. Migrated authentication to Azure AD. Python, React, Docker, AWS, Azure."
+    },
+    "OptumRX Health / Red Ventures": {
+      "summary": "Created full-stack E-commerce platform for RVO Health. Built the market, inventory, authentication, and ordering systems with automation pipelines. TypeScript, NextJS, React, Contentful, Plytix, Stripe, Algolia"
+    },
+    "LacyMorrow.com": {
+      "visible": false
+    },
+    "Flymore (Startup)": {
+      "visible": false
+    },
+    "Red Ventures": {
+      "visible": false
+    }
+  }
+}

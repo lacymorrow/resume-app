@@ -86,3 +86,7 @@ gha-creds-*.json
 # AI
 ai.mdx
 .env*.local
+
+# Playwright output (playwright.config.ts outputDir)
+test-results/
+playwright-report/

@@ -12,8 +12,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "build:vercel": "NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
+    "build": "bun run validate:resume && next build",
+    "build:vercel": "bun run validate:resume && NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
+    "validate:resume": "bun run scripts/validate-resume.ts",
     "clean": "rm next-env.d.ts ; rm package-lock.json ; rm pnpm-lock.yaml ; rm bun.lockb ; rm -rf .next ; rm -rf node_modules ; rm -rf .turbo",
     "clean:cache": "rm -rf .next/cache",
     "doctor": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",

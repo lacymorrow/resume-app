@@ -1,0 +1,251 @@
+import type { ResumeSchema } from "./types";
+
+const TAG_ALIASES: Record<string, string> = {
+  nextjs: "Next.js",
+  "next.js": "Next.js",
+  reactjs: "React",
+  "react.js": "React",
+  "react native": "React Native",
+  "react-native": "React Native",
+  typescript: "TypeScript",
+  javascript: "JavaScript",
+  nodejs: "Node.js",
+  "node.js": "Node.js",
+  node: "Node.js",
+  postgresql: "PostgreSQL",
+  postgres: "PostgreSQL",
+  mysql: "MySQL",
+  mongodb: "MongoDB",
+  "aws ec2": "AWS",
+  "g cloud": "GCP",
+  scss: "SASS",
+  sass: "SASS",
+  tailwind: "Tailwind",
+  webpack: "Webpack",
+  docker: "Docker",
+  python: "Python",
+  django: "Django",
+  flask: "Flask",
+  php: "PHP",
+  laravel: "Laravel",
+  wordpress: "WordPress",
+  electron: "Electron",
+  tauri: "Tauri",
+  rust: "Rust",
+  swift: "Swift",
+  go: "Go",
+  vue: "Vue",
+  svelte: "Svelte",
+  angular: "Angular",
+  astro: "Astro",
+  graphql: "GraphQL",
+  selenium: "Selenium",
+  jenkins: "Jenkins",
+  figma: "Figma",
+  stripe: "Stripe",
+  contentful: "Contentful",
+  algolia: "Algolia",
+  flutter: "Flutter",
+  sequelizejs: "Sequelize",
+  "nw.js": "NW.js",
+  wagtail: "Wagtail",
+  "ci/cd": "CI/CD",
+  regex: "Regex",
+  cron: "Cron",
+  azure: "Azure",
+  linux: "Linux",
+  apache: "Apache",
+  redis: "Redis",
+  "react query": "React Query",
+  "lang chain": "LangChain",
+  langchain: "LangChain",
+  "lang graph": "LangGraph",
+  langgraph: "LangGraph",
+  "llama index": "LlamaIndex",
+  llamaindex: "LlamaIndex",
+  rag: "RAG",
+  "retrieval augmented generation": "RAG",
+  "retrieval-augmented generation": "RAG",
+  llm: "LLM",
+  llms: "LLM",
+  "ai/llm orchestration": "LLM",
+  mcp: "MCP",
+  "model context protocol": "MCP",
+  claude: "Claude",
+  anthropic: "Claude",
+  openai: "OpenAI",
+  "vector database": "Vector Databases",
+  "vector databases": "Vector Databases",
+  pgvector: "Vector Databases",
+  pinecone: "Vector Databases",
+  embeddings: "Vector Databases",
+  nosql: "NoSQL",
+  microservices: "Microservices",
+  "distributed systems": "Distributed Systems",
+  "autonomous agents": "AI Agents",
+  "ai agents": "AI Agents",
+  "agent orchestration": "AI Agents",
+  agentic: "AI Agents",
+  rpa: "RPA",
+  automation: "Automation",
+  seo: "SEO",
+  analytics: "Analytics",
+  "google analytics": "Analytics",
+  "google tag manager": "Analytics",
+  "e-commerce": "E-commerce",
+  ecommerce: "E-commerce",
+  i18n: "Localization",
+  l10n: "Localization",
+  localization: "Localization",
+  regionalization: "Localization",
+  "landing page": "Landing Pages",
+  "landing pages": "Landing Pages",
+};
+
+const KNOWN_TAGS = new Set([
+  "TypeScript",
+  "JavaScript",
+  "React",
+  "React Native",
+  "Next.js",
+  "Vue",
+  "Svelte",
+  "Angular",
+  "Astro",
+  "Node.js",
+  "Python",
+  "PHP",
+  "Rust",
+  "Swift",
+  "Go",
+  "Docker",
+  "AWS",
+  "Azure",
+  "GCP",
+  "Electron",
+  "Tauri",
+  "Flutter",
+  "PostgreSQL",
+  "MySQL",
+  "MongoDB",
+  "Redis",
+  "Django",
+  "Flask",
+  "Laravel",
+  "WordPress",
+  "Wagtail",
+  "GraphQL",
+  "Selenium",
+  "Jenkins",
+  "Figma",
+  "Stripe",
+  "Contentful",
+  "Algolia",
+  "SASS",
+  "Tailwind",
+  "Webpack",
+  "CI/CD",
+  "Linux",
+  "Apache",
+  "Sequelize",
+  "NW.js",
+  "React Query",
+  "Tachyons",
+  "Datadog",
+  "Netlify",
+  "Vercel",
+  "Heroku",
+  "Cron",
+  "Regex",
+  "LangChain",
+  "LangGraph",
+  "LlamaIndex",
+  "RAG",
+  "LLM",
+  "MCP",
+  "Claude",
+  "OpenAI",
+  "Vector Databases",
+  "NoSQL",
+  "Microservices",
+  "Distributed Systems",
+  "AI Agents",
+  "RPA",
+  "Automation",
+  "SEO",
+  "Analytics",
+  "E-commerce",
+  "Localization",
+  "Landing Pages",
+]);
+
+/**
+ * Word-boundary tag regexes, pre-compiled once since KNOWN_TAGS and
+ * TAG_ALIASES are static. Every search term (canonical tag or alias) maps
+ * to its canonical tag, so aliases like "ecommerce" or "i18n" are matched
+ * inside prose and despite trailing punctuation. Boundaries prevent short
+ * tags from matching inside words (e.g. "Go" in "Django", "RAG" in
+ * "brokerage").
+ */
+const TAG_REGEXES = new Map<string, { canonical: string; regex: RegExp }>();
+for (const [term, canonical] of [
+  ...Array.from(KNOWN_TAGS, (tag) => [tag.toLowerCase(), tag] as const),
+  ...Object.entries(TAG_ALIASES),
+]) {
+  const escaped = term.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  TAG_REGEXES.set(term.toLowerCase(), {
+    canonical,
+    regex: new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`),
+  });
+}
+
+function extractTagsFromText(text: string | undefined): string[] {
+  // Summaries are optional on some collections, and a hand-edited resume.json
+  // can omit one anywhere. Tag extraction runs on every render, so a missing
+  // string here would be a blank page rather than a missing tag.
+  if (!text) return [];
+  const lower = text.toLowerCase();
+  const tags = new Set<string>();
+  for (const { canonical, regex } of TAG_REGEXES.values()) {
+    if (regex.test(lower)) tags.add(canonical);
+  }
+  return Array.from(tags);
+}
+
+export function extractWorkTags(work: ResumeSchema["work"]): Map<number, string[]> {
+  const map = new Map<number, string[]>();
+  for (let i = 0; i < work.length; i++) {
+    const entry = work[i]!;
+    const tags = extractTagsFromText(entry.summary);
+    if (entry.highlights) {
+      for (const h of entry.highlights) tags.push(...extractTagsFromText(h));
+    }
+    map.set(i, [...new Set(tags)]);
+  }
+  return map;
+}
+
+export function extractProjectTags(projects: ResumeSchema["projects"]): Map<number, string[]> {
+  const map = new Map<number, string[]>();
+  for (let i = 0; i < projects.length; i++) {
+    const entry = projects[i]!;
+    const tags = extractTagsFromText(entry.summary);
+    if (entry.highlights) {
+      for (const h of entry.highlights) tags.push(...extractTagsFromText(h));
+    }
+    map.set(i, [...new Set(tags)]);
+  }
+  return map;
+}
+
+export function getAllTags(data: ResumeSchema): string[] {
+  const all = new Set<string>();
+  for (const skill of data.skills) {
+    for (const kw of skill.keywords) {
+      for (const t of extractTagsFromText(kw)) all.add(t);
+    }
+  }
+  for (const tags of extractWorkTags(data.work).values()) for (const t of tags) all.add(t);
+  for (const tags of extractProjectTags(data.projects).values()) for (const t of tags) all.add(t);
+  return Array.from(all).sort();
+}

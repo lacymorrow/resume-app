@@ -4,13 +4,13 @@
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import resumeJson from "../src/app/(app)/resume/_lib/resume.json";
-import { buildExportData } from "../src/app/(app)/resume/_lib/resume-export";
-import { buildHtmlContent } from "../src/app/(app)/resume/_lib/resume-export-html";
-import { buildPdfDoc } from "../src/app/(app)/resume/_lib/resume-export-pdf";
-import { DEFAULT_FILTER_STATE } from "../src/app/(app)/resume/_lib/resume-filters";
-import { FLAVORS } from "../src/app/(app)/resume/_lib/resume-flavors";
-import type { ResumeSchema } from "../src/app/(app)/resume/_lib/resume-types";
+import resumeJson from "../resume.json";
+import { buildExportData } from "../src/resume/lib/export";
+import { buildHtmlContent } from "../src/resume/lib/export-html";
+import { buildPdfDoc } from "../src/resume/lib/export-pdf";
+import { DEFAULT_FILTER_STATE } from "../src/resume/lib/filters";
+import { FLAVORS } from "../src/resume/lib/flavors";
+import type { ResumeSchema } from "../src/resume/lib/types";
 
 const outDir = process.argv[2] ?? "/tmp/resume-samples";
 const flavorId = process.argv[3] ?? "complete";

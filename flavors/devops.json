@@ -1,0 +1,116 @@
+{
+  "id": "devops",
+  "label": "DevOps Engineer",
+  "description": "Infrastructure, CI/CD, Cloud, Docker",
+  "tagline": "DevOps engineer + infrastructure specialist",
+  "expertise": "DevOps; AWS/Azure/GCP; Docker; CI/CD pipelines; Infrastructure automation; Linux systems; Monitoring; Database administration",
+  "accent": "#97A8F0",
+  "statement": {
+    "headline": "I keep the <em>pipelines</em> green and the <em>infrastructure</em> boring.",
+    "sub": "CI/CD, cloud migrations, and on-call ownership. AWS and Azure deployments that ship every day without drama."
+  },
+  "sections": {
+    "awards": false,
+    "interests": false,
+    "references": false
+  },
+  "work": {
+    "American City Business Journals": {
+      "visible": false
+    },
+    "Duke Energy": {
+      "position": "DevOps Engineer",
+      "summary": "Refactored weather-forecasting dashboard deployment to AWS. Migrated authentication infrastructure to Azure AD from user/password. Configured containerized deployments and cron-based automation. Python, Docker, AWS, Azure, Regex, Cron."
+    },
+    "Credit Karma": {
+      "visible": false
+    },
+    "Novant Health / Red Ventures": {
+      "visible": false
+    },
+    "OptumRX Health / Red Ventures": {
+      "position": "DevOps Engineer",
+      "summary": "Built automation pipelines for E-commerce platform. Configured CI/CD, deployment workflows, and infrastructure for production systems. TypeScript, NextJS, Contentful, Algolia."
+    },
+    "Swell Energy": {
+      "summary": "Managed infrastructure for solar grid management platform. Docker containerization, PostgreSQL database administration, Django backend deployment. TypeScript, NextJS, React, Python, Django, Docker, PostgreSQL."
+    },
+    "Viasat": {
+      "summary": "Managed deployment and on-call for in-flight entertainment portals serving dozens of airlines. Jenkins CI/CD, AWS infrastructure, MySQL database management. React, TypeScript, Jenkins, AWS, MySQL."
+    },
+    "Twilio Inc.": {
+      "position": "Senior Web Engineer - DevOps & Brand Team",
+      "summary": "Managed infrastructure for twilio.com and all sub-sites. Implemented testing pipelines, migrated blog and legal sites to Laravel CMS. Worked emergency on-call. Docker deployments, WordPress and Django infrastructure. TypeScript, Docker, Python, Django, Wagtail, PHP, WordPress, Laravel."
+    },
+    "Yahoo": {
+      "visible": false
+    },
+    "Invitae": {
+      "position": "DevOps Engineer",
+      "summary": "Managed database health, configured continuous integration instances, web-hooks, bi-weekly deployments. Created an automated Selenium testing workflow. Docker, Jenkins, Splunk, Apache, AWS EC2, Linux, ElasticSearch."
+    },
+    "10up": {
+      "summary": "Managed deployment pipelines and infrastructure for client websites including Microsoft, Uber, AARP. Docker, WordPress hosting, AWS, Webpack build systems."
+    },
+    "LacyMorrow.com": {
+      "visible": false
+    },
+    "Lumenai (Startup)": {
+      "summary": "Built CI/CD pipeline from scratch. Automated deployments with Docker and Jest testing. The company saw a 15% rise in productivity and experienced 35% growth in 6 months."
+    },
+    "TekSystems": {
+      "visible": false
+    },
+    "Flymore (Startup)": {
+      "visible": false
+    },
+    "Long Game": {
+      "visible": false
+    },
+    "Appalachian State University": {
+      "position": "DevOps / Web Developer",
+      "summary": "Managed database and handled deployments for campus web infrastructure. Created custom CMS framework used by all campus web pages. PHP, Python, Postgres, MySQL, Git, Apache, Linux."
+    },
+    "Red Ventures": {
+      "visible": false
+    }
+  },
+  "projects": {
+    "Juno AI": {
+      "visible": false
+    },
+    "Shipkit": {
+      "visible": false
+    },
+    "Uibrary": {
+      "visible": false
+    },
+    "CrossOver": {
+      "visible": false
+    },
+    "OpenClaw Trading Skills": {
+      "visible": false
+    },
+    "MCP Servers & Tools": {
+      "visible": false
+    },
+    "Casper": {
+      "visible": false
+    },
+    "NPM Libraries": {
+      "visible": false
+    },
+    "React Component Libraries": {
+      "visible": false
+    },
+    "Cinematic": {
+      "visible": false
+    },
+    "Boone Community Network": {
+      "visible": false
+    },
+    "Phase2Productions": {
+      "visible": false
+    }
+  }
+}
