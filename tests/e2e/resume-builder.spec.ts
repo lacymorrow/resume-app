@@ -109,6 +109,15 @@ test.describe("resume builder", () => {
     // pass this for the wrong reason.
     expect(rail.scrolls).toBe(true);
     expect(rail.clearance).toBeGreaterThanOrEqual(12);
+
+    // Stacked on a phone, the rail is not a scroll box at all: it grows and the
+    // page scrolls, so there is no second scrollbar inside the first.
+    await page.setViewportSize({ width: 390, height: 780 });
+    const stacked = await page.locator(".resume-rail").evaluate((el) => ({
+      scrolls: el.scrollHeight > el.clientHeight,
+      spills: document.documentElement.scrollWidth > window.innerWidth,
+    }));
+    expect(stacked).toEqual({ scrolls: false, spills: false });
   });
 
   test("printing keeps the masthead and turns the page light", async ({ page }) => {

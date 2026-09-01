@@ -56,7 +56,11 @@ export const RESUME_CSS = `
 
   @media (max-width: 860px) {
     .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
-    .resume-rail { position: static !important; height: auto !important; margin-right: 0 !important; padding-right: 0 !important; }
+    /* Stacked above the resume rather than sticky beside it, so it has no
+       reason to keep the desktop rail's own scroll box: nested scrolling on a
+       touch screen is awkward, and its scrollbar would sit on the content the
+       same way. It grows to fit and the page scrolls. */
+    .resume-rail { position: static !important; height: auto !important; max-height: none !important; overflow: visible !important; margin-right: 0 !important; padding-right: 0 !important; }
     .resume-desk { margin-top: 1.75rem !important; padding-top: 0 !important; }
     .resume-desk [role="radiogroup"] { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
     .resume-desk button, .resume-desk a { margin-left: 0 !important; }
