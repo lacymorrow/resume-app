@@ -61,10 +61,14 @@ export interface ResumeConfig {
     /** Shown in the on-screen footer beside the name. */
     host: string;
     /**
-     * URL segment each flavor is served under, e.g. "r" gives /r/frontend.
-     * The default flavor is always served at "/".
+     * Optional URL segment flavors are served under: "" gives /frontend,
+     * "r" gives /r/frontend. The default flavor is always served at "/".
      *
-     * Changing this means renaming src/app/(resume)/r to match: App Router
+     * Empty means flavors occupy the root namespace, so any single-segment
+     * path that is not a flavor 404s. Set a prefix if the site also needs
+     * root-level pages of its own (a CMS catch-all, for instance).
+     *
+     * Changing this means renaming the route folder to match: App Router
      * directory names are static, so this constant and the folder have to
      * agree. `bun run validate:resume` checks that they do.
      */
@@ -105,7 +109,7 @@ export interface ResumeConfig {
 export const resumeConfig: ResumeConfig = {
   site: {
     host: "resume.lacy.sh",
-    flavorPrefix: "r",
+    flavorPrefix: "",
   },
 
   footer: {

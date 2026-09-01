@@ -28,7 +28,9 @@ export function isKnownFlavor(id: string | undefined): boolean {
   return FLAVORS.some((f) => f.id === id);
 }
 
-/** Canonical path for a flavor. */
+/** Canonical path for a flavor. An empty prefix puts flavors at the root. */
 export function flavorHref(id: string): string {
-  return id === DEFAULT_FLAVOR_ID ? "/" : `/${FLAVOR_PREFIX}/${encodeURIComponent(id)}`;
+  if (id === DEFAULT_FLAVOR_ID) return "/";
+  const segment = encodeURIComponent(id);
+  return FLAVOR_PREFIX ? `/${FLAVOR_PREFIX}/${segment}` : `/${segment}`;
 }

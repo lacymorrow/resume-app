@@ -23,11 +23,11 @@ const report = formatValidation(result);
  * the build would simply stop producing the flavor routes.
  */
 const prefix = resumeConfig.site.flavorPrefix;
-const flavorDir = new URL(`../src/app/(resume)/${prefix}/[flavor]/page.tsx`, import.meta.url);
-if (!existsSync(flavorDir)) {
+const routePath = `src/app/(resume)/${prefix ? `${prefix}/` : ""}[flavor]/page.tsx`;
+if (!existsSync(new URL(`../${routePath}`, import.meta.url))) {
   console.error(
-    `\nresume validation failed — site.flavorPrefix is "${prefix}" but ` +
-      `src/app/(resume)/${prefix}/[flavor]/page.tsx does not exist.\n` +
+    `\nresume validation failed — site.flavorPrefix is ${prefix ? `"${prefix}"` : "empty"} ` +
+      `but ${routePath} does not exist.\n` +
       "Rename the route folder to match, or change the config back."
   );
   process.exit(1);

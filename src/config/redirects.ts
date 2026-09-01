@@ -56,11 +56,14 @@ export const redirects = async (): Promise<Redirect[]> => {
      * Flavors used to be a query parameter; they are path segments now so each
      * one can be prerendered. Existing links keep working. Matched at the edge,
      * before the static page is served, so "/" stays a static file.
+     *
+     * The destination follows site.flavorPrefix, which is empty by default —
+     * flavors sit at the root.
      */
     {
       source: "/",
       has: [{ type: "query", key: "flavor", value: "(?<flavor>[a-z0-9-]+)" }],
-      destination: `/${resumeConfig.site.flavorPrefix}/:flavor`,
+      destination: `${resumeConfig.site.flavorPrefix ? `/${resumeConfig.site.flavorPrefix}` : ""}/:flavor`,
       permanent: true,
     },
     ...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
