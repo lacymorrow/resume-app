@@ -16,7 +16,50 @@ export const RESUME_CSS = `
   .resume-frame .project-link:hover .project-arrow { transform: translateX(3px); }
   @media (prefers-reduced-motion: reduce) {
     .resume-frame *, .resume-frame *::before, .resume-frame *::after { transition: none !important; }
+    ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+    [data-flavor-entering] .resume-main { animation: none !important; }
   }
+
+  /*
+   * Switching flavors is a page change: a different headline, a different set
+   * of roles, a different accent. The browser cross-fades the two states so the
+   * resume reads as being re-cut rather than reloaded. See lib/transitions.ts
+   * for the navigation side of it.
+   *
+   * The rail and the accent rule are named out of the page snapshot so they
+   * hold still. The name, the contacts, and the flavor list are identical
+   * either side of the switch, and drifting them would pull the eye away from
+   * the part that actually changed.
+   */
+  .resume-rail { view-transition-name: resume-rail; }
+  .resume-topbar { view-transition-name: resume-topbar; }
+
+  /* The default cross-fade blends the two snapshots additively, which only
+     looks right while neither of them moves. Both leave before the incoming
+     one arrives, so the two states barely overlap and nothing ghosts. */
+  ::view-transition-image-pair(root) { isolation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
+  ::view-transition-old(root) { animation: resume-leave 140ms ease-in both; }
+  ::view-transition-new(root) { animation: resume-enter 280ms 120ms cubic-bezier(0.22, 0.68, 0.24, 1) both; }
+
+  /* The rail keeps its place, so only its wording cross-fades. */
+  ::view-transition-old(resume-rail) { animation: resume-out 120ms ease-in both; }
+  ::view-transition-new(resume-rail) { animation: resume-in 240ms 120ms ease-out both; }
+  ::view-transition-group(resume-topbar) { animation-duration: 240ms; }
+
+  @keyframes resume-out { to { opacity: 0; } }
+  @keyframes resume-in { from { opacity: 0; } }
+  @keyframes resume-leave { to { opacity: 0; transform: translateY(-8px); } }
+  @keyframes resume-enter { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Colour transitions are still in flight when the incoming state is
+     captured, so the new snapshot would otherwise show the outgoing accent. */
+  [data-flavor-changing] .resume-frame, [data-flavor-changing] .resume-frame *,
+  [data-flavor-changing] .resume-topbar { transition: none !important; }
+
+  /* Without the API the swap is instant; the new column fades in instead. */
+  [data-flavor-entering] .resume-main { animation: resume-enter 300ms ease both; }
+
   @media (max-width: 860px) {
     .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
     .resume-rail { position: static !important; height: auto !important; }

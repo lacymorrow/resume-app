@@ -104,6 +104,84 @@ test.describe("resume builder", () => {
     await expect(page.locator(".resume-desk")).toBeHidden();
   });
 
+  test("switching flavor cross-fades instead of snapping", async ({ page }) => {
+    await page.goto("/");
+    await waitForHydration(page);
+
+    // A built-in flavor is its own page, so switching remounts the viewer and
+    // no component state survives it. The attribute on <html> is what the
+    // transition waits on to know the new flavor actually rendered.
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.dataset.flavor))
+      .toBe("complete");
+
+    const started = page.evaluate(
+      () =>
+        new Promise<boolean>((resolve) => {
+          const original = document.startViewTransition.bind(document);
+          document.startViewTransition = (cb) => {
+            resolve(true);
+            return original(cb);
+          };
+          setTimeout(() => resolve(false), 5000);
+        })
+    );
+
+    await page.getByRole("radio", { name: "AI / Agentic Engineer" }).click();
+    expect(await started).toBe(true);
+    await page.waitForURL(/\/ai$/);
+
+    // The flag suppresses every colour transition in the frame while the
+    // snapshots are taken; leaving it set would kill them for the session.
+    const changing = () =>
+      page.evaluate(() => document.documentElement.hasAttribute("data-flavor-changing"));
+    await expect.poll(changing).toBe(false);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.dataset.flavor))
+      .toBe("ai");
+  });
+
+  test("re-selecting the current flavor starts no transition", async ({ page }) => {
+    await page.goto("/ai");
+    await waitForHydration(page);
+    await page.evaluate(() => {
+      (window as unknown as { vt: number }).vt = 0;
+      const original = document.startViewTransition.bind(document);
+      document.startViewTransition = (cb) => {
+        (window as unknown as { vt: number }).vt += 1;
+        return original(cb);
+      };
+    });
+
+    // Nothing changes, so nothing would ever mark the swap as landed and the
+    // page would sit frozen under the transition until its own timeout.
+    await page.getByRole("radio", { name: "AI / Agentic Engineer" }).click();
+    await page.waitForTimeout(400);
+    expect(await page.evaluate(() => (window as unknown as { vt: number }).vt)).toBe(0);
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
+  });
+
+  test("reduced motion switches flavor with no animation at all", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await waitForHydration(page);
+    await page.evaluate(() => {
+      (window as unknown as { vt: number }).vt = 0;
+      const original = document.startViewTransition.bind(document);
+      document.startViewTransition = (cb) => {
+        (window as unknown as { vt: number }).vt += 1;
+        return original(cb);
+      };
+    });
+
+    // Not merely a stylesheet override: a view transition freezes the page
+    // while it runs, which is itself motion the reader asked not to have.
+    await page.getByRole("radio", { name: "DevOps Engineer" }).click();
+    await page.waitForURL(/\/devops$/);
+    expect(await page.evaluate(() => (window as unknown as { vt: number }).vt)).toBe(0);
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
+  });
+
   test("a tuned variant downloads as a committable flavor file", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);

@@ -27,6 +27,7 @@ import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
 import { DEFAULT_FLAVOR_ID, flavorHref } from "../lib/routes";
 import { buildSections, DEFAULT_SECTIONS } from "../lib/sections";
 import { SCREEN } from "../lib/theme";
+import { markFlavor, transitionToFlavor } from "../lib/transitions";
 import type { ResumeSchema } from "../lib/types";
 import { DeskLabel, ResumeFrame } from "./frame";
 import { ResumePanel } from "./panel";
@@ -114,6 +115,33 @@ export function ResumeViewer({
       allFlavors[0]!,
     [allFlavors, activeFlavorId, flavorId]
   );
+
+  /**
+   * The flavor on screen, published where the transition helper can see it.
+   * Built-in flavors are separate pages, so the switch remounts this component
+   * and an attribute on the document is the only thing that outlives it.
+   */
+  useEffect(() => {
+    markFlavor(flavor.id);
+  }, [flavor.id]);
+
+  /**
+   * A view transition freezes the page until the new flavor renders, so an
+   * unprefetched push would stall it for as long as the request takes. The
+   * flavor pages are static and there are a handful of them; fetching them
+   * while the browser is idle makes every switch a local render.
+   */
+  useEffect(() => {
+    const warm = () => {
+      for (const f of FLAVORS) router.prefetch(flavorHref(f.id));
+    };
+    if (typeof window.requestIdleCallback !== "function") {
+      const t = setTimeout(warm, 1200);
+      return () => clearTimeout(t);
+    }
+    const id = window.requestIdleCallback(warm, { timeout: 3000 });
+    return () => window.cancelIdleCallback(id);
+  }, [router]);
 
   const filters = useMemo<FilterState>(() => {
     // The flavor supplies section defaults; `off` records what the reader
@@ -205,17 +233,19 @@ export function ResumeViewer({
   const selectFlavor = useCallback(
     (id: string) => {
       const custom = customFlavors.find((f) => f.id === id);
-      void setHiddenCompanies(custom?.hiddenCompanies.length ? custom.hiddenCompanies : null);
-      void setHiddenProjects(custom?.hiddenProjects.length ? custom.hiddenProjects : null);
-      void setSectionsOff(null);
-      void setSelectedTags(null);
+      transitionToFlavor(id, () => {
+        void setHiddenCompanies(custom?.hiddenCompanies.length ? custom.hiddenCompanies : null);
+        void setHiddenProjects(custom?.hiddenProjects.length ? custom.hiddenProjects : null);
+        void setSectionsOff(null);
+        void setSelectedTags(null);
 
-      if (custom) {
-        void setSavedFlavorId(id);
-        return;
-      }
-      void setSavedFlavorId(null);
-      router.push(flavorHref(id));
+        if (custom) {
+          void setSavedFlavorId(id);
+          return;
+        }
+        void setSavedFlavorId(null);
+        router.push(flavorHref(id));
+      });
     },
     [
       customFlavors,
@@ -229,13 +259,15 @@ export function ResumeViewer({
   );
 
   const reset = useCallback(() => {
-    void setSavedFlavorId(null);
-    void setHiddenCompanies(null);
-    void setHiddenProjects(null);
-    void setSelectedTags(null);
-    void setTagMatchMode(null);
-    void setSectionsOff(null);
-    router.push(flavorHref(DEFAULT_FLAVOR_ID));
+    transitionToFlavor(DEFAULT_FLAVOR_ID, () => {
+      void setSavedFlavorId(null);
+      void setHiddenCompanies(null);
+      void setHiddenProjects(null);
+      void setSelectedTags(null);
+      void setTagMatchMode(null);
+      void setSectionsOff(null);
+      router.push(flavorHref(DEFAULT_FLAVOR_ID));
+    });
   }, [
     router,
     setSavedFlavorId,

@@ -200,6 +200,13 @@ an important author rule outranks those.
 `.resume-entry` is a class the frame uses, and a leftover rule there matching it
 is invisible until you look at the rendered page.
 
+Switching flavor is a navigation between prerendered pages, so it cross-fades
+through the View Transitions API rather than through React. The navigation side
+is `src/resume/lib/transitions.ts`; the look is the `::view-transition-*` rules
+in `RESUME_CSS`. The two halves are joined by `data-flavor` on `<html>`: the
+push remounts the viewer, so an attribute on the document is the only thing
+that outlives the swap and can tell the transition the new flavor has rendered.
+
 ### Adding New Routes
 Prefer not to. Every single-segment path is a resume flavor, so a new top-level
 route collides with the flavor namespace — see the URLs section of README.md and
