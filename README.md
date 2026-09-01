@@ -28,7 +28,7 @@ Flavors sit at the root. `site.flavorPrefix` in `resume.config.ts` can move
 them under a segment instead — `"r"` gives `/r/frontend` — which you want if
 the site also serves root-level pages of its own, since any single-segment path
 that is not a flavor now 404s. App Router folder names are static, so changing
-the prefix means renaming `src/app/(resume)/[flavor]` to match;
+the prefix means renaming `src/app/[flavor]` to match;
 `bun run validate:resume` fails the build if the two disagree.
 
 Flavors are paths and builder state is query parameters for a reason: a flavor
@@ -36,6 +36,11 @@ is a published variant that should prerender to a static file, while builder
 state is per-visitor tuning that a static file cannot vary on. That tuning is
 therefore applied after the page mounts. Legacy `/?flavor=<id>` links redirect
 to `/<id>`.
+
+Nothing else is routed. This started as a ShipKit app and kept its marketing,
+auth, dashboard, admin, docs, blog, CMS, and payment routes; they are gone, so
+every path other than the ones above is a 404. The libraries behind them still
+sit in `src/` — deleting a route does not delete its supporting code.
 
 ## Stack
 

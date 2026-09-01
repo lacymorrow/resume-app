@@ -97,14 +97,19 @@ Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/fea
 ## Key Architectural Patterns
 
 ### File Structure Convention
+This app serves the resume and nothing else. ShipKit's marketing, auth,
+dashboard, admin, docs, blog, CMS, and payment **routes** were removed; the
+libraries behind them still live under `src/`, so the sections below describing
+auth, payments, and CMS document code that is present but unrouted.
+
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── (app)/             # Main app routes
-│   ├── (authentication)/  # Auth pages  
-│   ├── (dashboard)/       # Protected routes
-│   ├── (demo)/           # Demo pages
-│   └── api/              # API routes
+├── app/                    # Next.js App Router — resume routes only
+│   ├── layout.tsx         # The only root layout (no chrome, no Suspense)
+│   ├── page.tsx           # Default flavor, served at "/"
+│   ├── [flavor]/          # One prerendered page per flavor
+│   └── not-found.tsx      # 404 — every other path lands here
+├── resume/                # The resume engine (data, flavors, viewer)
 ├── components/            # Reusable UI components
 ├── server/               # Server-side code
 │   ├── actions/          # Server actions
@@ -182,10 +187,14 @@ Shipkit uses environment variables for feature toggles:
 4. Update TypeScript types if needed
 
 ### Adding New Routes
-1. Create route in appropriate `app/` directory
-2. Follow route grouping conventions: `(app)`, `(dashboard)`, etc.
-3. Use Server Components when possible
-4. Add proper error and loading states
+Prefer not to. Every single-segment path is a resume flavor, so a new top-level
+route collides with the flavor namespace — see the URLs section of README.md and
+`site.flavorPrefix` in `resume.config.ts` before adding one.
+
+1. Create the route directly under `src/app/` (there are no route groups left)
+2. Use Server Components when possible
+3. Do not add a `loading.tsx` above the resume — a Suspense boundary there is
+   what used to stop the resume rendering without JavaScript
 
 ### Testing Strategy
 - **Unit tests** - Vitest for utilities and components
