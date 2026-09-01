@@ -201,11 +201,15 @@ an important author rule outranks those.
 is invisible until you look at the rendered page.
 
 Switching flavor is a navigation between prerendered pages, so it cross-fades
-through the View Transitions API rather than through React. The navigation side
-is `src/resume/lib/transitions.ts`; the look is the `::view-transition-*` rules
-in `RESUME_CSS`. The two halves are joined by `data-flavor` on `<html>`: the
-push remounts the viewer, so an attribute on the document is the only thing
-that outlives the swap and can tell the transition the new flavor has rendered.
+through the View Transitions API. ShipKit already ships that: `next-view-
+transitions` holds the transition open until the new route commits, and its
+`ViewTransitions` provider is mounted in the root layout — not through
+`components/layouts/app-router-layout.tsx`, which drags in the next/app nuqs
+adapter and would cost the app its static rendering.
+
+What the library does not do is respect reduced motion, or know that this page
+animates its colours; `src/resume/lib/transitions.ts` is only those two things.
+The look is the `::view-transition-*` rules in `RESUME_CSS`.
 
 ### Adding New Routes
 Prefer not to. Every single-segment path is a resume flavor, so a new top-level

@@ -104,60 +104,68 @@ test.describe("resume builder", () => {
     await expect(page.locator(".resume-desk")).toBeHidden();
   });
 
+  interface TransitionReport {
+    /** How many view transitions the page started. */
+    started: number;
+    /** Whether the flag that switches off the frame's colour fades was raised. */
+    suppressed: boolean;
+  }
+
+  /** Instruments the page, and returns a reader for what it saw. */
+  async function watchTransitions(page: Page) {
+    await page.evaluate(() => {
+      const w = window as unknown as { report: TransitionReport };
+      w.report = { started: 0, suppressed: false };
+      const original = document.startViewTransition.bind(document);
+      document.startViewTransition = (cb) => {
+        w.report.started += 1;
+        return original(cb);
+      };
+      new MutationObserver(() => {
+        if (document.documentElement.hasAttribute("data-flavor-changing")) {
+          w.report.suppressed = true;
+        }
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-flavor-changing"],
+      });
+    });
+    return () => page.evaluate(() => (window as unknown as { report: TransitionReport }).report);
+  }
+
+  function stillSuppressed(page: Page) {
+    return page.evaluate(() => document.documentElement.hasAttribute("data-flavor-changing"));
+  }
+
   test("switching flavor cross-fades instead of snapping", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);
-
-    // A built-in flavor is its own page, so switching remounts the viewer and
-    // no component state survives it. The attribute on <html> is what the
-    // transition waits on to know the new flavor actually rendered.
-    await expect
-      .poll(() => page.evaluate(() => document.documentElement.dataset.flavor))
-      .toBe("complete");
-
-    const started = page.evaluate(
-      () =>
-        new Promise<boolean>((resolve) => {
-          const original = document.startViewTransition.bind(document);
-          document.startViewTransition = (cb) => {
-            resolve(true);
-            return original(cb);
-          };
-          setTimeout(() => resolve(false), 5000);
-        })
-    );
+    const report = await watchTransitions(page);
 
     await page.getByRole("radio", { name: "AI / Agentic Engineer" }).click();
-    expect(await started).toBe(true);
     await page.waitForURL(/\/ai$/);
+    expect(await report()).toEqual({ started: 1, suppressed: true });
 
-    // The flag suppresses every colour transition in the frame while the
-    // snapshots are taken; leaving it set would kill them for the session.
-    const changing = () =>
-      page.evaluate(() => document.documentElement.hasAttribute("data-flavor-changing"));
-    await expect.poll(changing).toBe(false);
-    await expect
-      .poll(() => page.evaluate(() => document.documentElement.dataset.flavor))
-      .toBe("ai");
+    // Leaving the flag up would strip the colour fades from the page for the
+    // rest of the session, long after the transition it was raised for.
+    await expect.poll(() => stillSuppressed(page)).toBe(false);
+    await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
   });
 
-  test("re-selecting the current flavor starts no transition", async ({ page }) => {
-    await page.goto("/ai");
+  test("going back cross-fades too", async ({ page }) => {
+    await page.goto("/");
     await waitForHydration(page);
-    await page.evaluate(() => {
-      (window as unknown as { vt: number }).vt = 0;
-      const original = document.startViewTransition.bind(document);
-      document.startViewTransition = (cb) => {
-        (window as unknown as { vt: number }).vt += 1;
-        return original(cb);
-      };
-    });
+    await page.getByRole("radio", { name: "DevOps Engineer" }).click();
+    await page.waitForURL(/\/devops$/);
+    await waitForHydration(page);
 
-    // Nothing changes, so nothing would ever mark the swap as landed and the
-    // page would sit frozen under the transition until its own timeout.
-    await page.getByRole("radio", { name: "AI / Agentic Engineer" }).click();
-    await page.waitForTimeout(400);
-    expect(await page.evaluate(() => (window as unknown as { vt: number }).vt)).toBe(0);
+    // The provider transitions the browser's own buttons as well, a path that
+    // never touches the flavor controls and so has to raise the flag itself.
+    const report = await watchTransitions(page);
+    await page.goBack();
+    await page.waitForURL(/\/$/);
+    expect(await report()).toEqual({ started: 1, suppressed: true });
+    await expect.poll(() => stillSuppressed(page)).toBe(false);
     await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
   });
 
@@ -165,20 +173,13 @@ test.describe("resume builder", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await waitForHydration(page);
-    await page.evaluate(() => {
-      (window as unknown as { vt: number }).vt = 0;
-      const original = document.startViewTransition.bind(document);
-      document.startViewTransition = (cb) => {
-        (window as unknown as { vt: number }).vt += 1;
-        return original(cb);
-      };
-    });
+    const report = await watchTransitions(page);
 
     // Not merely a stylesheet override: a view transition freezes the page
     // while it runs, which is itself motion the reader asked not to have.
     await page.getByRole("radio", { name: "DevOps Engineer" }).click();
     await page.waitForURL(/\/devops$/);
-    expect(await page.evaluate(() => (window as unknown as { vt: number }).vt)).toBe(0);
+    expect(await report()).toEqual({ started: 0, suppressed: false });
     await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
   });
 

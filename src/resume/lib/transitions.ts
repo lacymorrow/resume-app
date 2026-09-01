@@ -1,95 +1,52 @@
 /**
- * Flavor switching as a page transition.
+ * The two things ShipKit's view-transition provider does not cover.
  *
- * Changing flavor rewrites the headline, the roles on show, and the accent all
- * at once. As a bare re-render that reads as a flicker — the page looks like it
- * reloaded rather than like the same resume being re-cut. The View Transitions
- * API lets the browser hold both states and cross-fade between them.
- *
- * The awkward part is that a built-in flavor is its own page, so the change is
- * a router push that lands some time after the call returns, and the push
- * remounts the viewer — there is no component state that survives to watch.
- * `startViewTransition` takes a promise for exactly this case, and the
- * `data-flavor` attribute the viewer writes on <html> is the signal that the
- * new flavor has actually rendered.
+ * next-view-transitions handles the hard part — a flavor is its own page, so
+ * switching is a router push that lands after the call returns, and the
+ * provider is what holds the transition open until the new route commits. It
+ * also covers the browser's own back and forward buttons. What it does not do
+ * is respect reduced motion, or know that this page animates its colours.
  */
 
-/** Written by the viewer on every render; read here to know the swap landed. */
-const FLAVOR_ATTR = "data-flavor";
-
-/** Present while a transition runs. RESUME_CSS reads both of these. */
+/** Present while a transition runs. RESUME_CSS reads it. */
 const RUNNING_ATTR = "data-flavor-changing";
-const ENTERING_ATTR = "data-flavor-entering";
+
+/** Backstop for the paths that never report a transition as ready. */
+const RESTORE_MS = 1000;
+
+let restoreTimer: ReturnType<typeof setTimeout> | undefined;
 
 /**
- * Cap on how long the frozen page waits for the push to land. Flavor pages are
- * static and prefetched, so this is a stall guard rather than a duration.
+ * A view transition freezes the page while it runs, which is itself motion the
+ * reader asked not to have, so the answer is to skip it rather than to style it
+ * away. Also covers browsers without the API, where the library pushes
+ * straight through and no transition would start anyway.
  */
-const SETTLE_MS = 600;
-
-/** Long enough to outlast the fallback fade in RESUME_CSS. */
-const FALLBACK_MS = 400;
-
-/** Records which flavor is on screen. Also what `transitionToFlavor` waits on. */
-export function markFlavor(id: string): void {
-  document.documentElement.setAttribute(FLAVOR_ATTR, id);
-}
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-/** Resolves once the viewer has marked `id` as rendered, or the cap expires. */
-function settled(id: string): Promise<void> {
-  const root = document.documentElement;
-  if (root.getAttribute(FLAVOR_ATTR) === id) return Promise.resolve();
-
-  return new Promise((resolve) => {
-    const finish = () => {
-      observer.disconnect();
-      clearTimeout(timer);
-      resolve();
-    };
-    const observer = new MutationObserver(() => {
-      if (root.getAttribute(FLAVOR_ATTR) === id) finish();
-    });
-    observer.observe(root, { attributes: true, attributeFilter: [FLAVOR_ATTR] });
-    const timer = setTimeout(finish, SETTLE_MS);
-  });
+export function shouldTransition(): boolean {
+  return (
+    typeof document !== "undefined" &&
+    "startViewTransition" in document &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
 }
 
 /**
- * Runs `apply` — the state changes and router push that switch flavor — inside
- * a view transition, falling back to a plain swap with a short enter animation
- * where the API is missing and to no animation at all under reduced motion.
+ * Colour transitions are still in flight when the incoming state is captured,
+ * so without this the new snapshot shows the outgoing accent. Cleared on the
+ * transition's own `ready`, by which point both snapshots have been taken.
+ *
+ * The timer is the way back for the paths that never report ready: a back or
+ * forward button, and a transition superseded by a second click, whose `ready`
+ * rejects. Leaving the flag set would strip the colour fades from the page for
+ * the rest of the session.
  */
-export function transitionToFlavor(id: string, apply: () => void): void {
-  const root = document.documentElement;
+export function suppressColorTransitions(): void {
+  document.documentElement.setAttribute(RUNNING_ATTR, "");
+  clearTimeout(restoreTimer);
+  restoreTimer = setTimeout(restoreColorTransitions, RESTORE_MS);
+}
 
-  // Re-selecting the current flavor changes nothing, so there would be nothing
-  // to wait for: the transition would freeze the page for the whole cap.
-  if (root.getAttribute(FLAVOR_ATTR) === id || prefersReducedMotion()) {
-    apply();
-    return;
-  }
-
-  if (typeof document.startViewTransition !== "function") {
-    root.setAttribute(ENTERING_ATTR, "");
-    apply();
-    void settled(id).then(() => {
-      setTimeout(() => root.removeAttribute(ENTERING_ATTR), FALLBACK_MS);
-    });
-    return;
-  }
-
-  root.setAttribute(RUNNING_ATTR, "");
-  const done = () => root.removeAttribute(RUNNING_ATTR);
-  const transition = document.startViewTransition(() => {
-    apply();
-    return settled(id);
-  });
-
-  // `finished` rejects only if that callback threw. Clear the flag either way:
-  // it disables every colour transition in the frame while it is set.
-  transition.finished.then(done, done);
+export function restoreColorTransitions(): void {
+  clearTimeout(restoreTimer);
+  document.documentElement.removeAttribute(RUNNING_ATTR);
 }
