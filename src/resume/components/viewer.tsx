@@ -208,7 +208,11 @@ export function ResumeViewer({
     [data.basics, flavor.tagline]
   );
   const contacts = useMemo(() => contactRows(basics), [basics]);
-  const location = [basics.location.city, basics.location.state].filter(Boolean).join(", ");
+  // The primary city and any others it is read alongside, each as "City, ST".
+  const location = [basics.location, ...(basics.location.also ?? [])]
+    .map((place) => [place.city, place.state].filter(Boolean).join(", "))
+    .filter(Boolean)
+    .join(" · ");
 
   const handleFiltersChange = useCallback(
     (next: FilterState) => {

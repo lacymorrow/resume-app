@@ -26,6 +26,12 @@ export interface ResumeBasics {
     city: string;
     state: string;
     address: string;
+    /**
+     * Further places worked from, in the order the rail should read them. The
+     * structured fields above hold one city between them, and a resume that
+     * names two bases is answering "where are you" for both.
+     */
+    also?: { city: string; state: string }[];
   };
   profiles: {
     network: string;
