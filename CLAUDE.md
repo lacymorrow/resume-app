@@ -47,6 +47,33 @@ bun start              # Start production server
 bun run analyze        # Analyze bundle size
 ```
 
+### Resume flavors
+```bash
+bun run validate:resume  # structural check over resume.json + flavors (gates the build)
+bun run flavor <posting>  # generate a flavor from a job posting
+bun run flavor <posting> --dry-run  # print the selection without generating
+```
+
+The generator lives in `scripts/flavor/`, built as an ordered pipeline in the
+same shape as [shipx](https://github.com/lacymorrow/shipx): `cli.ts` parses
+flags and drives `steps/*` in a fixed order, and clack handles the prompts.
+
+The load-bearing decision is that **visibility is computed, not generated**.
+`steps/select.ts` ranks entries by tag overlap with the posting; the model in
+`steps/prose.ts` only writes prose, and only over entries that survived. That is
+what makes a generated flavor reviewable rather than something to trust — the
+scores and reasons print as a table, and the same posting gives the same cuts.
+
+`steps/verify.ts` is the other half: a rewritten summary may not introduce a
+number or a technology absent from the source entry, and an override key that
+does not match an entry name is an error. Flavor overrides are keyed by entry
+name, so a mismatched key is silently ignored by the renderer — the same failure
+`src/resume/lib/validate.ts` exists to catch.
+
+Generation shells out to the `claude` CLI in print mode rather than an SDK, so
+there is no API key in `.env` for a public repo to leak. Unit tests for the
+deterministic stages are in `tests/unit/resume/`.
+
 ### Registry
 ```bash
 bun run build:registry # Build shadcn registry (npx shadcn build)

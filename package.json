@@ -15,6 +15,7 @@
     "build": "bun run validate:resume && next build",
     "build:vercel": "bun run validate:resume && NODE_OPTIONS='--max-old-space-size=4096' next build --webpack",
     "validate:resume": "bun run scripts/validate-resume.ts",
+    "flavor": "bun run scripts/flavor/cli.ts",
     "clean": "rm next-env.d.ts ; rm package-lock.json ; rm pnpm-lock.yaml ; rm bun.lockb ; rm -rf .next ; rm -rf node_modules ; rm -rf .turbo",
     "clean:cache": "rm -rf .next/cache",
     "doctor": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",
@@ -245,6 +246,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.0",
     "@builder.io/partytown": "^0.10.3",
+    "@clack/prompts": "^1.7.0",
     "@eslint/eslintrc": "^3.3.3",
     "@next/bundle-analyzer": "16.1.6",
     "@next/eslint-plugin-next": "16.1.6",
