@@ -199,7 +199,13 @@ for (const [term, canonical] of [
   });
 }
 
-function extractTagsFromText(text: string | undefined): string[] {
+/**
+ * Canonicalizes whatever technologies a piece of prose mentions. Exported
+ * because a job posting has to be read in the same vocabulary the resume is
+ * indexed in — matching raw words against raw words would miss "ecommerce"
+ * against "E-commerce" and every other alias this table exists to collapse.
+ */
+export function extractTagsFromText(text: string | undefined): string[] {
   // Summaries are optional on some collections, and a hand-edited resume.json
   // can omit one anywhere. Tag extraction runs on every render, so a missing
   // string here would be a blank page rather than a missing tag.

@@ -42,6 +42,46 @@ auth, dashboard, admin, docs, blog, CMS, and payment routes; they are gone, so
 every path other than the ones above is a 404. The libraries behind them still
 sit in `src/` — deleting a route does not delete its supporting code.
 
+## Flavors
+
+A flavor is a JSON overlay on `resume.json`: a tagline, an expertise line, an
+accent, an opening statement, and per-entry overrides that hide a job or rewrite
+its summary. `flavors/*.json` holds them and `flavors/index.ts` is the registry —
+a file on disk does nothing until it is in that array.
+
+### Generating one from a job posting
+
+```bash
+bun run flavor posting.txt --id acme-platform
+pbpaste | bun run flavor --id acme-platform
+bun run flavor posting.txt --dry-run   # print the selection, generate nothing
+```
+
+The pipeline is deliberately lopsided:
+
+1. **Read** the posting in the resume's own tag vocabulary, so `nextjs`,
+   `postgres`, and `i18n` land on `Next.js`, `PostgreSQL`, and `Localization`
+   rather than on nothing.
+2. **Score and select**, deterministically. Every work entry and project is
+   ranked by tag overlap; the newest roles are kept whatever they score, because
+   a resume that skips the last two years reads as an employment gap. The same
+   posting gives the same cuts, and the CLI prints them as a table with the
+   reason for each.
+3. **Write the prose** — and only the prose. A model sees the posting and the
+   entries that survived, and returns the tagline, expertise, statement, and at
+   most a handful of re-angled summaries. It never decides what is visible and
+   never sees an entry that was dropped.
+4. **Check it.** A rewritten summary may not introduce a number or a technology
+   the original entry did not have, and an override key that does not match an
+   entry name is an error rather than a silent no-op. The result is then run
+   through the same validation as `bun run validate:resume`.
+
+The CLI also reports what the posting asks for that the resume cannot answer —
+the honest counterweight to a variant tuned to look like a match.
+
+Generation drives the [`claude`](https://claude.com/claude-code) CLI in print
+mode, so there is no API key to configure. `--help` lists the rest.
+
 ## Stack
 
 - [Next.js 15](https://nextjs.org) with App Router
