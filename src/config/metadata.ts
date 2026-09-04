@@ -14,6 +14,14 @@ const getDefaultTitleString = (title: Metadata["title"]): string | undefined => 
   return undefined;
 };
 
+/*
+ * Neither of these names an image.
+ *
+ * The cards are generated per flavor by the file-based opengraph-image routes,
+ * and Next only falls back to those when metadata leaves `images` unset — an
+ * explicit value here would win over the file and pin every page to one
+ * picture. See src/resume/og/card.tsx.
+ */
 const defaultOpenGraph: OpenGraph = {
   type: "website",
   locale: siteConfig.metadata.locale,
@@ -21,37 +29,25 @@ const defaultOpenGraph: OpenGraph = {
   title: siteConfig.title,
   description: siteConfig.description,
   siteName: siteConfig.title,
-  images: [
-    {
-      url: siteConfig.ogImage,
-      width: siteConfig.metadata.openGraph.imageWidth,
-      height: siteConfig.metadata.openGraph.imageHeight,
-      alt: siteConfig.title,
-    },
-  ],
 };
 
 const defaultTwitter: Twitter = {
   card: siteConfig.metadata.twitter.card,
   title: siteConfig.title,
   description: siteConfig.description,
-  images: [
-    {
-      url: siteConfig.ogImage,
-      width: siteConfig.metadata.openGraph.imageWidth,
-      height: siteConfig.metadata.openGraph.imageHeight,
-      alt: siteConfig.title,
-    },
-  ],
   creator: siteConfig.creator.twitter,
 };
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.title,
-    template: `%s | ${siteConfig.tagline}`,
-  },
+  /*
+   * No template. Every page here is a flavor of one resume and already titles
+   * itself "<Role> Resume - <Name>", so a suffix only pushed the pages that
+   * inherit it past the length a search result shows — and "/" never inherited
+   * it, because the template lives in the same segment as that page, so the
+   * two halves of the site disagreed about their own titles.
+   */
+  title: siteConfig.title,
   description: siteConfig.description,
   applicationName: siteConfig.title,
   authors: [
@@ -144,6 +140,10 @@ export const constructMetadata = ({
   const metaTitleString = getDefaultTitleString(metadata.title);
   const defaultMetaTitleString = getDefaultTitleString(defaultMetadata.title);
 
+  // `images` is spread in only when a caller passes one, so the usual case
+  // leaves the key absent and the generated opengraph-image applies.
+  const overrideImages = images.length > 0 ? { images } : {};
+
   return {
     ...defaultMetadata,
     ...metadata,
@@ -153,7 +153,8 @@ export const constructMetadata = ({
       title: metaTitleString ?? defaultMetaTitleString,
       // Ensure description is not null
       description: metadata.description ?? defaultMetadata.description ?? undefined,
-      images: images.length > 0 ? images : defaultOpenGraph.images,
+      ...(metadata.openGraph ?? {}),
+      ...overrideImages,
     },
     twitter: {
       ...defaultTwitter,
@@ -161,29 +162,9 @@ export const constructMetadata = ({
       title: metaTitleString ?? defaultMetaTitleString,
       // Ensure description is not null
       description: metadata.description ?? defaultMetadata.description ?? undefined,
-      images: images.length > 0 ? images : defaultTwitter.images,
+      ...(metadata.twitter ?? {}),
+      ...overrideImages,
     },
     robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,
   };
-};
-
-// Route-specific metadata for better CTR
-export const routeMetadata = {
-  home: {
-    title: `${siteConfig.title} - ${siteConfig.tagline}`,
-    description: `Transform your app idea into reality with ${siteConfig.title}'s all-in-one development platform. Built with Next.js, TypeScript, and modern tools for rapid, production-ready deployment.`,
-  },
-  features: {
-    title: `Features - Modern App Development Made Simple | ${siteConfig.title}`,
-    description: `Discover how ${siteConfig.title} accelerates app development with Builder.io, Payload CMS, Auth.js, and more. Get enterprise-grade features without the complexity.`,
-  },
-  pricing: {
-    title: `Simple, Transparent Pricing | ${siteConfig.title}`,
-    description:
-      "Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.",
-  },
-  docs: {
-    title: `Documentation - Build Better Apps Faster | ${siteConfig.title}`,
-    description: `Comprehensive guides, API references, and examples to help you build production-ready apps with ${siteConfig.title}. From quick starts to advanced topics.`,
-  },
 };
