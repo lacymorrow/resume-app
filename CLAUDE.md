@@ -2,14 +2,17 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+This app serves the resume at resume.lacy.sh and nothing else. It started as a
+ShipKit app and kept its marketing, auth, dashboard, admin, docs, blog, CMS,
+and payment routes; those routes are gone but the libraries behind them still
+live under `src/` because deleting them would touch runtime code.
+
 ## Essential Development Commands
 
 ### Development Server
 ```bash
-bun dev             # Start development server with Turbo
-bun run dev:legacy  # Start development server without Turbo
+bun dev             # Start development server
 bun run dev:https   # Start development server with HTTPS
-bun run dev:all     # Start both dev server and workers
 ```
 
 ### Testing
@@ -29,20 +32,10 @@ bun run lint:fix       # Fix all linting issues
 bun run typecheck      # Run TypeScript type checking
 ```
 
-### Database Operations
-```bash
-bun run db:generate    # Generate Drizzle schema
-bun run db:migrate     # Run database migrations
-bun run db:push        # Push schema to database
-bun run db:studio      # Open Drizzle Studio
-bun run db:reset       # Reset database (drop, generate, migrate, push)
-bun run db:seed        # Seed database with test data
-```
-
 ### Build & Deployment
 ```bash
-bun run build          # Build for production
-bun run build:vercel   # Build with increased memory (8GB heap)
+bun run build          # Build for production (runs validate:resume first)
+bun run build:vercel   # Build with increased memory (4GB heap)
 bun start              # Start production server
 bun run analyze        # Analyze bundle size
 ```
@@ -61,159 +54,39 @@ flags and drives `steps/*` in a fixed order, and clack handles the prompts.
 The load-bearing decision is that **visibility is computed, not generated**.
 `steps/select.ts` ranks entries by tag overlap with the posting; the model in
 `steps/prose.ts` only writes prose, and only over entries that survived. That is
-what makes a generated flavor reviewable rather than something to trust — the
+what makes a generated flavor reviewable rather than something to trust: the
 scores and reasons print as a table, and the same posting gives the same cuts.
 
 `steps/verify.ts` is the other half: a rewritten summary may not introduce a
 number or a technology absent from the source entry, and an override key that
 does not match an entry name is an error. Flavor overrides are keyed by entry
-name, so a mismatched key is silently ignored by the renderer — the same failure
-`src/resume/lib/validate.ts` exists to catch.
+name, so a mismatched key is silently ignored by the renderer, which is the
+same failure `src/resume/lib/validate.ts` exists to catch.
 
 Generation shells out to the `claude` CLI in print mode rather than an SDK, so
 there is no API key in `.env` for a public repo to leak. Unit tests for the
 deterministic stages are in `tests/unit/resume/`.
 
-### Registry
-```bash
-bun run build:registry # Build shadcn registry (npx shadcn build)
-```
-
-Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/features/registry.mdx` for full documentation.
-
-## Architecture Overview
-
-### Core Framework Stack
-- **Next.js 15** with App Router - Full-stack React framework
-- **TypeScript** - Type safety throughout
-- **Tailwind CSS** - Utility-first styling
-- **Shadcn/UI** - Component library built on Radix UI
-- **Drizzle ORM** - Type-safe database operations
-- **Bun** - Package manager
-
-### Authentication & Authorization
-- **NextAuth.js v5** - Core authentication system
-- **Better Auth** - Alternative auth provider
-- **Payload CMS** - User management for credentials auth
-- **Multi-provider support** - OAuth (Google, GitHub, Discord), Magic Link, Credentials, Guest access
-- **Role-based access control** - Admin and user roles
-
-### Database & Data Layer
-- **PostgreSQL** - Primary database
-- **Drizzle ORM** - Database schema and queries
-- **Schema prefix support** - Multi-tenant capable with `DB_PREFIX`
-- **Comprehensive schema** - Users, payments, plans, API keys, teams, waitlists
-
-### Content Management
-- **Payload CMS v3** - Headless CMS with admin panel
-- **Builder.io** - Visual page builder integration
-- **MDX** - Rich content with React components
-- **Fumadocs** - Documentation system
-
-### Payment Processing
-- **Multiple providers** - Lemon Squeezy, Stripe, Polar
-- **Subscription management** - Plans, billing, webhooks
-- **Usage-based billing** - Flexible pricing models
-
-### Performance & Monitoring
-- **Vercel Analytics** - Web analytics
-- **PostHog** - Product analytics
-- **OpenTelemetry** - Observability
-- **Web Workers** - Background processing
-
-## Key Architectural Patterns
-
-### File Structure Convention
-This app serves the resume and nothing else. ShipKit's marketing, auth,
-dashboard, admin, docs, blog, CMS, and payment **routes** were removed; the
-libraries behind them still live under `src/`, so the sections below describing
-auth, payments, and CMS document code that is present but unrouted.
+## File Structure
 
 ```
 src/
-├── app/                    # Next.js App Router — resume routes only
+├── app/                    # Next.js App Router, resume routes only
 │   ├── layout.tsx         # The only root layout (no chrome, no Suspense)
 │   ├── page.tsx           # Default flavor, served at "/"
 │   ├── [flavor]/          # One prerendered page per flavor
-│   └── not-found.tsx      # 404 — every other path lands here
+│   └── not-found.tsx      # 404, every other path lands here
 ├── resume/                # The resume engine (data, flavors, viewer)
 ├── components/            # Reusable UI components
-├── server/               # Server-side code
-│   ├── actions/          # Server actions
-│   ├── services/         # Business logic
-│   └── db/              # Database layer
-├── lib/                  # Utilities and configurations
-└── content/             # Static content (MDX, JSON)
+├── lib/                   # Utilities and configurations
+└── content/               # Static content (MDX, JSON)
 ```
 
-### Component Architecture
-- **Atomic design** - Primitives → Blocks → Layouts → Pages
-- **Server Components first** - Minimize client-side JavaScript
-- **Named exports** - Prefer `export const Component = () => {}` over default exports
-- **TypeScript interfaces** - Type all props and return values
+`src/server/`, `src/config/`, and other directories carry ShipKit code that is
+present but not routed. Do not build on top of it without a specific reason.
 
-### Server-Side Patterns
-- **Server Actions** - Form handling and mutations (in `server/actions/`)
-- **Services** - Business logic and data access (in `server/services/`)
-- **Separation of concerns** - Actions call services, components use actions
-- **Never use server actions for data fetching** - Use Server Components instead
+## Styling the Resume
 
-### State Management
-- **Server state** - React Server Components handle most state
-- **Client state** - Minimal use of useState/useEffect
-- **URL state** - Use `nuqs` for search parameters
-- **Form state** - React Hook Form with Zod validation
-
-### Feature Flag System
-Shipkit uses environment variables for feature toggles:
-- `NEXT_PUBLIC_FEATURE_AUTH_*_ENABLED` - Authentication providers
-- `NEXT_PUBLIC_FEATURE_PAYMENTS_*_ENABLED` - Payment providers
-- `NEXT_PUBLIC_FEATURE_CMS_ENABLED` - CMS functionality
-- **Graceful degradation** - Features disable cleanly when not configured
-
-## Critical Development Rules
-
-### Code Style (Enforced by Cursor Rules)
-- **File size limit** - Keep files under 500 lines
-- **Naming conventions** - kebab-case files, PascalCase components, camelCase variables
-- **Function style** - Arrow functions for components, function keyword for utilities
-- **TypeScript** - Interfaces over types, no enums (use objects/maps)
-- **Comments** - Explain "why" not "what", preserve existing comments
-
-### Performance Requirements
-- **Minimize client components** - Use 'use client' sparingly
-- **Suspense boundaries** - Wrap client components with fallbacks
-- **Image optimization** - Use Next.js Image with proper sizing
-- **Bundle analysis** - Run `bun run analyze` before major changes
-
-### Navigation Patterns
-- **Prefer Link over router.push** - Use `src/components/primitives/link-with-transition`
-- **Button-like links** - Use `<Link className={cn(buttonVariants(...))} ...>`
-- **Multi-zone navigation** - Use anchor tags (`<a>`) for cross-zone links
-
-### Database Best Practices
-- **Use transactions** - `db.transaction()` for multi-operation changes
-- **Avoid booleans** - Use timestamps instead (e.g., `activeAt` vs `isActive`)
-- **Type safety** - All queries are type-safe through Drizzle
-- **Error handling** - Wrap database operations in try-catch blocks
-
-## Common Tasks
-
-### Adding New Features
-1. Check for existing environment variable feature flags
-2. Add new feature flag if needed
-3. Implement server action in `server/actions/`
-4. Add service logic in `server/services/`
-5. Create UI components following atomic design
-6. Add tests for new functionality
-
-### Database Schema Changes
-1. Modify schema in `src/server/db/schema.ts`
-2. Run `bun run db:generate` to create migration
-3. Run `bun run db:migrate` to apply changes
-4. Update TypeScript types if needed
-
-### Styling the Resume
 The resume is styled with inline styles plus one stylesheet, `RESUME_CSS` in
 `src/resume/components/frame.tsx`, for the rules inline styles cannot express:
 hover, responsive, and print.
@@ -223,14 +96,14 @@ palette out of `resume.config.ts` instead of restating its hex values. They also
 have to be `!important`: the screen theme is applied as inline styles, and only
 an important author rule outranks those.
 
-`globals.css` is shared ShipKit styling. Be careful adding resume rules to it —
-`.resume-entry` is a class the frame uses, and a leftover rule there matching it
-is invisible until you look at the rendered page.
+`globals.css` is shared ShipKit styling. Be careful adding resume rules to it:
+`.resume-entry` is a class the frame uses, and a leftover rule there matching
+it is invisible until you look at the rendered page.
 
 Switching flavor is a navigation between prerendered pages, so it cross-fades
 through the View Transitions API. ShipKit already ships that: `next-view-
 transitions` holds the transition open until the new route commits, and its
-`ViewTransitions` provider is mounted in the root layout — not through
+`ViewTransitions` provider is mounted in the root layout, not through
 `components/layouts/app-router-layout.tsx`, which drags in the next/app nuqs
 adapter and would cost the app its static rendering.
 
@@ -238,132 +111,22 @@ What the library does not do is respect reduced motion, or know that this page
 animates its colours; `src/resume/lib/transitions.ts` is only those two things.
 The look is the `::view-transition-*` rules in `RESUME_CSS`.
 
-### Adding New Routes
+## Adding New Routes
+
 Prefer not to. Every single-segment path is a resume flavor, so a new top-level
-route collides with the flavor namespace — see the URLs section of README.md and
+route collides with the flavor namespace, see the URLs section of README.md and
 `site.flavorPrefix` in `resume.config.ts` before adding one.
 
-1. Create the route directly under `src/app/` (there are no route groups left)
-2. Use Server Components when possible
-3. Do not add a `loading.tsx` above the resume — a Suspense boundary there is
-   what used to stop the resume rendering without JavaScript
-
-### Testing Strategy
-- **Unit tests** - Vitest for utilities and components
-- **Integration tests** - Test server actions and services
-- **E2E tests** - Playwright for critical user flows
-- **Run tests** - `bun run test` before committing
-
-## Multi-Zone Architecture
-
-Shipkit supports multi-zone deployments for scalable applications:
-
-### Zone Structure
-- **Main zone** - Core app functionality
-- **Content zones** - `/docs`, `/blog`, `/ui`, `/tools`
-- **Shared authentication** - Single sign-on across zones
-- **Consistent design** - Shared component library
-
-### Zone Development
-Each zone is a full Shipkit installation with:
-- `basePath` and `assetPrefix` configuration
-- Environment variables for zone-specific settings
-- Anchor tag navigation between zones
-- Shared authentication state
-
-## Environment Configuration
-
-### Required for Basic Functionality
-```env
-DATABASE_URL=                 # PostgreSQL connection string
-AUTH_SECRET=                  # Auth encryption key (or APP_SECRET to derive all secrets)
-```
-
-### Optional Feature Enablement
-
-Features auto-enable when their env vars are set. No manual flags needed.
-
-```env
-AUTH_GITHUB_ID=              # + AUTH_GITHUB_SECRET → GitHub OAuth
-LEMONSQUEEZY_API_KEY=        # + LEMONSQUEEZY_STORE_ID → Lemon Squeezy payments
-STRIPE_SECRET_KEY=           # + STRIPE_PUBLISHABLE_KEY → Stripe payments
-BUILDER_API_KEY=             # → Builder.io visual editing
-RESEND_API_KEY=              # → Email (Resend)
-OPENAI_API_KEY=              # → OpenAI
-ANTHROPIC_API_KEY=           # → Anthropic
-```
-
-See `src/config/features-config.ts` for the complete flag detection logic.
+1. Create the route directly under `src/app/` (there are no route groups left).
+2. Use Server Components when possible.
+3. Do not add a `loading.tsx` above the resume: a Suspense boundary there is
+   what used to stop the resume rendering without JavaScript.
 
 ## Troubleshooting
 
-### Common Issues
-- **Type errors** - Run `bun run typecheck` and fix before proceeding
-- **Linting failures** - Run `bun run lint:fix` to auto-fix issues
-- **Database connection** - Check `DATABASE_URL` and run `bun run db:push`
-- **Build failures** - Try `bun run clean` then `bun run build`
-- **Out of Memory (OOM) errors** - Use `bun run build:vercel` for larger builds
-
-### Debug Commands
-```bash
-bun run deps:check             # Check for outdated dependencies
-bun run check:metadata         # Validate site metadata
-bun run check:performance      # Performance profiling
-```
+- **Type errors**: run `bun run typecheck` and fix before proceeding.
+- **Linting failures**: run `bun run lint:fix` to auto-fix issues.
+- **Build failures**: try `bun run clean` then `bun run build`.
+- **OOM during build**: use `bun run build:vercel` for larger builds.
 
 Always run `bun run lint` and `bun run typecheck` before committing changes.
-
-## Scaffolding New ShipKit Sites
-
-Use the ShipKit CLI to create new sites from this template:
-
-### Using the CLI
-```bash
-# From anywhere — interactive
-cd cli && bun run build && node dist/index.js create my-new-site
-
-# Non-interactive (CI/agent)
-node cli/dist/index.js create my-new-site --yes
-```
-
-### Manual Steps (if CLI unavailable)
-```bash
-# 1. Create repo from template
-gh repo create my-new-site --template shipkit-io/bones --clone --public
-cd my-new-site
-
-# 2. Add upstream remote (premium first, bones fallback)
-git remote add upstream https://github.com/shipkit-io/shipkit.git || \
-git remote add upstream https://github.com/shipkit-io/bones.git
-
-# 3. Graft upstream history
-git fetch upstream
-git merge upstream/main --allow-unrelated-histories --no-edit \
-  -m "chore: graft upstream template history"
-
-# 4. Install and run
-bun install
-cp .env.example .env
-bun dev
-```
-
-### Syncing Upstream Changes
-```bash
-# Via CLI (creates PR branch)
-node cli/dist/index.js sync --yes
-
-# Via npm script (from within a ShipKit project)
-bun run upstream:pull
-
-# Direct merge (no PR)
-node cli/dist/index.js sync --yes --direct
-```
-
-### CLI Development
-The CLI lives in `cli/` and uses Commander + @clack/prompts:
-```bash
-cd cli
-bun install
-bun run build   # Builds to cli/dist/index.js
-bun run dev     # Watch mode
-```

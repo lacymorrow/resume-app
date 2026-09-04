@@ -1,13 +1,10 @@
 {
   "name": "resume-app",
   "version": "0.2.1",
-  "homepage": "https://shipkit.io",
+  "homepage": "https://resume.lacy.sh",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lacymorrow/shipkit.git"
-  },
-  "shipkit": {
-    "bones": "0.2.1"
+    "url": "git+https://github.com/lacymorrow/resume-app.git"
   },
   "private": true,
   "type": "module",
@@ -46,8 +43,6 @@
     "lint:fix:eslint": "eslint --fix .",
     "lint:fix:prettier": "prettier --write \"**/*.{ts,tsx,md,mdx,json}\"",
     "start": "next start",
-    "upstream:setup": "tsx scripts/setup-upstream.ts",
-    "upstream:pull": "tsx scripts/git-sync-upstream.ts",
     "postinstall": "npx next telemetry disable",
     "workers:build": "tsc -p ./tsconfig.workers.json",
     "workers:dev": "concurrently \"npm run workers:build\" \"tsc -p ./tsconfig.workers.json --watch\"",
@@ -57,7 +52,6 @@
     "test:browser": "vitest --config=vitest.config.browser.ts",
     "test:node": "vitest --config=vitest.config.node.ts",
     "typecheck": "tsc --noEmit",
-    "build:registry": "npx shadcn build",
     "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
     "build:storybook": "storybook build",
     "test:e2e": "playwright test",
@@ -287,7 +281,6 @@
     "eslint-config-next": "16.1.6",
     "jsdom": "^28.1.0",
     "lighthouse": "^13.0.3",
-    "next-sitemap": "^4.2.3",
     "npm-check-updates": "^19.3.2",
     "payload": "^3.76.1",
     "playwright": "^1.58.2",
