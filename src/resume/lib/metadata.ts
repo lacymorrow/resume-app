@@ -22,9 +22,18 @@ export function flavorSeo(id: string | undefined): FlavorSeo {
 
   return {
     title: isDefault ? `Resume - ${name}` : `${flavor.label} Resume - ${name}`,
+    /*
+     * Short enough to survive a search result.
+     *
+     * `flavor.expertise` used to be appended here, which pushed every
+     * description past 200 characters — Google cuts at about 155, so the tail
+     * of a semicolon-separated skills list was all that ever got trimmed, and
+     * the part that read like a sentence was the part that got shown. The
+     * expertise block is still on the page, where it belongs.
+     */
     description: isDefault
-      ? `${name} — ${flavor.tagline}. ${flavor.expertise}`
-      : `${name} — ${flavor.tagline}. ${flavor.description}. ${flavor.expertise}`,
+      ? `${name} — ${flavor.tagline}. Interactive resume, cut by role.`
+      : `${name} — ${flavor.tagline}. ${flavor.description}.`,
     canonical: flavorHref(flavor.id),
   };
 }

@@ -1,17 +1,21 @@
 # resume.lacy.sh
 
-Interactive resume for Lacy Morrow — full-stack engineer, AI tooling, and product builder.
+One resume, cut several ways. `resume.json` holds the whole career; each flavor
+is an overlay that re-angles it for a role and gets its own prerendered page.
 
 Live at [resume.lacy.sh](https://resume.lacy.sh)
 
 ## Features
 
-- Interactive resume viewer with filtering by role, technology, and date range
-- Multiple resume flavors (full-stack, frontend, backend, AI/ML, management)
-- Export as PDF, DOCX, or HTML
-- URL-based state management for shareable filtered views
-- Print-optimized layout
-- Responsive design
+- Seven role flavors — complete, frontend, fullstack, devops, ai, gtm, lead —
+  each a crawlable page with its own title, description, accent, and social card
+- A builder that hides roles, filters by the tools a job asks for, and carries
+  the result in the URL
+- Export as PDF, DOCX, or HTML, generated in the browser
+- Generate a new flavor from a job posting
+- Machine-readable throughout: `Person` structured data per page, `/llms.txt`,
+  and the whole resume as Markdown at `/llms-full.txt`
+- Print-optimized layout, responsive, no client-side data fetching
 
 ## URLs
 
@@ -23,6 +27,10 @@ crawlable:
 | `/` | The default flavor — the first entry in `flavors/index.ts` |
 | `/<flavor>` | One page per flavor file, e.g. `/frontend` |
 | `?hc=`, `?hp=`, `?tags=`, `?match=`, `?off=` | Builder state, applied in the browser |
+| `/opengraph-image`, `/<flavor>/opengraph-image` | The social card for that page, generated at build time |
+| `/llms.txt` | What the site is and where each flavor lives |
+| `/llms-full.txt` | The complete resume as Markdown |
+| `/sitemap.xml`, `/robots.txt`, `/manifest.webmanifest` | Generated from the flavor registry and `resume.config.ts` |
 
 Flavors sit at the root. `site.flavorPrefix` in `resume.config.ts` can move
 them under a segment instead — `"r"` gives `/r/frontend` — which you want if
@@ -82,9 +90,35 @@ the honest counterweight to a variant tuned to look like a match.
 Generation drives the [`claude`](https://claude.com/claude-code) CLI in print
 mode, so there is no API key to configure. `--help` lists the rest.
 
+## Making it yours
+
+Two files:
+
+| File | What it holds |
+| --- | --- |
+| `resume.json` | The career. [JSON Resume](https://jsonresume.org) v1.0.0, unmodified schema |
+| `resume.config.ts` | Everything about *this* resume that is not resume data — host, theme, page size, footer, date handling |
+
+Nothing else needs editing. The site title, description, keywords, social
+profiles, contact addresses, canonical URLs, and structured data are all read
+from those two, so there is no third place for your name to go stale. The
+favicon and app icons are your initials, and the social cards are your flavors'
+own statements:
+
+```bash
+bun run icons        # regenerate the favicon and app icons
+bun run og:preview   # render every social card to .og-preview/ without a build
+```
+
+Re-run `bun run icons` and commit the result after changing your name; the
+social cards are generated at build time and need nothing.
+
+There is no `.env` to fill in. Every environment variable is optional and the
+app builds without one.
+
 ## Stack
 
-- [Next.js 15](https://nextjs.org) with App Router
+- [Next.js 16](https://nextjs.org) with App Router
 - [TypeScript](https://www.typescriptlang.org)
 - [Tailwind CSS](https://tailwindcss.com)
 - [shadcn/ui](https://ui.shadcn.com)
@@ -97,11 +131,15 @@ bun install
 bun dev
 ```
 
-## Build
-
 ```bash
+bun run validate:resume   # flavor overrides reference entries that exist
+bun run typecheck
+bun run test
 bun run build
 ```
+
+`bun run build` runs `validate:resume` first, so a flavor that points at a job
+you have renamed fails the build rather than shipping a blank section.
 
 ## License
 

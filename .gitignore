@@ -90,3 +90,4 @@ ai.mdx
 # Playwright output (playwright.config.ts outputDir)
 test-results/
 playwright-report/
+.og-preview/

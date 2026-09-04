@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { constructMetadata } from "@/config/metadata";
+import { flavorMetadata } from "@/config/flavor-metadata";
+import { JsonLd } from "@/resume/components/json-ld";
 import { ResumeViewer } from "@/resume/components/viewer";
 import { resumeData } from "@/resume/lib/data";
 import { findFlavor } from "@/resume/lib/flavors";
-import { flavorSeo } from "@/resume/lib/metadata";
 import { DEFAULT_FLAVOR_ID } from "@/resume/lib/routes";
-
-/** Flavor SEO merged into the app's shared metadata defaults. */
-function toMetadata(id: string): Metadata {
-  const { title, description, canonical } = flavorSeo(id);
-  return { ...constructMetadata({ title, description }), alternates: { canonical } };
-}
+import { profilePageJsonLd } from "@/resume/lib/schema-org";
 
 /**
  * The default flavor, served at "/".
@@ -19,8 +14,13 @@ function toMetadata(id: string): Metadata {
  * build time. Every other flavor lives at /{prefix}/{id} and is prerendered the
  * same way — see [flavor]/page.tsx.
  */
-export const metadata: Metadata = toMetadata(DEFAULT_FLAVOR_ID);
+export const metadata: Metadata = flavorMetadata(DEFAULT_FLAVOR_ID);
 
 export default function ResumeIndexPage() {
-  return <ResumeViewer data={resumeData} flavorId={findFlavor(DEFAULT_FLAVOR_ID).id} />;
+  return (
+    <>
+      <JsonLd data={profilePageJsonLd(DEFAULT_FLAVOR_ID)} />
+      <ResumeViewer data={resumeData} flavorId={findFlavor(DEFAULT_FLAVOR_ID).id} />
+    </>
+  );
 }

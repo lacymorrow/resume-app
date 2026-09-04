@@ -1,14 +1,40 @@
 import type { Metadata } from "next";
 import type { Manifest } from "next/dist/lib/metadata/types/manifest-types";
-
-// import { routes } from "@/config/routes"; // Import if needed for startUrl
+// These imports must be relative: next.config loads this file (through
+// base-url.ts) before the TS path aliases are available.
+import { resumeConfig } from "../resume/inputs";
+import { resumeData } from "../resume/lib/data";
 
 /**
  * Site Configuration
  *
  * Central configuration for site-wide settings, branding, and metadata.
  * Used throughout the application for consistent branding and functionality.
+ *
+ * Identity — the name, the host, the contact details, the social profiles — is
+ * read from resume.json and resume.config.ts rather than repeated here. Those
+ * two files are the fork contract, and a name that has to be kept in step in a
+ * third place is a name that eventually disagrees with itself.
  */
+
+const { basics } = resumeData;
+
+/** A profile URL from `basics.profiles`, matched case-insensitively. */
+const profile = (network: string): string =>
+  basics.profiles?.find((p) => p.network.toLowerCase() === network.toLowerCase())?.url ?? "";
+
+/** A profile handle, for the places that want "@name" rather than a URL. */
+const handle = (network: string): string =>
+  basics.profiles?.find((p) => p.network.toLowerCase() === network.toLowerCase())?.username ?? "";
+
+const SITE_URL = `https://${resumeConfig.site.host}`;
+
+/** "San Francisco, CA · Charlotte, NC" — every base the resume lists. */
+const BASES = [basics.location, ...(basics.location.also ?? [])]
+  .map((l) => [l.city, l.state].filter(Boolean).join(", "))
+  .filter(Boolean)
+  .join(" · ");
+const EMAIL_DOMAIN = basics.email?.split("@")[1] ?? resumeConfig.site.host;
 
 interface ManifestConfig {
   startUrl: string;
@@ -186,43 +212,48 @@ export const siteConfig: SiteConfig = {
     pageTransitions: true,
   },
 
-  name: "Lacy Morrow",
-  title: "Lacy Morrow",
-  tagline: "Engineer. Builder. Leader.",
-  url: "https://resume.lacy.sh",
-  ogImage: "/app/og-image.png",
-  description:
-    "Interactive resume for Lacy Morrow — full-stack engineer, AI tooling, and product builder.",
+  name: basics.name,
+  title: basics.name,
+  tagline: basics.label,
+  url: SITE_URL,
+  /**
+   * Not the social card. The cards are generated per flavor by the file-based
+   * opengraph-image routes; this is the one path that has to be a literal, for
+   * the Payload admin, and it points at the generated default.
+   */
+  ogImage: "/opengraph-image",
+  description: `${basics.name} — ${basics.label}. An interactive resume, cut for the role you are hiring for.`,
 
   branding: {
-    projectName: "resume.lacy.sh",
+    projectName: resumeConfig.site.host,
     projectSlug: "resume",
     productNames: {
       bones: "Bones",
       brains: "Brains",
-      main: "resume.lacy.sh",
+      main: resumeConfig.site.host,
     },
-    domain: "resume.lacy.sh",
+    domain: resumeConfig.site.host,
     protocol: "web+resume",
-    githubOrg: "lacymorrow",
+    githubOrg: handle("github"),
     githubRepo: "resume-app",
     vercelProjectName: "resume-app",
     databaseName: "resume",
   },
 
   links: {
-    twitter: "https://twitter.com/lacybuilds",
-    twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
-    x: "https://x.com/lacybuilds",
-    x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
-    github: "https://github.com/lacymorrow",
+    twitter: profile("twitter"),
+    twitter_follow: `https://twitter.com/intent/follow?screen_name=${handle("twitter")}`,
+    x: profile("twitter"),
+    x_follow: `https://x.com/intent/follow?screen_name=${handle("twitter")}`,
+    github: profile("github"),
   },
 
-  // Configure social profiles here. Leave any you don't use as empty strings.
+  // Read from `basics.profiles`. Add a profile to resume.json and it shows up
+  // here; an empty string means the resume does not list that network.
   social: {
-    github: "https://github.com/lacymorrow",
-    x: "https://x.com/lacybuilds",
-    linkedin: "https://linkedin.com/in/lacymorrow",
+    github: profile("github"),
+    x: profile("twitter"),
+    linkedin: profile("linkedin"),
     instagram: "",
     facebook: "",
     youtube: "",
@@ -233,9 +264,9 @@ export const siteConfig: SiteConfig = {
   },
 
   repo: {
-    owner: "lacymorrow",
+    owner: handle("github"),
     name: "resume-app",
-    url: "https://github.com/lacymorrow/resume-app",
+    url: `https://github.com/${handle("github")}/resume-app`,
     format: {
       // Placeholder format functions - assigned below
       clone: () => "",
@@ -243,29 +274,31 @@ export const siteConfig: SiteConfig = {
     },
   },
 
+  // One inbox. A resume has no support desk, and a reader who writes to any of
+  // these should reach the person whose resume it is.
   email: {
-    support: "lacy@lacy.sh",
-    team: "lacy@lacy.sh",
-    noreply: "noreply@lacy.sh",
-    domain: "lacy.sh",
-    legal: "lacy@lacy.sh",
-    privacy: "lacy@lacy.sh",
+    support: basics.email,
+    team: basics.email,
+    noreply: `noreply@${EMAIL_DOMAIN}`,
+    domain: EMAIL_DOMAIN,
+    legal: basics.email,
+    privacy: basics.email,
     // Placeholder format function - assigned below
     format: (_type) => "",
   },
 
   creator: {
-    name: "lacymorrow",
-    email: "lacy@lacy.sh",
-    url: "https://lacymorrow.com",
-    twitter: "@lacybuilds",
-    twitter_handle: "lacybuilds",
-    domain: "lacymorrow.com",
-    fullName: "Lacy Morrow",
-    role: "Engineer",
-    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4",
-    location: "San Francisco, CA",
-    bio: "Founder, developer, and product designer.",
+    name: basics.name,
+    email: basics.email,
+    url: basics.url,
+    twitter: handle("twitter") ? `@${handle("twitter")}` : "",
+    twitter_handle: handle("twitter"),
+    domain: basics.url.replace(/^https?:\/\//, "").replace(/\/$/, ""),
+    fullName: basics.name,
+    role: basics.label,
+    avatar: basics.image ?? "",
+    location: BASES,
+    bio: basics.label,
   },
 
   store: {
@@ -275,17 +308,19 @@ export const siteConfig: SiteConfig = {
 
   metadata: {
     keywords: [
-      "Lacy Morrow",
+      basics.name,
       "resume",
+      "cv",
       "software engineer",
-      "full-stack developer",
       "interactive resume",
       "portfolio",
-      "AI tooling",
+      "hire",
     ],
+    // The resume renders one way in both schemes, so the browser chrome should
+    // not promise a light page and then hand over a near-black one.
     themeColor: {
-      light: "white",
-      dark: "black",
+      light: resumeConfig.theme.screen.bg,
+      dark: resumeConfig.theme.screen.bg,
     },
     locale: "en-US",
     generator: "Next.js", // Use Next.js as generator
@@ -316,15 +351,15 @@ export const siteConfig: SiteConfig = {
       telephone: false,
     },
     alternates: {},
+    /*
+     * No startupImage. The one here pointed at the 180px app icon, which is an
+     * icon and not a launch screen — iOS stretched it across the whole display.
+     * A real set means one image per device resolution; until those exist, iOS
+     * drawing its own blank launch screen looks better than a blown-up glyph.
+     */
     appleWebApp: {
       capable: true,
-      statusBarStyle: "default",
-      startupImage: [
-        {
-          url: "/apple-touch-icon.png",
-          media: "(device-width: 768px) and (device-height: 1024px)",
-        },
-      ],
+      statusBarStyle: "black-translucent",
     },
     appLinks: {},
     assetsPath: "/assets",

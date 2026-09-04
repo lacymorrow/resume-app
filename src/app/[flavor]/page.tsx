@@ -1,17 +1,12 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { constructMetadata } from "@/config/metadata";
+import { flavorMetadata } from "@/config/flavor-metadata";
+import { JsonLd } from "@/resume/components/json-ld";
 import { ResumeViewer } from "@/resume/components/viewer";
 import { resumeData } from "@/resume/lib/data";
 import { findFlavor } from "@/resume/lib/flavors";
-import { flavorSeo } from "@/resume/lib/metadata";
 import { DEFAULT_FLAVOR_ID, flavorIds, isKnownFlavor } from "@/resume/lib/routes";
-
-/** Flavor SEO merged into the app's shared metadata defaults. */
-function toMetadata(id: string): Metadata {
-  const { title, description, canonical } = flavorSeo(id);
-  return { ...constructMetadata({ title, description }), alternates: { canonical } };
-}
+import { profilePageJsonLd } from "@/resume/lib/schema-org";
 
 type Params = Promise<{ flavor: string }>;
 
@@ -31,7 +26,7 @@ export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { flavor } = await params;
-  return toMetadata(flavor);
+  return flavorMetadata(flavor);
 }
 
 export default async function FlavorPage({ params }: { params: Params }) {
@@ -39,5 +34,10 @@ export default async function FlavorPage({ params }: { params: Params }) {
   if (!isKnownFlavor(flavor)) notFound();
   // The default flavor's canonical home is "/", not a prefixed path.
   if (flavor === DEFAULT_FLAVOR_ID) redirect("/");
-  return <ResumeViewer data={resumeData} flavorId={findFlavor(flavor).id} />;
+  return (
+    <>
+      <JsonLd data={profilePageJsonLd(flavor)} />
+      <ResumeViewer data={resumeData} flavorId={findFlavor(flavor).id} />
+    </>
+  );
 }
