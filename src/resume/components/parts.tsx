@@ -131,8 +131,11 @@ export function WorkEntry({
         )}
         {highlights && highlights.length > 0 && (
           <ul style={{ marginTop: "0.5rem", paddingLeft: "1.2rem" }}>
-            {highlights.slice(0, 3).map((h) => (
-              <li key={h} style={{ fontSize: "0.85rem", color: S.dim, marginTop: "0.2rem" }}>
+            {highlights.slice(0, 3).map((h, i) => (
+              <li
+                key={`${i}-${h}`}
+                style={{ fontSize: "0.85rem", color: S.dim, marginTop: "0.2rem" }}
+              >
                 {h}
               </li>
             ))}
