@@ -47,6 +47,14 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      # Scoped to the directories this app actually owns —
+      # src/resume, src/app, src/config, scripts. The rest of src/
+      # is inherited ShipKit surface (see LAC-3717) with pre-existing
+      # errors that would drown out real signal. As LAC-3717 trims that
+      # surface further, expand this to `bun run lint` and delete lint:ci.
+      - name: Lint (owned directories)
+        run: bun run lint:ci
+
       - name: Test
         run: bun run test
 

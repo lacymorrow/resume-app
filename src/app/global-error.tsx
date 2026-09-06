@@ -26,6 +26,7 @@ export default function GlobalError({
             Something went wrong.
           </h2>
           <button
+            type="button"
             onClick={reset}
             style={{
               marginTop: "1rem",

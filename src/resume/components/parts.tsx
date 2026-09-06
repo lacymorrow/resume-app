@@ -131,8 +131,8 @@ export function WorkEntry({
         )}
         {highlights && highlights.length > 0 && (
           <ul style={{ marginTop: "0.5rem", paddingLeft: "1.2rem" }}>
-            {highlights.slice(0, 3).map((h, i) => (
-              <li key={i} style={{ fontSize: "0.85rem", color: S.dim, marginTop: "0.2rem" }}>
+            {highlights.slice(0, 3).map((h) => (
+              <li key={h} style={{ fontSize: "0.85rem", color: S.dim, marginTop: "0.2rem" }}>
                 {h}
               </li>
             ))}
@@ -228,6 +228,7 @@ export function FlavorButton({
   btnRef?: React.Ref<HTMLAnchorElement>;
 }) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: must be a real link so each flavor is crawlable and works without JS; see FlavorButton comment above.
     <a
       ref={btnRef}
       href={href}
