@@ -35,6 +35,15 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # next-env.d.ts is gitignored, and it is what pulls in
+      # next/image-types/global — the wildcard module declarations for .png,
+      # .svg and friends. Without it a fresh checkout fails typecheck on every
+      # image import ("Cannot find module '@/public/…'"), which is a missing
+      # prerequisite rather than a real type error. typegen writes it without
+      # running a full build.
+      - name: Generate Next types
+        run: bunx next typegen
+
       - name: Typecheck
         run: bun run typecheck
 
