@@ -35,6 +35,7 @@
     "check:performance": "next dev & npx react-scan@latest localhost:3000",
     "git:checkpoint": "tsx scripts/git-checkpoint.ts",
     "lint": "npm run lint:biome && npm run lint:eslint && npm run lint:prettier",
+    "lint:ci": "biome lint src/resume src/app src/config scripts",
     "lint:biome": "biome lint .",
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier --check \"**/*.{ts,tsx,md,mdx,json}\"",

@@ -31,7 +31,7 @@ export function renderStatement(html: string): React.ReactNode[] {
     if (m) {
       return (
         <em
-          key={`em-${i}`}
+          key={`em-${i}-${m[1]}`}
           style={{
             fontFamily: THEME_SERIF,
             fontStyle: "italic",
@@ -45,6 +45,6 @@ export function renderStatement(html: string): React.ReactNode[] {
         </em>
       );
     }
-    return <span key={`text-${i}`}>{part}</span>;
+    return <span key={`text-${i}-${part}`}>{part}</span>;
   });
 }
