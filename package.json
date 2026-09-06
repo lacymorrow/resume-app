@@ -67,9 +67,6 @@
     "audit:axe": "tsx scripts/a11y/axe.ts",
     "browser:open": "vibe-tools browser open \"http://localhost:3000\" --html --network --screenshot=.tmp/home.png",
     "browser:act": "URL=\"http://localhost:3000\" ACTION=\"interactive elements\" vibe-tools browser act \"$ACTION\" --url=$URL --html --network --screenshot=.tmp/act.png",
-    "form-monitor": "tsx scripts/form-monitor.ts",
-    "form-monitor:status": "tsx scripts/form-monitor.ts status",
-    "form-monitor:test": "tsx scripts/form-monitor.ts test",
     "verify": "tsx scripts/verify.ts",
     "verify:quick": "tsx scripts/verify.ts --quick"
   },
