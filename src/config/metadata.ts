@@ -35,7 +35,9 @@ const defaultTwitter: Twitter = {
   card: siteConfig.metadata.twitter.card,
   title: siteConfig.title,
   description: siteConfig.description,
-  creator: siteConfig.creator.twitter,
+  // Undefined, not "", so no empty twitter:creator tag ships when the resume
+  // lists no X profile.
+  creator: siteConfig.creator.twitter || undefined,
 };
 
 export const defaultMetadata: Metadata = {
