@@ -25,6 +25,7 @@ import {
   resolveWork,
 } from "../lib/filters";
 import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
+import { resolveHighlightedOrg, ROLE_PARAM } from "../lib/highlight";
 import { DEFAULT_FLAVOR_ID, flavorHref } from "../lib/routes";
 import { buildSections, DEFAULT_SECTIONS } from "../lib/sections";
 import { SCREEN } from "../lib/theme";
@@ -103,6 +104,10 @@ export function ResumeViewer({
   const [selectedTags, setSelectedTags] = useQueryState("tags", arrayParam);
   const [tagMatchMode, setTagMatchMode] = useQueryState("match", matchParam);
   const [sectionsOff, setSectionsOff] = useQueryState("off", arrayParam);
+  // Set by links from elsewhere, not by anything on this page: a portfolio
+  // entry about one job links back here and that job is what should be on
+  // screen. See lib/highlight.ts.
+  const [role, setRole] = useQueryState(ROLE_PARAM, parseAsString);
 
   const [panelOpen, setPanelOpen] = useState(false);
   const [customFlavors, setCustomFlavors] = useState<CustomFlavor[]>([]);
@@ -188,6 +193,41 @@ export function ResumeViewer({
   );
 
   /**
+   * Resolved against the roles this flavor is actually showing, so a link into
+   * a role a flavor leaves out renders the plain resume rather than an empty
+   * marker. Held to `applied` like the rest of the query state, so the first
+   * client render still matches the prerendered HTML.
+   */
+  const highlightedOrg = useMemo(
+    () =>
+      applied
+        ? (resolveHighlightedOrg(
+            role,
+            visibleWork.map((e) => e.name)
+          ) ?? undefined)
+        : undefined,
+    [applied, role, visibleWork]
+  );
+
+  /**
+   * The role a link points at is usually below the fold, so arriving at the top
+   * of the resume would leave the reader to go and find the thing they clicked
+   * for. Focus moves too: a scroll moves the page but not a screen reader's
+   * reading position, and without it the link does nothing for anyone who is
+   * not looking at the screen.
+   */
+  useEffect(() => {
+    if (!highlightedOrg) return;
+    const entry = document.querySelector<HTMLElement>("[data-highlighted]");
+    if (!entry) return;
+    entry.focus({ preventScroll: true });
+    entry.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      block: "center",
+    });
+  }, [highlightedOrg]);
+
+  /**
    * The builder lists every role and project the *flavor* shows, not the ones
    * that survive the current filters. Sourcing it from the filtered set instead
    * would drop a row the moment its toggle was switched off, leaving no way to
@@ -268,6 +308,10 @@ export function ResumeViewer({
       void setHiddenProjects(custom?.hiddenProjects.length ? custom.hiddenProjects : null);
       void setSectionsOff(null);
       void setSelectedTags(null);
+      // The reader taking over is the end of the inbound link's job, and the
+      // push drops the parameter from the URL regardless, so nuqs has to be
+      // told or it keeps serving a highlight the address bar no longer shows.
+      void setRole(null);
 
       // A saved flavor is not a page — it lives in this browser's localStorage
       // — so it rewrites the query string in place. There is no push to hang a
@@ -287,6 +331,7 @@ export function ResumeViewer({
       setHiddenProjects,
       setSectionsOff,
       setSelectedTags,
+      setRole,
     ]
   );
 
@@ -297,6 +342,7 @@ export function ResumeViewer({
     void setSelectedTags(null);
     void setTagMatchMode(null);
     void setSectionsOff(null);
+    void setRole(null);
     navigate(flavorHref(DEFAULT_FLAVOR_ID));
   }, [
     navigate,
@@ -306,6 +352,7 @@ export function ResumeViewer({
     setSelectedTags,
     setTagMatchMode,
     setSectionsOff,
+    setRole,
   ]);
 
   const handleExport = useCallback(
@@ -460,6 +507,7 @@ export function ResumeViewer({
       contacts={contacts}
       statement={flavor.statement}
       sections={sections}
+      highlightedOrg={highlightedOrg}
       desk={desk}
       footerNote={`${basics.name} · ${resumeConfig.site.host}`}
       footerLinkLabel={displayUrl(footerHref(basics.url))}

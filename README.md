@@ -11,6 +11,8 @@ Live at [resume.lacy.sh](https://resume.lacy.sh)
   each a crawlable page with its own title, description, accent, and social card
 - A builder that hides roles, filters by the tools a job asks for, and carries
   the result in the URL
+- Deep links into a single role, so a portfolio page can point at the job it is
+  about
 - Export as PDF, DOCX, or HTML, generated in the browser
 - Generate a new flavor from a job posting
 - Machine-readable throughout: `Person` structured data per page, `/llms.txt`,
@@ -27,6 +29,7 @@ crawlable:
 | `/` | The default flavor — the first entry in `flavors/index.ts` |
 | `/<flavor>` | One page per flavor file, e.g. `/frontend` |
 | `?hc=`, `?hp=`, `?tags=`, `?match=`, `?off=` | Builder state, applied in the browser |
+| `?role=<company>` | Marks one role and scrolls to it, for links arriving from elsewhere |
 | `/opengraph-image`, `/<flavor>/opengraph-image` | The social card for that page, generated at build time |
 | `/llms.txt` | What the site is and where each flavor lives |
 | `/llms-full.txt` | The complete resume as Markdown |
@@ -44,6 +47,24 @@ is a published variant that should prerender to a static file, while builder
 state is per-visitor tuning that a static file cannot vary on. That tuning is
 therefore applied after the page mounts. Legacy `/?flavor=<id>` links redirect
 to `/<id>`.
+
+### Linking to one role
+
+A portfolio page, a case study, or a cover letter can point at the job it is
+about: `resume.lacy.sh/fullstack?role=credit-karma` opens that flavor with the
+Credit Karma role marked in the flavor's accent and scrolled into view. It works
+on any flavor page, and combines with the rest of the builder state.
+
+The value is a company name, matched loosely so links can be written by hand:
+the slug (`credit-karma`), the name itself (`Credit%20Karma`), or any prefix
+that fits only one company (`credit`). A prefix that fits several resolves to
+nothing rather than guessing.
+
+Nothing is resolved until the page has mounted, and it is resolved against the
+roles the current flavor shows. A link into a role a flavor cuts, or a company
+that has since left `resume.json`, renders the ordinary resume: the marking is a
+pointer into a document, not a lookup that can fail. The highlight is for
+reading on screen, so it does not print and never reaches an export.
 
 Nothing else is routed. This started as a ShipKit app and kept its marketing,
 auth, dashboard, admin, docs, blog, CMS, and payment routes; they are gone, so
