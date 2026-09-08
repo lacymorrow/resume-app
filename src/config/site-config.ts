@@ -240,11 +240,17 @@ export const siteConfig: SiteConfig = {
     databaseName: "resume",
   },
 
+  // A follow link with no handle is a live URL that goes nowhere, so these
+  // collapse to "" alongside the profile they are built from.
   links: {
     twitter: profile("twitter"),
-    twitter_follow: `https://twitter.com/intent/follow?screen_name=${handle("twitter")}`,
+    twitter_follow: handle("twitter")
+      ? `https://twitter.com/intent/follow?screen_name=${handle("twitter")}`
+      : "",
     x: profile("twitter"),
-    x_follow: `https://x.com/intent/follow?screen_name=${handle("twitter")}`,
+    x_follow: handle("twitter")
+      ? `https://x.com/intent/follow?screen_name=${handle("twitter")}`
+      : "",
     github: profile("github"),
   },
 
