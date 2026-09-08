@@ -29,14 +29,29 @@ export function roleSlug(name: string): string {
 }
 
 /**
+ * The slug with its separators dropped, which is what the loose passes compare.
+ *
+ * Someone writing a link by hand is recalling a company, not a slug, and where
+ * the word breaks fall is the first thing to go: "longgame" for Long Game,
+ * "twilioinc" for Twilio Inc. Comparing without separators means the writer has
+ * to remember the name and nothing else about how it was punctuated.
+ */
+function compactSlug(name: string): string {
+  return roleSlug(name).replace(/-/g, "");
+}
+
+/**
  * Which company an inbound link points at, or null.
  *
- * Links are written by hand, so matching is deliberately forgiving: the slug,
- * the company name itself, or an unambiguous prefix of the slug all resolve.
- * A prefix that fits more than one company resolves to nothing rather than to
- * an arbitrary pick, since guessing between "Novant Health / Red Ventures" and
- * "OptumRX Health / Red Ventures" would silently point the reader at the wrong
- * job.
+ * Links are written by hand, so matching is deliberately forgiving: the company
+ * name, the slug, the slug with its separators dropped ("longgame"), or an
+ * unambiguous prefix of that all resolve. A prefix that fits more than one
+ * company resolves to nothing rather than to an arbitrary pick, since guessing
+ * between "Novant Health / Red Ventures" and "OptumRX Health / Red Ventures"
+ * would silently point the reader at the wrong job.
+ *
+ * Exact forms are tried before loose ones, so a company whose whole name is
+ * another's prefix still wins its own link.
  *
  * @param query raw query parameter value
  * @param orgs company names visible in the current flavor, in resume order
@@ -58,6 +73,12 @@ export function resolveHighlightedOrg(
   const bySlug = orgs.find((org) => roleSlug(org) === slug);
   if (bySlug) return bySlug;
 
-  const [onlyPrefixed, ...alsoPrefixed] = orgs.filter((org) => roleSlug(org).startsWith(slug));
+  const compact = slug.replace(/-/g, "");
+  const byCompact = orgs.find((org) => compactSlug(org) === compact);
+  if (byCompact) return byCompact;
+
+  const [onlyPrefixed, ...alsoPrefixed] = orgs.filter((org) =>
+    compactSlug(org).startsWith(compact)
+  );
   return onlyPrefixed && alsoPrefixed.length === 0 ? onlyPrefixed : null;
 }

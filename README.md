@@ -55,10 +55,13 @@ about: `resume.lacy.sh/fullstack?role=credit-karma` opens that flavor with the
 Credit Karma role marked in the flavor's accent and scrolled into view. It works
 on any flavor page, and combines with the rest of the builder state.
 
-The value is a company name, matched loosely so links can be written by hand:
-the slug (`credit-karma`), the name itself (`Credit%20Karma`), or any prefix
-that fits only one company (`credit`). A prefix that fits several resolves to
-nothing rather than guessing.
+The value is a company name, matched loosely so links can be written from memory
+rather than copied: the name itself (`Credit%20Karma`), the slug
+(`credit-karma`), the slug without its separators (`creditkarma`, `longgame`),
+or any prefix of that which fits only one company (`credit`, `lumenai`). Exact
+forms are tried before loose ones, so a company whose whole name is another's
+prefix still wins its own link, and a prefix that fits several companies
+resolves to nothing rather than guessing.
 
 Nothing is resolved until the page has mounted, and it is resolved against the
 roles the current flavor shows. A link into a role a flavor cuts, or a company

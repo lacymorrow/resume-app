@@ -8,6 +8,8 @@ const ORGS = [
   "Novant Health / Red Ventures",
   "OptumRX Health / Red Ventures",
   "Twilio Inc.",
+  "Lumenai (Startup)",
+  "Long Game",
   "10up",
 ];
 
@@ -39,6 +41,17 @@ describe("resolveHighlightedOrg", () => {
   it("resolves an unambiguous prefix, so links can be written from memory", () => {
     expect(resolveHighlightedOrg("credit", ORGS)).toBe("Credit Karma");
     expect(resolveHighlightedOrg("novant", ORGS)).toBe("Novant Health / Red Ventures");
+    // The suffix is on the resume, not in anyone's memory of the company.
+    expect(resolveHighlightedOrg("lumenai", ORGS)).toBe("Lumenai (Startup)");
+  });
+
+  it("resolves a name written without its separators", () => {
+    // Where the word breaks fall is the first thing to go when a link is typed
+    // from memory, so "longgame" has to reach Long Game.
+    expect(resolveHighlightedOrg("longgame", ORGS)).toBe("Long Game");
+    expect(resolveHighlightedOrg("twilioinc", ORGS)).toBe("Twilio Inc.");
+    expect(resolveHighlightedOrg("creditkarma", ORGS)).toBe("Credit Karma");
+    expect(resolveHighlightedOrg("dukeenergy", ORGS)).toBe("Duke Energy");
   });
 
   it("resolves nothing when a prefix fits more than one company", () => {
@@ -63,7 +76,10 @@ describe("resolveHighlightedOrg", () => {
   });
 
   it("prefers an exact match over a prefix that would also fit", () => {
+    // Without this a company whose whole name is another's prefix could never
+    // be linked to at all.
     const orgs = ["Red Ventures", "Red Ventures Studio"];
     expect(resolveHighlightedOrg("red-ventures", orgs)).toBe("Red Ventures");
+    expect(resolveHighlightedOrg("redventures", orgs)).toBe("Red Ventures");
   });
 });
