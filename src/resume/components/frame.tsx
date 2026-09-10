@@ -14,6 +14,31 @@ export const RESUME_CSS = `
   .resume-frame a.ha:hover { color: var(--accent) !important; text-decoration: underline; text-underline-offset: 3px; }
   .resume-frame .project-link:hover { background: ${S.lift} !important; }
   .resume-frame .project-link:hover .project-arrow { transform: translateX(3px); }
+
+  /*
+   * The role an inbound ?role= link points at: an accent edge and a wash of the
+   * same colour, so the marking belongs to whichever flavor is on screen rather
+   * than introducing a colour of its own.
+   *
+   * The entry holds its place in the grid because the padding that makes room
+   * for the edge is cancelled by an equal negative margin, so the resume reads
+   * identically with and without a highlight and only the marked entry moves.
+   */
+  .resume-frame .resume-entry[data-highlighted] {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+    box-shadow: inset 3px 0 0 var(--accent);
+    border-radius: 4px;
+    padding-left: 1.1rem;
+    margin-left: -1.1rem;
+    padding-right: 0.85rem;
+    margin-right: -0.85rem;
+  }
+
+  /* Focused only by script, to carry the scroll across to a screen reader, and
+     never reachable by tab. The accent edge is already the visible marker, and
+     a browser focus ring on top of it draws a second box saying the same thing. */
+  .resume-frame .resume-entry[data-highlighted]:focus { outline: none; }
+
   @media (prefers-reduced-motion: reduce) {
     .resume-frame *, .resume-frame *::before, .resume-frame *::after { transition: none !important; }
     ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
@@ -117,6 +142,10 @@ export const RESUME_CSS = `
 
     .resume-frame section { margin-top: 1.5rem !important; }
     .resume-entry { break-inside: avoid; page-break-inside: avoid; padding: 0.6rem 0 !important; }
+
+    /* A highlight answers "which role did that link mean", which is a question
+       nobody holding the paper has asked. */
+    .resume-entry[data-highlighted] { background: none !important; box-shadow: none !important; margin: 0 !important; }
   }
 `;
 
@@ -128,6 +157,11 @@ export interface ResumeFrameProps {
   contacts: ContactRow[];
   statement: FlavorStatement;
   sections: NormalizedSection[];
+  /**
+   * Company whose role an inbound `?role=` link points at, already resolved
+   * against what this flavor shows. Undefined is the ordinary resume.
+   */
+  highlightedOrg?: string;
   /**
    * Rail controls. Flavors render as real links so they stay reachable and
    * crawlable before any JavaScript runs; the viewer intercepts the clicks.
@@ -151,6 +185,7 @@ export function ResumeFrame({
   contacts,
   statement,
   sections,
+  highlightedOrg,
   desk,
   footerNote,
   footerLinkLabel,
@@ -261,7 +296,7 @@ export function ResumeFrame({
             <StatementBlock statement={statement} />
 
             {sections.map((section) => (
-              <SectionBlock key={section.key} section={section} />
+              <SectionBlock key={section.key} section={section} highlightedOrg={highlightedOrg} />
             ))}
 
             <footer

@@ -73,6 +73,7 @@ export function WorkEntry({
   summary,
   highlights,
   url,
+  highlighted,
 }: {
   position: string;
   name: string;
@@ -81,11 +82,23 @@ export function WorkEntry({
   summary?: string;
   highlights?: string[];
   url?: string;
+  /**
+   * The role an inbound `?role=` link points at. Styling lives in RESUME_CSS
+   * against the data attribute, which is also how the viewer finds the entry to
+   * scroll to and how print drops the marking again.
+   */
+  highlighted?: boolean;
 }) {
   const years = formatYearRange(startDate, endDate);
   return (
     <li
       className="resume-entry"
+      data-highlighted={highlighted ? "" : undefined}
+      aria-current={highlighted ? "true" : undefined}
+      // A scroll moves the page but not a screen reader's position, so the
+      // entry is made focusable and the viewer focuses it. Without this the
+      // deep link does nothing at all for a reader who is not looking.
+      tabIndex={highlighted ? -1 : undefined}
       style={{
         display: "grid",
         gridTemplateColumns: "5.5rem minmax(0, 1fr)",
@@ -400,7 +413,14 @@ export function QuoteBlock({ item }: { item: QuoteItem }) {
  * Dispatches a normalized section to its renderer. Adding a section to the
  * registry needs no change here unless it introduces a new renderer kind.
  */
-export function SectionBlock({ section }: { section: NormalizedSection }) {
+export function SectionBlock({
+  section,
+  highlightedOrg,
+}: {
+  section: NormalizedSection;
+  /** Resolved company name, matched by equality so the lookup happens once. */
+  highlightedOrg?: string;
+}) {
   const headingId = `sh-${section.key}`;
   const body = (() => {
     switch (section.renderer) {
@@ -417,6 +437,7 @@ export function SectionBlock({ section }: { section: NormalizedSection }) {
                 summary={e.summary}
                 highlights={e.highlights}
                 url={e.url}
+                highlighted={!!highlightedOrg && e.org === highlightedOrg}
               />
             ))}
           </ol>
