@@ -206,7 +206,13 @@ const PROFILE_NETWORKS: Record<string, { kind: ContactKind; label: string }> = {
 /** Contact rows for the header block, derived from basics + profiles. */
 export function contactRows(basics: ExportData["basics"]): ContactRow[] {
   const rows: ContactRow[] = [];
-  if (basics.phone) rows.push({ kind: "phone", text: basics.phone });
+  if (basics.phone) {
+    // Every other contact row is a link, and this one rendered as plain text
+    // styled identically to them, so nothing marked it as the one you cannot
+    // action. A tel: href also gives it somewhere to go on a phone.
+    const dial = basics.phone.replace(/[^\d+]/g, "");
+    rows.push({ kind: "phone", text: basics.phone, href: dial ? `tel:${dial}` : undefined });
+  }
   if (basics.email) {
     rows.push({ kind: "email", text: basics.email, href: `mailto:${basics.email}` });
   }

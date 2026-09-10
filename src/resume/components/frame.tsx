@@ -16,6 +16,41 @@ export const RESUME_CSS = `
   .resume-frame .project-link:hover .project-arrow { transform: translateX(3px); }
 
   /*
+   * A designed focus ring. Most controls here are borderless text on a dark
+   * ground, and the browser default lands a thin dark outline on top of that,
+   * so the ring is drawn in the flavor's accent with an offset gap instead.
+   * :focus-visible, so a mouse click does not leave a ring behind.
+   */
+  .resume-frame a:focus-visible,
+  .resume-frame button:focus-visible,
+  .resume-frame input:focus-visible,
+  .resume-frame [tabindex]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /*
+   * Ten tab stops sat between the top of the page and the first line of the
+   * resume: four contacts, the flavor list, and the export controls. The link
+   * is off-screen until focused, which is the first Tab on the page.
+   */
+  .resume-skip {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 60;
+    padding: 0.7rem 1rem;
+    background: ${S.bg};
+    color: ${S.ink};
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .resume-skip:focus { left: 1rem; top: 1rem; }
+
+  /*
    * The role an inbound ?role= link points at: an accent edge and a wash of the
    * same colour, so the marking belongs to whichever flavor is on screen rather
    * than introducing a colour of its own.
@@ -87,7 +122,7 @@ export const RESUME_CSS = `
        same way. It grows to fit and the page scrolls. */
     .resume-rail { position: static !important; height: auto !important; max-height: none !important; overflow: visible !important; margin-right: 0 !important; padding-right: 0 !important; }
     .resume-desk { margin-top: 1.75rem !important; padding-top: 0 !important; }
-    .resume-desk [role="radiogroup"] { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
+    .resume-desk .resume-flavors { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
     .resume-desk button, .resume-desk a { margin-left: 0 !important; }
     .resume-main { padding-top: 3rem !important; }
     .resume-entry { grid-template-columns: 1fr !important; gap: 0.25rem !important; }
@@ -128,9 +163,9 @@ export const RESUME_CSS = `
 
     .resume-frame *, .resume-frame { color: ${PRINT.body} !important; border-color: ${PRINT.rail} !important; }
     .resume-frame h1, .resume-frame h2, .resume-frame h3, .resume-frame dt { color: ${PRINT.ink} !important; }
-    .resume-frame h2 { font-size: 17pt !important; }
+    .resume-frame h2:not([id^="sh-"]) { font-size: 17pt !important; }
     .resume-frame h2 em, .resume-entry > span:first-child { color: ${PRINT.accent} !important; }
-    .resume-frame section > div[id^="sh-"] { color: ${PRINT.heading} !important; }
+    .resume-frame section > h2[id^="sh-"] { color: ${PRINT.heading} !important; }
     .resume-frame footer { color: ${PRINT.footer} !important; }
     .resume-frame a { text-decoration: none !important; }
 
@@ -212,6 +247,10 @@ export function ResumeFrame({
           } as React.CSSProperties
         }
       >
+        <a className="resume-skip" href="#resume-main">
+          Skip to resume
+        </a>
+
         <div
           className="resume-grid"
           style={{
@@ -292,7 +331,14 @@ export function ResumeFrame({
             </div>
           </header>
 
-          <main className="resume-main" style={{ padding: "6rem 0 4rem", maxWidth: 720 }}>
+          {/* tabIndex so the skip link actually moves focus and not just the
+              viewport; -1 keeps it out of the tab order itself. */}
+          <main
+            id="resume-main"
+            tabIndex={-1}
+            className="resume-main"
+            style={{ padding: "6rem 0 4rem", maxWidth: 720, outline: "none" }}
+          >
             <StatementBlock statement={statement} />
 
             {sections.map((section) => (

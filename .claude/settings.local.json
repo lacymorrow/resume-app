@@ -1,23 +1,34 @@
 {
   "permissions": {
     "allow": [
+      "Bash(/Users/lacy/repo/resume-app/scripts/paperclip-issue-update.sh:*)",
+      "Bash(/Users/lacy/repo/resume-app/scripts/paperclip:*)",
+      "Bash(DEBUG=drizzle*)",
+      "Bash(bun -e:*)",
+      "Bash(bun run:*)",
+      "Bash(bunx drizzle-kit introspect:*)",
+      "Bash(bunx drizzle-kit push:*)",
+      "Bash(curl:*)",
+      "Bash(env)",
+      "Bash(env:*)",
+      "Bash(export DATABASE_URL:*)",
+      "Bash(ls:*)",
+      "Bash(npm view:*)",
+      "Bash(source:*)",
+      "Bash(yes:*)",
+      "mcp__Neon__list_organizations",
       "mcp__Neon__list_projects",
       "mcp__Neon__list_shared_projects",
       "mcp__Neon__search",
-      "mcp__Neon__list_organizations",
-      "Bash(ls:*)",
-      "Bash(bun -e:*)",
-      "Bash(bun run:*)",
-      "Bash(bunx drizzle-kit push:*)",
-      "Bash(source:*)",
-      "Bash(export DATABASE_URL:*)",
-      "Bash(yes:*)",
-      "Bash(bunx drizzle-kit introspect:*)",
-      "Bash(npm view:*)",
-      "Bash(DEBUG=drizzle*)",
+      "mcp__acp__Bash",
       "mcp__acp__Edit",
-      "mcp__acp__Write",
-      "mcp__acp__Bash"
-    ]
+      "mcp__acp__Write"
+    ],
+    "additionalDirectories": [
+      "/Users/lacy/.paperclip/instances/default/companies/18a87342-5b53-46fa-8d3f-5b25ebfa211d",
+      "/Users/lacy/.paperclip/instances/default/companies/18a87342-5b53-46fa-8d3f-5b25ebfa211d/acp-engine/agents/c1d4aa58-afd6-49fb-9d17-36fc37c09f92",
+      "/Users/lacy/.paperclip/instances/default/workspaces/c1d4aa58-afd6-49fb-9d17-36fc37c09f92"
+    ],
+    "defaultMode": "default"
   }
 }

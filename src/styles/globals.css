@@ -9,8 +9,13 @@
   --sidebar-top-offset: 0.5rem;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Smooth scrolling is an animation, and it applies to anchor jumps and to
+   scrollIntoView. Someone who has asked the OS for reduced motion gets the
+   instant jump instead. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
