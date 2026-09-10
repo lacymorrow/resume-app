@@ -25,9 +25,18 @@ export function TopRule({ accent }: { accent: string }) {
   );
 }
 
+/**
+ * A section's label, and a real `h2`.
+ *
+ * It reads as a small caption rather than a heading, but it is the only thing
+ * standing between the statement and twenty job titles: rendered as a `div`,
+ * navigating this page by heading gave a screen reader a flat run of roles with
+ * no way to tell where Experience ended and Education began. The size is
+ * styling; the level is structure, and they are allowed to disagree.
+ */
 export function SectionHead({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
-    <div
+    <h2
       id={id}
       style={{
         fontSize: "0.7rem",
@@ -35,13 +44,13 @@ export function SectionHead({ id, children }: { id?: string; children: React.Rea
         letterSpacing: "0.14em",
         color: S.dim,
         fontWeight: 500,
+        margin: "0 0 0.5rem",
         paddingBottom: "0.9rem",
         borderBottom: `1px solid ${S.hairline}`,
-        marginBottom: "0.5rem",
       }}
     >
       {children}
-    </div>
+    </h2>
   );
 }
 
@@ -121,24 +130,39 @@ export function WorkEntry({
         {years}
       </span>
       <div>
-        <h3 style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
+        {/*
+         * The company sits inside the heading rather than in a paragraph after
+         * it. Two roles on this resume are both "Full-Stack Next.js Developer",
+         * so a heading list built from the title alone repeats itself and names
+         * neither employer. It renders exactly as it did as a sibling.
+         */}
+        <h3 style={{ fontSize: "1.1rem", fontWeight: 600, letterSpacing: "-0.01em", margin: 0 }}>
           {position}
+          <span
+            style={{
+              display: "block",
+              color: S.dim,
+              fontSize: "0.9rem",
+              fontWeight: 400,
+              letterSpacing: 0,
+              marginTop: "0.15rem",
+            }}
+          >
+            {url ? (
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: S.dim, textDecoration: "none", transition: "color 300ms ease" }}
+                className="ha"
+              >
+                {name}
+              </a>
+            ) : (
+              name
+            )}
+          </span>
         </h3>
-        <p style={{ color: S.dim, fontSize: "0.9rem", marginTop: "0.15rem" }}>
-          {url ? (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: S.dim, textDecoration: "none", transition: "color 300ms ease" }}
-              className="ha"
-            >
-              {name}
-            </a>
-          ) : (
-            name
-          )}
-        </p>
         {summary && (
           <p style={{ marginTop: "0.6rem", fontSize: "0.95rem", maxWidth: "56ch" }}>{summary}</p>
         )}
@@ -218,12 +242,18 @@ export function ProjectRow({
 }
 
 /**
- * A flavor control that is a real link.
+ * A flavor control that is a real link, and says so.
  *
  * Rendering it as an anchor means every variant is crawlable and works with
  * scripting disabled — each flavor has its own title and description via
  * generateMetadata. With JavaScript the click is intercepted so switching stays
  * client-side and instant.
+ *
+ * It used to carry `role="radio"` inside a radiogroup, which told a screen
+ * reader these were options in a form and hid the fact that each one goes
+ * somewhere. The radio pattern also brought a roving tabindex with it, so six
+ * of the seven flavors were not reachable by Tab at all. They are links to
+ * pages; `aria-current` is how a link says it is the one you are on.
  */
 export function FlavorButton({
   href,
@@ -231,8 +261,6 @@ export function FlavorButton({
   swatch,
   selected,
   onClick,
-  onKeyDown,
-  btnRef,
 }: {
   /** Real destination, so the list works as links before any JS runs. */
   href: string;
@@ -240,16 +268,10 @@ export function FlavorButton({
   swatch: string;
   selected: boolean;
   onClick: () => void;
-  onKeyDown?: (e: React.KeyboardEvent) => void;
-  btnRef?: React.Ref<HTMLAnchorElement>;
 }) {
   return (
-    // biome-ignore lint/a11y/useSemanticElements: must be a real link so each flavor is crawlable and works without JS; see FlavorButton comment above.
     <a
-      ref={btnRef}
       href={href}
-      role="radio"
-      aria-checked={selected}
       aria-current={selected ? "page" : undefined}
       onClick={(e) => {
         // Let modified clicks open a new tab the way any link would.
@@ -257,8 +279,6 @@ export function FlavorButton({
         e.preventDefault();
         onClick();
       }}
-      onKeyDown={onKeyDown}
-      tabIndex={selected ? 0 : -1}
       style={{
         display: "flex",
         alignItems: "center",
@@ -359,25 +379,48 @@ export function CredentialRow({ item }: { item: CredentialItem }) {
   );
 }
 
-/** Skills, languages, interests: a label and its terms. */
+/** The text of a keyword row: its terms, or the qualifier if it has none. */
+function keywordTerms(item: KeywordItem) {
+  return item.keywords.length > 0 ? item.keywords.join(", ") : (item.detail ?? "");
+}
+
+/** Skills, languages: a label and its terms. */
 export function KeywordRow({ item }: { item: KeywordItem }) {
-  const terms = item.keywords.length > 0 ? item.keywords.join(", ") : (item.detail ?? "");
-  // A collapsed bare-name list has no label, so it runs the full width.
-  const unlabelled = item.name === "";
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: unlabelled ? "minmax(0, 1fr)" : "10rem minmax(0, 1fr)",
+        gridTemplateColumns: "10rem minmax(0, 1fr)",
         gap: "1.5rem",
         padding: "0.85rem 0",
         borderBottom: `1px solid ${S.hairline}`,
         fontSize: "0.9rem",
       }}
     >
-      {!unlabelled && <dt style={{ fontWeight: 600 }}>{item.name}</dt>}
-      <dd style={{ color: S.dim, margin: 0 }}>{terms}</dd>
+      <dt style={{ fontWeight: 600 }}>{item.name}</dt>
+      <dd style={{ color: S.dim, margin: 0 }}>{keywordTerms(item)}</dd>
     </div>
+  );
+}
+
+/**
+ * The collapsed bare-name list sections.ts produces for interests: one run of
+ * names with nothing defining anything. It rendered as a `dd` with no `dt`,
+ * which is not a definition list, so it is prose instead.
+ */
+export function KeywordRun({ item }: { item: KeywordItem }) {
+  return (
+    <p
+      style={{
+        margin: 0,
+        padding: "0.85rem 0",
+        borderBottom: `1px solid ${S.hairline}`,
+        fontSize: "0.9rem",
+        color: S.dim,
+      }}
+    >
+      {keywordTerms(item)}
+    </p>
   );
 }
 
@@ -450,7 +493,11 @@ export function SectionBlock({
             ))}
           </ul>
         );
-      case "keywords":
+      case "keywords": {
+        // sections.ts collapses a collection of bare names into a single
+        // unlabelled item; that is prose, not a term and its definition.
+        const only = section.items.length === 1 ? section.items[0] : undefined;
+        if (only && only.name === "") return <KeywordRun item={only} />;
         return (
           <dl style={{ margin: 0, padding: 0 }}>
             {section.items.map((e) => (
@@ -458,6 +505,7 @@ export function SectionBlock({
             ))}
           </dl>
         );
+      }
       case "credentials":
         return (
           <ol style={{ margin: 0, padding: 0 }}>

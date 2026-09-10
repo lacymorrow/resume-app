@@ -25,7 +25,9 @@ test.describe("resume builder", () => {
     await page.goto("/");
     await waitForHydration(page);
     await page.getByRole("button", { name: /Customize/ }).click();
-    await expect(page.getByRole("complementary", { name: "Resume builder" })).toBeVisible();
+    await expect(
+      page.locator(".resume-desk").filter({ has: page.getByRole("heading", { name: "Builder" }) })
+    ).toBeVisible();
 
     // Section toggle removes the section and records it in the URL.
     await expect(view(page).locator('[id="sh-education"]')).toBeVisible();
@@ -63,7 +65,9 @@ test.describe("resume builder", () => {
     await page.getByRole("button", { name: /Customize/ }).click();
     await page.getByRole("button", { name: /^Roles/ }).click();
 
-    const panel = page.getByRole("complementary", { name: "Resume builder" });
+    const panel = page
+      .locator(".resume-desk")
+      .filter({ has: page.getByRole("heading", { name: "Builder" }) });
     const toggles = panel.locator('button[role="switch"][id^="company-"]');
     const total = await toggles.count();
     const id = (await toggles.first().getAttribute("id"))!;
@@ -93,7 +97,9 @@ test.describe("resume builder", () => {
     await page.goto("/");
     await waitForHydration(page);
     await page.getByRole("button", { name: /Customize/ }).click();
-    await expect(page.getByRole("complementary", { name: "Resume builder" })).toBeVisible();
+    await expect(
+      page.locator(".resume-desk").filter({ has: page.getByRole("heading", { name: "Builder" }) })
+    ).toBeVisible();
 
     const rail = await page.locator(".resume-rail").evaluate((el) => ({
       scrolls: el.scrollHeight > el.clientHeight,
@@ -180,7 +186,7 @@ test.describe("resume builder", () => {
     await waitForHydration(page);
     const report = await watchTransitions(page);
 
-    await page.getByRole("radio", { name: "AI / Agentic Engineer" }).click();
+    await page.getByRole("link", { name: "AI / Agentic Engineer" }).click();
     await page.waitForURL(/\/ai$/);
     expect(await report()).toEqual({ started: 1, suppressed: true });
 
@@ -193,7 +199,7 @@ test.describe("resume builder", () => {
   test("going back cross-fades too", async ({ page }) => {
     await page.goto("/");
     await waitForHydration(page);
-    await page.getByRole("radio", { name: "DevOps Engineer" }).click();
+    await page.getByRole("link", { name: "DevOps Engineer" }).click();
     await page.waitForURL(/\/devops$/);
     await waitForHydration(page);
 
@@ -215,7 +221,7 @@ test.describe("resume builder", () => {
 
     // Not merely a stylesheet override: a view transition freezes the page
     // while it runs, which is itself motion the reader asked not to have.
-    await page.getByRole("radio", { name: "DevOps Engineer" }).click();
+    await page.getByRole("link", { name: "DevOps Engineer" }).click();
     await page.waitForURL(/\/devops$/);
     expect(await report()).toEqual({ started: 0, suppressed: false });
     await expect(view(page).locator('[id="sh-work"]')).toBeVisible();
@@ -272,9 +278,10 @@ test.describe("resume builder", () => {
     // generateMetadata, and these anchors are what point at them.
     await page.goto("/");
     // Scoped to the flavor control anchors: at the root namespace a bare href
-    // regex would also sweep up every other link on the page.
+    // regex would also sweep up every other link on the page. They are plain
+    // links now, so the nav container is what scopes them.
     const hrefs = await page
-      .locator('a[role="radio"]')
+      .locator(".resume-flavors a")
       .evaluateAll((els) => els.map((el) => el.getAttribute("href")));
     expect(new Set(hrefs).size).toBe(hrefs.length);
     expect(hrefs.length).toBeGreaterThanOrEqual(7);
@@ -305,7 +312,7 @@ test.describe("resume builder", () => {
     await expect(frame.locator('[id="sh-work"]')).toBeVisible();
 
     // Flavor controls are anchors to real pages, so switching works unscripted.
-    const links = page.locator('a[href^="/"][role="radio"]');
+    const links = page.locator('.resume-flavors a[href^="/"]');
     expect(await links.count()).toBeGreaterThanOrEqual(6);
     await expect(page.locator('a[aria-current="page"]')).toHaveCount(1);
 

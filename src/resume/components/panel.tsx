@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CustomFlavor } from "../lib/custom-flavors";
 import type { ExportFormat } from "../lib/export";
 import type { FilterState } from "../lib/filters";
@@ -10,6 +10,23 @@ import { SCREEN, THEME_SANS } from "../lib/theme";
 import type { SectionKey } from "../lib/types";
 
 const S = SCREEN;
+
+/**
+ * The label of a role or project switched off in the builder.
+ *
+ * It used to be `S.dim` at half opacity, which composites to 2.19:1 on the
+ * page background and fails WCAG AA for text. This is the dimmest value that
+ * still clears 4.5:1. The strike-through carries the state on its own, so the
+ * colour is only reinforcing it.
+ */
+const HIDDEN_INK = "#807D74";
+
+/**
+ * The edge of a switch in its off state. `S.hairline` is right for a divider,
+ * which is decorative and exempt, but this is the boundary of a control and
+ * has to clear 3:1 against the page. This is 3.6:1.
+ */
+const CONTROL_EDGE = "rgba(237, 234, 227, 0.42)";
 
 export interface ResumePanelProps {
   filters: FilterState;
@@ -76,7 +93,7 @@ function Toggle({ checked, onChange, id }: { checked: boolean; onChange: () => v
         height: 17,
         flexShrink: 0,
         borderRadius: 999,
-        border: `1px solid ${checked ? "var(--accent)" : S.hairline}`,
+        border: `1px solid ${checked ? "var(--accent)" : CONTROL_EDGE}`,
         background: checked ? "var(--accent)" : "transparent",
         cursor: "pointer",
         padding: 0,
@@ -165,6 +182,13 @@ export function ResumePanel({
   const [naming, setNaming] = useState<"save" | "download" | null>(null);
   const [draftName, setDraftName] = useState("");
 
+  // The name field replaces the button that opened it, which would otherwise
+  // drop focus to the body mid-task.
+  const nameRef = useRef<HTMLInputElement | null>(null);
+  useEffect(() => {
+    if (naming) nameRef.current?.focus();
+  }, [naming]);
+
   const isCustomActive = customFlavors.some((f) => f.id === activeFlavor.id);
   const hiddenCount = filters.hiddenCompanies.length + filters.hiddenProjects.length;
 
@@ -194,8 +218,10 @@ export function ResumePanel({
   };
 
   return (
-    <aside
-      aria-label="Resume builder"
+    // Not <aside>: this sits inside the rail's <header>, and a complementary
+    // landmark nested inside another landmark is not exposed as a landmark at
+    // all. The "Builder" heading below names the group instead.
+    <div
       style={{
         display: "flex",
         flexDirection: "column",
@@ -205,7 +231,7 @@ export function ResumePanel({
       }}
     >
       <div style={{ ...rowStyle, marginBottom: "0.5rem" }}>
-        <strong style={{ fontSize: "0.9rem", fontWeight: 600 }}>Builder</strong>
+        <h2 style={{ fontSize: "0.9rem", fontWeight: 600, margin: 0 }}>Builder</h2>
         <span style={{ display: "flex", gap: "0.9rem" }}>
           <button type="button" onClick={onReset} style={linkButton} className="ha">
             Reset
@@ -216,7 +242,7 @@ export function ResumePanel({
         </span>
       </div>
 
-      <p style={{ fontSize: "0.78rem", color: S.dim, margin: "0 0 1rem" }}>
+      <p aria-live="polite" style={{ fontSize: "0.78rem", color: S.dim, margin: "0 0 1rem" }}>
         <span style={{ color: S.ink, fontVariantNumeric: "tabular-nums" }}>{matchedWork}</span>/
         {totalWork} roles,{" "}
         <span style={{ color: S.ink, fontVariantNumeric: "tabular-nums" }}>{matchedProjects}</span>/
@@ -281,7 +307,7 @@ export function ResumePanel({
               <label
                 htmlFor={domId("company", name)}
                 style={{
-                  color: visible ? S.dim : "rgba(138,134,124,0.5)",
+                  color: visible ? S.dim : HIDDEN_INK,
                   textDecoration: visible ? "none" : "line-through",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -324,7 +350,7 @@ export function ResumePanel({
               <label
                 htmlFor={domId("project", name)}
                 style={{
-                  color: visible ? S.dim : "rgba(138,134,124,0.5)",
+                  color: visible ? S.dim : HIDDEN_INK,
                   textDecoration: visible ? "none" : "line-through",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -373,6 +399,10 @@ export function ResumePanel({
               }
               style={linkButton}
               className="ha"
+              // No aria-label here. The visible text is "match any", and an
+              // aria-label replaces it, so the accessible name would no longer
+              // contain the words on the button: WCAG 2.5.3, and it breaks
+              // "click match any" for anyone driving the page by voice.
               title="Whether an entry must match any selected tag or all of them"
             >
               match {filters.tagMatchMode}
@@ -428,6 +458,7 @@ export function ResumePanel({
         {naming ? (
           <div style={{ display: "flex", gap: "0.5rem" }}>
             <input
+              ref={nameRef}
               value={draftName}
               onChange={(e) => setDraftName(e.target.value)}
               onKeyDown={(e) => {
@@ -451,8 +482,14 @@ export function ResumePanel({
             <button type="button" onClick={commitName} style={linkButton} className="ha">
               OK
             </button>
-            <button type="button" onClick={() => setNaming(null)} style={linkButton} className="ha">
-              ×
+            <button
+              type="button"
+              onClick={() => setNaming(null)}
+              aria-label="Cancel"
+              style={linkButton}
+              className="ha"
+            >
+              <span aria-hidden="true">×</span>
             </button>
           </div>
         ) : (
@@ -474,7 +511,7 @@ export function ResumePanel({
               className="ha"
               title="Download this variant as a /flavors/*.json file"
             >
-              ↓ Flavor JSON
+              <span aria-hidden="true">↓ </span>Flavor JSON
             </button>
             {(["pdf", "docx", "html"] as ExportFormat[]).map((fmt) => (
               <button
@@ -484,15 +521,16 @@ export function ResumePanel({
                 style={linkButton}
                 className="ha"
               >
-                ↓ {fmt.toUpperCase()}
+                <span aria-hidden="true">↓ </span>
+                {fmt.toUpperCase()}
               </button>
             ))}
             <button type="button" onClick={() => window.print()} style={linkButton} className="ha">
-              ⎙ Print
+              <span aria-hidden="true">⎙ </span>Print
             </button>
           </div>
         )}
       </div>
-    </aside>
+    </div>
   );
 }

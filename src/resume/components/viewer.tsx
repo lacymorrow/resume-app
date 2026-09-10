@@ -25,7 +25,7 @@ import {
   resolveWork,
 } from "../lib/filters";
 import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
-import { resolveHighlightedOrg, ROLE_PARAM } from "../lib/highlight";
+import { ROLE_PARAM, resolveHighlightedOrg } from "../lib/highlight";
 import { DEFAULT_FLAVOR_ID, flavorHref } from "../lib/routes";
 import { buildSections, DEFAULT_SECTIONS } from "../lib/sections";
 import { SCREEN } from "../lib/theme";
@@ -395,32 +395,39 @@ export function ResumeViewer({
     [filters, flavor]
   );
 
-  // Roving tabindex: the flavor list is a radiogroup, so arrows move between
-  // options and only the selected one is in the tab order.
-  const btnRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-  const handleFlavorKey = useCallback(
-    (e: React.KeyboardEvent, idx: number) => {
-      const count = allFlavors.length;
-      let next = idx;
-      if (e.key === "ArrowDown" || e.key === "ArrowRight") next = (idx + 1) % count;
-      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = (idx - 1 + count) % count;
-      else return;
-      e.preventDefault();
-      selectFlavor(allFlavors[next]!.id);
-      btnRefs.current[next]?.focus();
-    },
-    [allFlavors, selectFlavor]
-  );
+  /**
+   * Opening the builder unmounts the button that opened it, which drops focus
+   * to the body and loses a keyboard reader's place entirely. Focus moves into
+   * the panel on open and back to the trigger on close.
+   */
+  const customizeRef = useRef<HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const closingRef = useRef(false);
+
+  useEffect(() => {
+    if (panelOpen) {
+      panelRef.current?.focus();
+      return;
+    }
+    if (!closingRef.current) return;
+    closingRef.current = false;
+    customizeRef.current?.focus();
+  }, [panelOpen]);
+
+  const closePanel = useCallback(() => {
+    closingRef.current = true;
+    setPanelOpen(false);
+  }, []);
 
   const desk = (
     <>
       <DeskLabel id="desk-label" />
-      <div
-        role="radiogroup"
+      <nav
         aria-labelledby="desk-label"
+        className="resume-flavors"
         style={{ display: "flex", flexDirection: "column", gap: "0.15rem" }}
       >
-        {allFlavors.map((f, i) => (
+        {allFlavors.map((f) => (
           <FlavorButton
             key={f.id}
             href={
@@ -432,16 +439,12 @@ export function ResumeViewer({
             swatch={f.accent}
             selected={flavor.id === f.id}
             onClick={() => selectFlavor(f.id)}
-            onKeyDown={(e) => handleFlavorKey(e, i)}
-            btnRef={(el) => {
-              btnRefs.current[i] = el;
-            }}
           />
         ))}
-      </div>
+      </nav>
 
       {panelOpen ? (
-        <div style={{ marginTop: "1.75rem" }}>
+        <div ref={panelRef} tabIndex={-1} style={{ marginTop: "1.75rem", outline: "none" }}>
           <ResumePanel
             filters={filters}
             onFiltersChange={handleFiltersChange}
@@ -461,7 +464,7 @@ export function ResumeViewer({
             onDeleteFlavor={handleDeleteFlavor}
             onDownloadFlavor={handleDownloadFlavor}
             onReset={reset}
-            onClose={() => setPanelOpen(false)}
+            onClose={closePanel}
           />
         </div>
       ) : (
@@ -471,8 +474,9 @@ export function ResumeViewer({
             onClick={() => setPanelOpen(true)}
             style={deskActionStyle}
             className="ha"
+            ref={customizeRef}
           >
-            ⚙ Customize
+            <span aria-hidden="true">⚙ </span>Customize
           </button>
           {EXPORT_FORMATS.map((fmt) => (
             <button
@@ -482,7 +486,8 @@ export function ResumeViewer({
               style={deskActionStyle}
               className="ha"
             >
-              ↓ {fmt.toUpperCase()}
+              <span aria-hidden="true">↓ </span>
+              {fmt.toUpperCase()}
             </button>
           ))}
           <button
@@ -491,7 +496,7 @@ export function ResumeViewer({
             style={deskActionStyle}
             className="ha"
           >
-            ⎙ Print
+            <span aria-hidden="true">⎙ </span>Print
           </button>
         </div>
       )}
