@@ -6,6 +6,23 @@ import { type FlavorStatement, renderStatement, SCREEN } from "../lib/theme";
 const S = SCREEN;
 export const SF = `var(--font-instrument-sans), 'Instrument Sans', system-ui, sans-serif`;
 
+/**
+ * A borderless text control: the rail's own actions and the quiet half of the
+ * download bar. One definition, so the two read as the same kind of thing.
+ */
+export const actionStyle: React.CSSProperties = {
+  background: "none",
+  border: "none",
+  color: S.dim,
+  fontFamily: SF,
+  fontSize: "0.75rem",
+  cursor: "pointer",
+  padding: 0,
+  textTransform: "uppercase",
+  letterSpacing: "0.08em",
+  transition: "color 200ms ease",
+};
+
 export function TopRule({ accent }: { accent: string }) {
   return (
     <div
