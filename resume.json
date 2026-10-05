@@ -13,7 +13,7 @@
     "email": "me@lacymorrow.com",
     "phone": "704-451-6680",
     "url": "https://lacymorrow.com",
-    "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nEXPERTISE: Agentic engineer + Full-stack developer + GTM/Growth engineer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); GTM engineering (product launches, e-commerce funnels, SEO/analytics, marketing automation); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
+    "summary": "Over 20 years as a Web Developer building accessible, well-architected sites and apps. Creator of pixel-perfect, mobile-first development with graceful degradation and progressive enhancement.\n\nAfter a run of contract work I am looking for a long-term founding or lead engineering role where I can own AI-native product from zero to scale.\n\nEXPERTISE: Agentic engineer + Full-stack developer + GTM/Growth engineer + Hardware Engineer; AI/GenAI integration (LLMs, LangChain, LangGraph, RAG, MCP); GTM engineering (product launches, e-commerce funnels, SEO/analytics, marketing automation); Agency owner; Tech/Development lead; Product/Project manager; DevOps; IT consultant; Software architect; Hiring manager; SCRUM master\n\nI especially enjoy TypeScript, React, NextJS, and Electron/Tauri\n\nQUALITIES: Tech leader. Passionate about quality. Communicative and accessible; Reliable, confident, and eager to build. A highly motivated problem-solver.",
     "location": {
       "countryCode": "US",
       "city": "San Francisco",
@@ -255,7 +255,7 @@
       "position": "Lead Web Developer - Grid Services",
       "startDate": "2023-08-01",
       "endDate": "2024-02-01",
-      "summary": "Contract - Developed charts, dashboards, control panels to manage solar and power utilities in southern California and Hawaii. Authentication, API, UI, CRUD. TypeScript, NextJS, React, Python, Django, Docker, PostgreSQL",
+      "summary": "Contract - Gave grid operators the charts, dashboards, and control panels they use to manage solar and power utilities across southern California and Hawaii. Shipped the authentication, API, UI, and CRUD behind them. TypeScript, NextJS, React, Python, Django, Docker, PostgreSQL",
       "location": "Remote",
       "sector": "Clean Energy"
     },
@@ -282,7 +282,7 @@
       "position": "Senior React Developer - In-Flight Entertainment",
       "startDate": "2022-06-01",
       "endDate": "2023-01-01",
-      "summary": "Contract - Managed in-flight entertainment portals for dozens of airlines. On-call. In charge of workflow management and client-stakeholder relations. Demoed product updates to stakeholders. Transformed polished designs into reusable components. React, TypeScript, NextJS, Jenkins, AWS, MySQL",
+      "summary": "Contract - Kept in-flight entertainment portals live for dozens of airlines, owning workflow management, on-call, and client-stakeholder relations. Turned polished designs into a reusable component library and demoed product updates to stakeholders. React, TypeScript, NextJS, Jenkins, AWS, MySQL",
       "location": "Remote",
       "sector": "Aerospace"
     },
@@ -425,9 +425,7 @@
         "Svelte",
         "Astro",
         "Vue",
-        "HTML / JSX / MDX",
-        "SCSS / CSS / BEM / Styled Components / SASS",
-        "Tailwind / Bootstrap",
+        "Tailwind / Styled Components",
         "React Native / Flutter"
       ]
     },
