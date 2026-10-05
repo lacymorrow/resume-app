@@ -141,8 +141,50 @@ export const RESUME_CSS = `
   .resume-rail { scrollbar-width: none; }
   .resume-rail::-webkit-scrollbar { display: none; }
 
+  /*
+   * The two rows built on a fixed 10rem label column. There is no width at
+   * which 10rem plus a 1.5rem gap plus readable text fits a phone, and the
+   * project row also carries an arrow in a third column: at 320px its middle
+   * column was squeezed to 32px wanting 70, which is where the page's
+   * sideways scroll came from. Stacked, the label is a line of its own.
+   */
+  @media (max-width: 640px) {
+    .resume-frame .resume-project { grid-template-columns: 1fr !important; gap: 0.3rem !important; }
+    /* The arrow pointed across a gap that no longer exists. */
+    .resume-frame .project-arrow { display: none !important; }
+    .resume-frame .resume-kv { grid-template-columns: 1fr !important; gap: 0.2rem !important; }
+  }
+
+  /*
+   * Anything driven by a finger rather than a pointer. The download bar's
+   * controls were 19px tall and the contact links 21px, well under the 44px
+   * a fingertip needs, and they sit next to each other. Scoped to coarse
+   * pointers so the drawn design is untouched wherever there is a cursor.
+   */
+  @media (pointer: coarse) {
+    .resume-frame .resume-actionbar button,
+    .resume-frame .resume-rail nav a,
+    .resume-frame .resume-flavors a,
+    .resume-frame .resume-desk button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      /* Flex drops the whitespace between the glyph span and the label, so
+         "down-arrow PDF" came out as one run. The flavor links set their own
+         gap inline, which still wins here. */
+      gap: 0.3rem;
+    }
+  }
+
   @media (max-width: 860px) {
-    .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    /* Matches the download bar's own side padding, so its first control sits
+       directly above the name instead of 12px inside it. 2rem was also an
+       eighth of the screen at 320px. */
+    .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; padding: 0 1.25rem !important; }
+    /* 5vw never reaches the 2.5rem floor on a phone, so the headline sat at
+       40px in a 256px column: seven lines and 269px of it before a word of
+       the resume. This band gets its own ramp. */
+    .resume-statement { font-size: clamp(1.9rem, 7.5vw, 3rem) !important; }
     /* Four controls still fit on one line at 360px once the gaps close up,
        and they have to: a bar that wraps changes height, and the clearance
        the rail leaves for it is a fixed number. */
@@ -294,11 +336,11 @@ export function ResumeFrame({
           className="resume-grid"
           style={{
             display: "grid",
-            gridTemplateColumns: "300px minmax(0, 1fr)",
+            gridTemplateColumns: "clamp(220px, 24vw, 300px) minmax(0, 1fr)",
             maxWidth: 1200,
             margin: "0 auto",
             padding: "0 2rem",
-            gap: "4rem",
+            gap: "clamp(2rem, 4vw, 4rem)",
           }}
         >
           <header

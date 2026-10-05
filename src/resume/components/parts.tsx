@@ -75,6 +75,7 @@ export function StatementBlock({ statement }: { statement: FlavorStatement }) {
   return (
     <section aria-label="Introduction">
       <h2
+        className="resume-statement"
         style={{
           fontSize: "clamp(2.5rem, 5vw, 4rem)",
           fontWeight: 500,
@@ -247,12 +248,14 @@ export function ProjectRow({
           target="_blank"
           rel="noopener noreferrer"
           style={grid}
-          className="project-link"
+          className="resume-project project-link"
         >
           {inner}
         </a>
       ) : (
-        <div style={grid}>{inner}</div>
+        <div style={grid} className="resume-project">
+          {inner}
+        </div>
       )}
     </li>
   );
@@ -405,6 +408,7 @@ function keywordTerms(item: KeywordItem) {
 export function KeywordRow({ item }: { item: KeywordItem }) {
   return (
     <div
+      className="resume-kv"
       style={{
         display: "grid",
         gridTemplateColumns: "10rem minmax(0, 1fr)",
