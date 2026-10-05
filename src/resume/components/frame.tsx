@@ -12,6 +12,9 @@ const S = SCREEN;
  */
 export const RESUME_CSS = `
   .resume-frame a.ha:hover { color: var(--accent) !important; text-decoration: underline; text-underline-offset: 3px; }
+  /* Buttons share the class but not the underline: there is nothing to
+     underline on a control that is not a link. */
+  .resume-frame button.ha:hover:not(:disabled) { color: var(--accent) !important; }
   .resume-frame .project-link:hover { background: ${S.lift} !important; }
   .resume-frame .project-link:hover .project-arrow { transform: translateX(3px); }
 
@@ -49,6 +52,17 @@ export const RESUME_CSS = `
     text-decoration: none;
   }
   .resume-skip:focus { left: 1rem; top: 1rem; }
+
+  /* The filled PDF control. A wash of the accent rather than a fill, so it
+     does not outshout the resume it is a button for. */
+  .resume-frame .resume-dl-primary:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+  }
+  /* Every download disables the whole bar while it runs, so the two states
+     have to look different: the one being generated keeps its colour and the
+     others go quiet. */
+  .resume-frame .resume-actionbar button:disabled { cursor: default; opacity: 0.4; }
+  .resume-frame .resume-actionbar button[aria-busy="true"] { cursor: progress; opacity: 1; }
 
   /*
    * The role an inbound ?role= link points at: an accent edge and a wash of the
@@ -92,6 +106,7 @@ export const RESUME_CSS = `
    */
   .resume-rail { view-transition-name: resume-rail; }
   .resume-topbar { view-transition-name: resume-topbar; }
+  .resume-actionbar { view-transition-name: resume-actionbar; }
 
   /* The default cross-fade blends the two snapshots additively, which only
      looks right while neither of them moves. Both leave before the incoming
@@ -104,7 +119,8 @@ export const RESUME_CSS = `
   /* The rail keeps the default cross-fade: it holds its place and its contents
      barely change, so sequencing it the way the body is sequenced only opens a
      gap where the name and the contacts dip out to nothing. */
-  ::view-transition-group(resume-rail), ::view-transition-group(resume-topbar) { animation-duration: 240ms; }
+  ::view-transition-group(resume-rail), ::view-transition-group(resume-topbar),
+  ::view-transition-group(resume-actionbar) { animation-duration: 240ms; }
 
   @keyframes resume-leave { to { opacity: 0; transform: translateY(-8px); } }
   @keyframes resume-enter { from { opacity: 0; transform: translateY(14px); } }
@@ -127,6 +143,10 @@ export const RESUME_CSS = `
 
   @media (max-width: 860px) {
     .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
+    /* Four controls still fit on one line at 360px once the gaps close up,
+       and they have to: a bar that wraps changes height, and the clearance
+       the rail leaves for it is a fixed number. */
+    .resume-actionbar > div { padding: 0.55rem 1.25rem !important; gap: 0.85rem !important; }
     /* Stacked above the resume rather than sticky beside it, so it has no
        reason to keep the desktop rail's own scroll box: nested scrolling on a
        touch screen is awkward. It grows to fit and the page scrolls. */
@@ -157,7 +177,7 @@ export const RESUME_CSS = `
 
     /* Chrome, not content: a fixed rule repeats on every sheet, and the
        flavor switcher and export buttons do nothing on paper. */
-    .resume-topbar, .resume-desk { display: none !important; }
+    .resume-topbar, .resume-desk, .resume-actionbar { display: none !important; }
 
     .resume-frame {
       --accent: ${PRINT.accent};
@@ -212,6 +232,12 @@ export interface ResumeFrameProps {
    * crawlable before any JavaScript runs; the viewer intercepts the clicks.
    */
   desk: React.ReactNode;
+  /**
+   * The download bar, fixed to the top of the viewport. Rendered after the
+   * skip link so the first Tab still escapes to the resume, and inside the
+   * frame so it reads `--accent`.
+   */
+  actions: React.ReactNode;
   footerNote: string;
   footerLinkLabel: string;
   footerLinkHref: string;
@@ -232,6 +258,7 @@ export function ResumeFrame({
   sections,
   highlightedOrg,
   desk,
+  actions,
   footerNote,
   footerLinkLabel,
   footerLinkHref,
@@ -261,6 +288,8 @@ export function ResumeFrame({
           Skip to resume
         </a>
 
+        {actions}
+
         <div
           className="resume-grid"
           style={{
@@ -286,7 +315,7 @@ export function ResumeFrame({
               overflowY: "auto",
               display: "flex",
               flexDirection: "column",
-              padding: "3.5rem 0 2.5rem 0",
+              padding: "5.5rem 0 2.5rem 0",
             }}
           >
             <h1 style={{ fontSize: "1.35rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
