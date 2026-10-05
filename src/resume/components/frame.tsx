@@ -114,13 +114,23 @@ export const RESUME_CSS = `
   [data-flavor-changing] .resume-frame, [data-flavor-changing] .resume-frame *,
   [data-flavor-changing] .resume-topbar { transition: none !important; }
 
+  /*
+   * The rail scrolls but draws no scrollbar. Any author scrollbar styling, even
+   * scrollbar-width: thin, opts an element out of the platform's overlay
+   * scrollbars and back into a classic bar that is always on screen, and this
+   * one landed in the gutter between the rail and the resume where it read as a
+   * divider the design never drew. Hidden instead: the wheel, the trackpad, and
+   * focusing a control inside still scroll it.
+   */
+  .resume-rail { scrollbar-width: none; }
+  .resume-rail::-webkit-scrollbar { display: none; }
+
   @media (max-width: 860px) {
     .resume-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
     /* Stacked above the resume rather than sticky beside it, so it has no
        reason to keep the desktop rail's own scroll box: nested scrolling on a
-       touch screen is awkward, and its scrollbar would sit on the content the
-       same way. It grows to fit and the page scrolls. */
-    .resume-rail { position: static !important; height: auto !important; max-height: none !important; overflow: visible !important; margin-right: 0 !important; padding-right: 0 !important; }
+       touch screen is awkward. It grows to fit and the page scrolls. */
+    .resume-rail { position: static !important; height: auto !important; max-height: none !important; overflow: visible !important; }
     .resume-desk { margin-top: 1.75rem !important; padding-top: 0 !important; }
     .resume-desk .resume-flavors { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.25rem 0.5rem !important; }
     .resume-desk button, .resume-desk a { margin-left: 0 !important; }
@@ -274,16 +284,9 @@ export function ResumeFrame({
               // behind it does not move it. The builder panel makes that much
               // easier to hit.
               overflowY: "auto",
-              scrollbarWidth: "thin",
-              // The scrollbar is drawn over the rail rather than beside it on
-              // any platform with overlay scrollbars, and it lands on the
-              // panel's right-hand controls. Hanging the scroll edge out into
-              // the column gap gives the bar a strip of its own without
-              // narrowing anything.
-              marginRight: "-14px",
               display: "flex",
               flexDirection: "column",
-              padding: "3.5rem 14px 2.5rem 0",
+              padding: "3.5rem 0 2.5rem 0",
             }}
           >
             <h1 style={{ fontSize: "1.35rem", fontWeight: 600, letterSpacing: "-0.01em" }}>
