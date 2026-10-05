@@ -28,39 +28,22 @@ import { FLAVORS, type ResumeFlavor } from "../lib/flavors";
 import { ROLE_PARAM, resolveHighlightedOrg } from "../lib/highlight";
 import { DEFAULT_FLAVOR_ID, flavorHref } from "../lib/routes";
 import { buildSections, DEFAULT_SECTIONS } from "../lib/sections";
-import { SCREEN } from "../lib/theme";
 import {
   restoreColorTransitions,
   shouldTransition,
   suppressColorTransitions,
 } from "../lib/transitions";
 import type { ResumeSchema } from "../lib/types";
+import { ResumeActionBar } from "./actionbar";
 import { DeskLabel, ResumeFrame } from "./frame";
 import { ResumePanel } from "./panel";
-import { FlavorButton, SF } from "./parts";
-
-const S = SCREEN;
+import { actionStyle, FlavorButton } from "./parts";
 
 const arrayParam = parseAsArrayOf(parseAsString).withDefault([]);
 const matchParam = parseAsStringLiteral(["any", "all"] as const).withDefault("any");
 
-const EXPORT_FORMATS: ExportFormat[] = ["pdf", "docx", "html"];
-
 /** Stable empty array so the pre-mount memo doesn't churn. */
 const NONE: string[] = [];
-
-const deskActionStyle: React.CSSProperties = {
-  background: "none",
-  border: "none",
-  color: S.dim,
-  fontFamily: SF,
-  fontSize: "0.75rem",
-  cursor: "pointer",
-  padding: 0,
-  textTransform: "uppercase",
-  letterSpacing: "0.08em",
-  transition: "color 200ms ease",
-};
 
 export function ResumeViewer({
   data,
@@ -356,9 +339,7 @@ export function ResumeViewer({
   ]);
 
   const handleExport = useCallback(
-    (format: ExportFormat) => {
-      void exportResume(format, buildExportData(data, basics, flavor, filters));
-    },
+    (format: ExportFormat) => exportResume(format, buildExportData(data, basics, flavor, filters)),
     [data, basics, flavor, filters]
   );
 
@@ -459,7 +440,6 @@ export function ResumeViewer({
             totalProjects={projects.entries.length}
             companies={flavorCompanies}
             projects={flavorProjects}
-            onExport={handleExport}
             onSaveFlavor={handleSaveFlavor}
             onDeleteFlavor={handleDeleteFlavor}
             onDownloadFlavor={handleDownloadFlavor}
@@ -468,35 +448,15 @@ export function ResumeViewer({
           />
         </div>
       ) : (
-        <div style={{ marginTop: "2rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <div style={{ marginTop: "2rem" }}>
           <button
             type="button"
             onClick={() => setPanelOpen(true)}
-            style={deskActionStyle}
+            style={actionStyle}
             className="ha"
             ref={customizeRef}
           >
             <span aria-hidden="true">⚙ </span>Customize
-          </button>
-          {EXPORT_FORMATS.map((fmt) => (
-            <button
-              key={fmt}
-              type="button"
-              onClick={() => handleExport(fmt)}
-              style={deskActionStyle}
-              className="ha"
-            >
-              <span aria-hidden="true">↓ </span>
-              {fmt.toUpperCase()}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={() => window.print()}
-            style={deskActionStyle}
-            className="ha"
-          >
-            <span aria-hidden="true">⎙ </span>Print
           </button>
         </div>
       )}
@@ -514,6 +474,7 @@ export function ResumeViewer({
       sections={sections}
       highlightedOrg={highlightedOrg}
       desk={desk}
+      actions={<ResumeActionBar onExport={handleExport} />}
       footerNote={`${basics.name} · ${resumeConfig.site.host}`}
       footerLinkLabel={displayUrl(footerHref(basics.url))}
       footerLinkHref={footerHref(basics.url)}

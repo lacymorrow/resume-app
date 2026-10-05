@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CustomFlavor } from "../lib/custom-flavors";
-import type { ExportFormat } from "../lib/export";
 import type { FilterState } from "../lib/filters";
 import type { ResumeFlavor } from "../lib/flavors";
 import { DEFAULT_SECTIONS } from "../lib/sections";
@@ -42,7 +41,6 @@ export interface ResumePanelProps {
   totalProjects: number;
   companies: string[];
   projects: string[];
-  onExport: (format: ExportFormat) => void;
   onSaveFlavor: (name: string) => void;
   onDeleteFlavor: (id: string) => void;
   onDownloadFlavor: (name: string) => void;
@@ -172,7 +170,6 @@ export function ResumePanel({
   totalProjects,
   companies,
   projects,
-  onExport,
   onSaveFlavor,
   onDeleteFlavor,
   onDownloadFlavor,
@@ -512,21 +509,6 @@ export function ResumePanel({
               title="Download this variant as a /flavors/*.json file"
             >
               <span aria-hidden="true">↓ </span>Flavor JSON
-            </button>
-            {(["pdf", "docx", "html"] as ExportFormat[]).map((fmt) => (
-              <button
-                key={fmt}
-                type="button"
-                onClick={() => onExport(fmt)}
-                style={linkButton}
-                className="ha"
-              >
-                <span aria-hidden="true">↓ </span>
-                {fmt.toUpperCase()}
-              </button>
-            ))}
-            <button type="button" onClick={() => window.print()} style={linkButton} className="ha">
-              <span aria-hidden="true">⎙ </span>Print
             </button>
           </div>
         )}
