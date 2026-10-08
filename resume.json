@@ -77,27 +77,27 @@
       "name": "Lacy Shell",
       "startDate": "2024-01-01",
       "summary": "AI Coding Agent for Your Terminal. Integrate Codex, Claude Code, or your favorite AI coding CLI into your existing shell. Natural language routes through an LLM agent with tool calling and safe command execution.",
-      "url": "https://github.com/lacymorrow/lacy-shell",
+      "url": "https://github.com/lacymorrow/lacy",
       "featured": true
     },
     {
       "name": "Juno AI",
       "startDate": "2025-01-01",
       "summary": "Voice-Operate Your Computer. Rust + Tauri Desktop app built on OpenAI Whisper and Anthropic Computer-use. Also functions as an MCP server (npx juno-cua) for Claude Code, Cursor, and other AI agents.",
-      "url": "https://github.com/lacymorrow/juno-ai",
+      "url": "https://github.com/lacymorrow/juno",
       "featured": true
     },
     {
       "name": "Vibe Rehab",
       "startDate": "2025-01-01",
       "summary": "Fix Your Vibe Code. Finish your vibe coded projects and get them launched, deployed, and secured.",
-      "url": "https://github.com/lacymorrow/vibe-rehab"
+      "url": "https://github.com/lacymorrow/vibe.rehab"
     },
     {
       "name": "Hitchhiker's Guide to the Galaxy",
       "startDate": "2025-01-01",
       "summary": "Completely dynamic website that generates entries as they are requested. LLM-powered generative content with retrieval of prior entries for consistency. Mimicking the guide from the famous Douglas Adams novel.",
-      "url": "https://github.com/lacymorrow/hitchhikers-guide"
+      "url": "https://github.com/lacymorrow/hitchhikersgalaxy.guide"
     },
     {
       "name": "OpenClaw Trading Skills",
@@ -115,7 +115,7 @@
       "name": "Shipkit",
       "startDate": "2024-01-01",
       "summary": "Next.js Accelerator. Full-featured Next.js Starter and toolkit for building, launching, and monetizing MVPs.",
-      "url": "https://github.com/lacymorrow/shipkit",
+      "url": "https://shipkit.io",
       "featured": true
     },
     {
@@ -135,7 +135,7 @@
       "name": "Twilio Hackpack v4",
       "startDate": "2018-01-01",
       "summary": "Twilio's Open Source Hardware Badge, built for SIGNAL Conference 2018. Joystick, lights, 7 buttons, a touchscreen, on a Raspberry Pi Zero, in a 3D-printed case.",
-      "url": "https://github.com/twilio/hackpack-v4",
+      "url": "https://github.com/twilio/hackpack-v4-firmware",
       "endDate": "2018-12-31"
     },
     {
@@ -162,7 +162,7 @@
       "name": "Cinematic",
       "startDate": "2015-01-01",
       "summary": "A NodeJS-based desktop app for organizing your digital movie collection in a simple, easy-to-manage way. Sort, filter, search your movies, then check out ratings, trailers, plot, reviews and more before watching.\n\nNodeJS + Meteor desktop app",
-      "url": "https://lacymorrow.github.io/cinematic",
+      "url": "https://github.com/lacymorrow/cinematic",
       "endDate": "2016-12-31"
     },
     {
@@ -177,7 +177,6 @@
       "name": "Boone Community Network",
       "startDate": "2012-08-31",
       "summary": "A local, community-based social network for the city of Boone, North Carolina. Connect locally and interact with your community; Discover businesses, deals, and people around you; Hear about the latest events and keep your roots local.",
-      "url": "https://boonecommunitynetwork.com",
       "endDate": "2012-08-31"
     },
     {
@@ -191,14 +190,14 @@
       "name": "XPlay.js",
       "startDate": "2012-01-01",
       "summary": "The open source, drop-and-go HTML5 media player. xPlay.js is a powerful tool used to assist in playing multiple media files on a website. Scan an entire directory and generate a playlist, complete with album art, from your audio and video. Playlist is completely customizable via CSS and controlled via JS.",
-      "url": "https://lacymorrow.github.com/xplay-js",
+      "url": "https://github.com/lacymorrow/xplay-js",
       "endDate": "2012-12-31"
     },
     {
       "name": "XSPF Jukebox",
       "startDate": "2006-01-01",
       "summary": "Flash Audio + Video Player. The XSPF Jukebox is a fully skinnable, open source Flash media player. Based on my revisions of Fabricio Zuardi's original creation. A full featured media player, the Jukebox supports both mp3 audio and flv video parsed through an external .XSPF or .XML playlist. Widespread use on popular websites and packaged with PHP framework SocialEngine; Python/PHP backend playlist generation.",
-      "url": "https://lacymorrow.github.io/xspf-jukebox/",
+      "url": "https://github.com/lacymorrow/xspf-jukebox",
       "endDate": "2009-04-30",
       "featured": true
     }
@@ -220,6 +219,7 @@
       "startDate": "2025-06-01",
       "endDate": "2026-04-01",
       "summary": "Contract - Led internal AI adoption: built an internal GPT/LLM platform for company-wide use with RAG (Retrieval-Augmented Generation) over internal documentation, prompt libraries, and Azure OpenAI integration. Refactored a weather-forecasting dashboard to deploy to AWS and migrated authentication to Azure A/D (Active Directory) from user/password. Python, React, LangChain, LlamaIndex, RAG, LLMs, Docker, AWS, Azure, Regex, Cron",
+      "url": "https://www.duke-energy.com/",
       "location": "Remote",
       "sector": "Energy"
     },
@@ -229,6 +229,7 @@
       "startDate": "2025-01-01",
       "endDate": "2025-01-01",
       "summary": "Contract - Created the entire User Testing dashboard for Credit Karma for the User Management team. Converted pages router to App router. Built features for creating test/production users across the web and mobile experience. Included search and metrics coordinated across multiple system APIs. TypeScript, NextJS, React, Tachyons, React Native",
+      "url": "https://www.creditkarma.com/",
       "location": "Remote",
       "sector": "Fintech"
     },
@@ -238,6 +239,7 @@
       "startDate": "2024-06-01",
       "endDate": "2024-12-01",
       "summary": "Contract - Build and maintained Physician Finder, Matcher, and landing pages sites for Novant to locate doctors. Legacy code was sunsetted and new, modern websites were built using TypeScript, NextJS, and Vue, tooled with Datadog/Netlify.",
+      "url": "https://www.novanthealth.org/",
       "location": "Remote",
       "sector": "Healthcare"
     },
@@ -247,6 +249,7 @@
       "startDate": "2024-01-01",
       "endDate": "2024-12-31",
       "summary": "Contract - Created E-commerce site for RVO Health. Built the market, inventory, authentication, and ordering systems, complete with automation pipelines. TypeScript, NextJS, React, Contentful, Plytix, Stripe, Algolia",
+      "url": "https://www.optumrx.com/",
       "location": "Remote",
       "sector": "Healthcare"
     },
@@ -256,6 +259,7 @@
       "startDate": "2023-08-01",
       "endDate": "2024-02-01",
       "summary": "Contract - Gave grid operators the charts, dashboards, and control panels they use to manage solar and power utilities across southern California and Hawaii. Shipped the authentication, API, UI, and CRUD behind them. TypeScript, NextJS, React, Python, Django, Docker, PostgreSQL",
+      "url": "https://swellenergy.com/",
       "location": "Remote",
       "sector": "Clean Energy"
     },
@@ -274,6 +278,7 @@
       "startDate": "2023-01-01",
       "endDate": "2023-06-01",
       "summary": "Government contract with the VA. Built health medicine tools + calculators to lessen the amount of information patients had to fill out and help physicians get accurate stats about health issues.",
+      "url": "https://www.teksystems.com/",
       "location": "Remote",
       "sector": "Government / Healthcare"
     },
@@ -283,6 +288,7 @@
       "startDate": "2022-06-01",
       "endDate": "2023-01-01",
       "summary": "Contract - Kept in-flight entertainment portals live for dozens of airlines, owning workflow management, on-call, and client-stakeholder relations. Turned polished designs into a reusable component library and demoed product updates to stakeholders. React, TypeScript, NextJS, Jenkins, AWS, MySQL",
+      "url": "https://www.viasat.com/",
       "location": "Remote",
       "sector": "Aerospace"
     },
@@ -334,7 +340,6 @@
       "endDate": "2016-11-30",
       "highlights": [],
       "summary": "Contract - Helped create a startup's initial mobile app: React web-app and second-iteration React Native app for IOS and Android; Saw first launch to 100+ beta users. AWS; NodeJS; Docker; SequelizeJS; React Native",
-      "url": "https://truist.com/long-game",
       "location": "San Francisco, CA",
       "sector": "Fintech"
     },
