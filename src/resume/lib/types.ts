@@ -50,6 +50,8 @@ export interface ResumeWork {
   location?: string;
   highlights?: string[];
   sector?: string;
+  /** Employment type shown beside the dates, e.g. "Consulting". */
+  type?: string;
 }
 
 export interface ResumeProject {
