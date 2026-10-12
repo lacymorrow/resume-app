@@ -85,6 +85,36 @@ export function formatYearRange(startDate: string, endDate?: string): string {
   return start === end ? `${start}` : `${start} - ${end}`;
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "Feb 2024" for a YYYY-MM date, "2016" for a bare year. */
+function formatPoint(date: string): string {
+  const d = new Date(date);
+  const year = d.getUTCFullYear();
+  return /^\d{4}-\d{2}/.test(date) ? `${MONTHS[d.getUTCMonth()]} ${year}` : `${year}`;
+}
+
+/**
+ * Work dates at the precision the data carries ("Feb 2024 - Jun 2024", or
+ * "2016" for a role only known by year), followed by the employment type when
+ * set: "Feb 2024 - Jun 2024 · Consulting".
+ */
+export function formatWorkDates(startDate: string, endDate?: string, type?: string): string {
+  const start = formatPoint(startDate);
+  let range: string;
+  if (!endDate) {
+    const ongoing =
+      resumeConfig.dates.ongoing === "current-year"
+        ? formatPoint(new Date().toISOString().slice(0, 7))
+        : resumeConfig.dates.ongoing;
+    range = start === ongoing ? start : `${start} - ${ongoing}`;
+  } else {
+    const end = formatPoint(endDate);
+    range = start === end ? start : `${start} - ${end}`;
+  }
+  return type ? `${range} · ${type}` : range;
+}
+
 /** Projects read as a single start year in the handmade resume unless truly ranged. */
 export function formatProjectYear(startDate: string, endDate?: string): string {
   if (!endDate) return `${new Date(startDate).getUTCFullYear()}`;

@@ -9,6 +9,7 @@ import {
   footerHref,
   footerParts,
   formatProjectYear,
+  formatWorkDates,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
@@ -60,7 +61,7 @@ export function buildHtmlContent(data: ExportData): string {
         .join("");
       return `<article class="entry">
 	<div class="meta">
-		<div class="dates">${esc(formatYearRange(entry.startDate, entry.endDate))}</div>
+		<div class="dates">${esc(formatWorkDates(entry.startDate, entry.endDate, entry.type))}</div>
 		<div class="org">${entry.url ? `<a href="${esc(entry.url)}">${esc(entry.name)}</a>` : esc(entry.name)}</div>
 		${entry.sector ? `<div class="sector">(${esc(entry.sector)})</div>` : ""}
 	</div>

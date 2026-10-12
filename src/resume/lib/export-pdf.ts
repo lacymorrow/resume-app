@@ -6,6 +6,7 @@ import {
   type ExportData,
   footerText,
   formatProjectYear,
+  formatWorkDates,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
@@ -349,7 +350,7 @@ export async function buildPdfDoc(data: ExportData): Promise<jsPDF> {
     for (const entry of work) {
       drawEntry(doc, cur, {
         meta: {
-          dates: formatYearRange(entry.startDate, entry.endDate),
+          dates: formatWorkDates(entry.startDate, entry.endDate, entry.type),
           org: entry.name,
           orgUrl: entry.url,
           sector: entry.sector,

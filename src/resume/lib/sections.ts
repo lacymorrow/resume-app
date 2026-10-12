@@ -44,6 +44,7 @@ export interface TimelineItem {
   highlights?: string[];
   url?: string;
   location?: string;
+  type?: string;
 }
 
 export interface ProjectItem {
@@ -217,6 +218,7 @@ function normalize(
         highlights: e.highlights as string[] | undefined,
         url: e.url as string | undefined,
         location: e.location as string | undefined,
+        type: e.type as string | undefined,
       }));
       return items.length ? { key, label, renderer: "timeline", items } : null;
     }

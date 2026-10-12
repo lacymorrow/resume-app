@@ -7,6 +7,7 @@ import {
   footerHref,
   footerParts,
   formatProjectYear,
+  formatWorkDates,
   formatYearRange,
   getVisibleProjects,
   getVisibleWork,
@@ -108,7 +109,7 @@ export function exportDocx(data: ExportData, filename: string) {
       body += para(run(entry.position, { bold: true, size: 11, color: BLUE }), 20);
       const orgRun = run(`   ${entry.name}`, { bold: true, size: 9.5, color: INK });
       body += para(
-        run(formatYearRange(entry.startDate, entry.endDate), {
+        run(formatWorkDates(entry.startDate, entry.endDate, entry.type), {
           bold: true,
           size: 10,
           color: PINK,

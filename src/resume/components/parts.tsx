@@ -1,5 +1,5 @@
 import type React from "react";
-import { formatYearRange } from "../lib/export-shared";
+import { formatWorkDates, formatYearRange } from "../lib/export-shared";
 import type { CredentialItem, KeywordItem, NormalizedSection, QuoteItem } from "../lib/sections";
 import { type FlavorStatement, renderStatement, SCREEN } from "../lib/theme";
 
@@ -100,6 +100,7 @@ export function WorkEntry({
   summary,
   highlights,
   url,
+  type,
   highlighted,
 }: {
   position: string;
@@ -109,6 +110,7 @@ export function WorkEntry({
   summary?: string;
   highlights?: string[];
   url?: string;
+  type?: string;
   /**
    * The role an inbound `?role=` link points at. Styling lives in RESUME_CSS
    * against the data attribute, which is also how the viewer finds the entry to
@@ -116,7 +118,7 @@ export function WorkEntry({
    */
   highlighted?: boolean;
 }) {
-  const years = formatYearRange(startDate, endDate);
+  const years = formatWorkDates(startDate, endDate, type);
   return (
     <li
       className="resume-entry"
@@ -501,6 +503,7 @@ export function SectionBlock({
                 summary={e.summary}
                 highlights={e.highlights}
                 url={e.url}
+                type={e.type}
                 highlighted={!!highlightedOrg && e.org === highlightedOrg}
               />
             ))}

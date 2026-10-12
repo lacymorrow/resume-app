@@ -1,6 +1,6 @@
 import { resumeConfig } from "../inputs";
 import { resumeData } from "./data";
-import { contactRows, formatProjectYear, formatYearRange } from "./export-shared";
+import { contactRows, formatProjectYear, formatWorkDates, formatYearRange } from "./export-shared";
 import { DEFAULT_FILTER_STATE, resolveProjects, resolveWork } from "./filters";
 import { FLAVORS, findFlavor } from "./flavors";
 import { flavorHref } from "./routes";
@@ -80,7 +80,7 @@ export function resumeMarkdown(flavorId: string): string {
     switch (section.renderer) {
       case "timeline":
         for (const item of section.items) {
-          const when = dateRange(item.startDate, item.endDate);
+          const when = item.startDate ? formatWorkDates(item.startDate, item.endDate, item.type) : "";
           out.push(
             heading(
               [item.title, item.org].filter(Boolean).join(" — ") + (when ? ` (${when})` : ""),
