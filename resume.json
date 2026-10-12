@@ -349,12 +349,13 @@
     {
       "name": "Long Game",
       "position": "Web/React Native Developer",
-      "startDate": "2016",
-      "endDate": "2016",
+      "startDate": "2016-03",
+      "endDate": "2016-11",
       "highlights": [],
       "summary": "Contract - Helped create a startup's initial mobile app: React web-app and second-iteration React Native app for IOS and Android; Saw first launch to 100+ beta users. AWS; NodeJS; Docker; SequelizeJS; React Native",
       "location": "San Francisco, CA",
-      "sector": "Fintech"
+      "sector": "Fintech",
+      "type": "Consulting"
     },
     {
       "name": "Yahoo",
@@ -371,7 +372,7 @@
       "name": "Invitae",
       "position": "Software Engineer",
       "startDate": "2014-06",
-      "endDate": "2015",
+      "endDate": "2015-09",
       "highlights": [],
       "summary": "Senior Full-Stack Web Developer - Created and maintained HIPAA-compliant back office software, data science tools, and analytics software as well as the public-facing invitae.com; UX/UI Developer - Developed navigation, modals, and interactions; Made custom WordPress theme; DevOps - Managed database health, configured continuous integration instances, web-hooks, bi-weekly deployments. Created an automated Selenium testing workflow; Tech Interviewer;\n\nPython, PHP, MySQL, Django, Flask, Angular, Backbone, React, WordPress, ElasticSearch, NightwatchJS, Git & Mercurial, Docker, Jenkins, Splunk, Apache, AWS EC2, Linux",
       "url": "https://invitae.com/",
