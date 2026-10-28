@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { adminConfig } from "@/config/admin-config";
+import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { rbacService } from "@/server/services/rbac";
@@ -11,7 +12,7 @@ import { rbacService } from "@/server/services/rbac";
 
 /**
  * Check if a user is an admin based on:
- * 1. Email configuration (admin emails and domains)
+ * 1. Email configuration (admin emails and domains), for a verified account
  * 2. Database role check
  * 3. RBAC permissions
  *
@@ -34,27 +35,41 @@ export async function isAdmin({
     return false;
   }
 
-  // 1. Check admin config (static configuration) - works without userId
-  if (adminConfig.isAdminByEmailConfig(email)) {
-    return true;
-  }
-
-  // For the remaining checks, we need either userId or we can try to get it from the database
-  // 2. Check if user is admin by querying the database directly
+  // Load the account first. The config check below used to run against the raw
+  // email string alone, which meant anyone who could present a matching address
+  // was an admin, whether or not they had ever proved they owned it.
   const user = await db?.query.users.findFirst({
     where: eq(users.email, email.toLowerCase()),
     columns: {
       role: true,
       id: true,
+      emailVerified: true,
     },
   });
 
+  // 1. Static configuration, but only for a real account with a verified email.
+  if (adminConfig.isAdminByEmailConfig(email)) {
+    if (user?.emailVerified) {
+      return true;
+    }
+    // Deliberately no address in the metadata. `logger` has no level filter
+    // and copies its metadata into OTel span attributes, so an email here is
+    // written into production telemetry, whether it is the real configured
+    // admin or an address an attacker chose to present (LAC-6126).
+    // `hasAccount` keeps the operator signal that matters: no row owns this
+    // address at all, versus a row that exists and never verified.
+    logger.warn("Admin config matched an email with no verified account; refusing admin", {
+      hasAccount: Boolean(user),
+    });
+  }
+
+  // 2. Explicit role on the account.
   if (user?.role === "admin") {
     return true;
   }
 
   // 3. Check RBAC permissions if userId is provided or we found it in the database
-  const userIdToCheck = userId || user?.id;
+  const userIdToCheck = userId ?? user?.id;
   if (userIdToCheck) {
     try {
       const hasRbacPermission = await rbacService.hasPermission(userIdToCheck, "system", "admin");
