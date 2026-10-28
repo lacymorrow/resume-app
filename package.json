@@ -47,7 +47,7 @@
     "postinstall": "npx next telemetry disable",
     "workers:build": "tsc -p ./tsconfig.workers.json",
     "workers:dev": "concurrently \"npm run workers:build\" \"tsc -p ./tsconfig.workers.json --watch\"",
-    "test": "vitest run",
+    "test": "vitest run && vitest run --config=vitest.config.node.ts",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
     "test:browser": "vitest --config=vitest.config.browser.ts",
