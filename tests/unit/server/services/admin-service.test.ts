@@ -20,6 +20,7 @@ const mocks = vi.hoisted(() => ({
   payloadFind: vi.fn(),
   hasPermission: vi.fn(),
   isAdminByEmailConfig: vi.fn(),
+  loggerWarn: vi.fn(),
 }));
 
 vi.mock("@/server/db", () => ({
@@ -44,7 +45,7 @@ vi.mock("@/config/admin-config", () => ({
 }));
 
 vi.mock("@/lib/logger", () => ({
-  logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+  logger: { debug: vi.fn(), info: vi.fn(), warn: mocks.loggerWarn, error: vi.fn() },
 }));
 
 const { isAdmin } = await import("@/server/services/admin-service");
@@ -132,5 +133,86 @@ describe("isAdmin and Payload membership (LAC-5048, ported LAC-5245)", () => {
     });
 
     expect(await isAdmin({ email: "registered@shipkit.test" })).toBe(true);
+  });
+});
+
+/**
+ * Regression tests for the static-config hole in `isAdmin()` (LAC-3811,
+ * ported LAC-6023).
+ *
+ * Check 1 used to return true on `adminConfig.isAdminByEmailConfig(email)`
+ * alone, before any account lookup happened. The config is a list of
+ * addresses and domains, so clearing it needed nothing but presenting a
+ * matching address: an unverified signup, or an OAuth profile from a
+ * provider that does not verify the email it hands over. A config match now
+ * has to land on a real account that proved it owns the address.
+ *
+ * `emailVerified` is a floor, not a ceiling. It cannot be written on an
+ * existing row, but it is settable on a NEW row by an unauthenticated
+ * action (LAC-5209), so this raises the bar rather than closing the door.
+ */
+describe("isAdmin and the static admin config (LAC-3811, ported LAC-6023)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    // The config names this address on every test in this block.
+    mocks.isAdminByEmailConfig.mockReturnValue(true);
+    mocks.hasPermission.mockResolvedValue(false);
+    mocks.getPayloadClient.mockResolvedValue({ find: mocks.payloadFind });
+    mocks.payloadFind.mockResolvedValue(payloadHit);
+  });
+
+  it("refuses a config-named address that no account owns", async () => {
+    // Nobody ever signed up as this address, so nobody has proved they own
+    // it. Before the fix this returned true without reading the database.
+    mocks.dbFindFirst.mockResolvedValue(undefined);
+
+    expect(await isAdmin({ email: "unowned@shipkit.test" })).toBe(false);
+  });
+
+  it("refuses a config-named address whose account never verified", async () => {
+    mocks.dbFindFirst.mockResolvedValue({
+      id: "unverified-1",
+      role: "user",
+      emailVerified: null,
+    });
+
+    expect(await isAdmin({ email: "unverified@shipkit.test" })).toBe(false);
+  });
+
+  it("logs the refusal so the operator can see a near miss", async () => {
+    mocks.dbFindFirst.mockResolvedValue({
+      id: "unverified-1",
+      role: "user",
+      emailVerified: null,
+    });
+
+    await isAdmin({ email: "unverified@shipkit.test" });
+
+    expect(mocks.loggerWarn).toHaveBeenCalledWith(
+      "Admin config matched an email with no verified account; refusing admin",
+      { email: "unverified@shipkit.test" }
+    );
+  });
+
+  it("reads the account before deciding, not after", async () => {
+    // The ordering is the fix. A config match that short-circuits ahead of
+    // the lookup is the bug, whatever the lookup would have said.
+    mocks.dbFindFirst.mockResolvedValue(undefined);
+
+    await isAdmin({ email: "unowned@shipkit.test" });
+
+    expect(mocks.dbFindFirst).toHaveBeenCalledTimes(1);
+  });
+
+  it("still grants a config-named address on an unverified row that holds role=admin", async () => {
+    // Check 2 is independent of the verification floor on check 1: an
+    // explicit role on the account is its own grant and must not regress.
+    mocks.dbFindFirst.mockResolvedValue({
+      id: "admin-1",
+      role: "admin",
+      emailVerified: null,
+    });
+
+    expect(await isAdmin({ email: "admin@shipkit.test" })).toBe(true);
   });
 });
