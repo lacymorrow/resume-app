@@ -52,8 +52,14 @@ export async function isAdmin({
     if (user?.emailVerified) {
       return true;
     }
+    // Deliberately no address in the metadata. `logger` has no level filter
+    // and copies its metadata into OTel span attributes, so an email here is
+    // written into production telemetry, whether it is the real configured
+    // admin or an address an attacker chose to present (LAC-6126).
+    // `hasAccount` keeps the operator signal that matters: no row owns this
+    // address at all, versus a row that exists and never verified.
     logger.warn("Admin config matched an email with no verified account; refusing admin", {
-      email,
+      hasAccount: Boolean(user),
     });
   }
 

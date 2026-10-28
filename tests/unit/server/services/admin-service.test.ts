@@ -179,7 +179,7 @@ describe("isAdmin and the static admin config (LAC-3811, ported LAC-6023)", () =
     expect(await isAdmin({ email: "unverified@shipkit.test" })).toBe(false);
   });
 
-  it("logs the refusal so the operator can see a near miss", async () => {
+  it("logs the refusal without naming the address", async () => {
     mocks.dbFindFirst.mockResolvedValue({
       id: "unverified-1",
       role: "user",
@@ -190,8 +190,29 @@ describe("isAdmin and the static admin config (LAC-3811, ported LAC-6023)", () =
 
     expect(mocks.loggerWarn).toHaveBeenCalledWith(
       "Admin config matched an email with no verified account; refusing admin",
-      { email: "unverified@shipkit.test" }
+      { hasAccount: true }
     );
+    // `logger` has no level filter and copies its metadata into OTel span
+    // attributes, so an address passed here is written straight into
+    // production telemetry (LAC-6126). Assert over the whole call list, not
+    // just the metadata object, so a future author cannot smuggle it into
+    // the message string either.
+    expect(JSON.stringify(mocks.loggerWarn.mock.calls)).not.toContain("@");
+  });
+
+  it("separates a missing account from an unverified one in the log", async () => {
+    // The two near misses need different operator responses: nobody owns the
+    // configured address, versus somebody signed up and never verified. That
+    // distinction is what `email` used to carry, and it survives without it.
+    mocks.dbFindFirst.mockResolvedValue(undefined);
+
+    await isAdmin({ email: "unowned@shipkit.test" });
+
+    expect(mocks.loggerWarn).toHaveBeenCalledWith(
+      "Admin config matched an email with no verified account; refusing admin",
+      { hasAccount: false }
+    );
+    expect(JSON.stringify(mocks.loggerWarn.mock.calls)).not.toContain("@");
   });
 
   it("reads the account before deciding, not after", async () => {
