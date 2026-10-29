@@ -212,9 +212,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
     },
-    // @see: https://nextjs.org/docs/app/api-reference/next-config-js/viewTransition
-    viewTransition: true,
-    webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
+    webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "INP"],
 
     // Optimized prefetching
     optimisticClientCache: true,
