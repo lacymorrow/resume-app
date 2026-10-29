@@ -290,7 +290,6 @@
       "startDate": "2023-07",
       "endDate": "2024-02",
       "summary": "Contract - Gave grid operators the charts, dashboards, and control panels they use to manage solar and power utilities across southern California and Hawaii. Shipped the authentication, API, UI, and CRUD behind them. TypeScript, NextJS, React, Python, Django, Docker, PostgreSQL",
-      "url": "https://swellenergy.com/",
       "location": "Remote",
       "sector": "Clean Energy",
       "type": "Consulting"
